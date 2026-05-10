@@ -1,0 +1,6 @@
+@{{cookiecutter.project_namespace}}_HostAddress = http://localhost:5171
+
+GET {{ '{{' }}{{cookiecutter.project_namespace}}_HostAddress{{ '}}' }}/weatherforecast/
+Accept: application/json
+
+###

@@ -12,7 +12,7 @@ The system is partitioned into specialized microservices using **Domain-Driven D
 
 | Service | Primary responsibility | Key patterns / tech | Runtime | External comms | Internal comms | Independently deployed | Status |
 |---|---|---|---|---|---|---|---|
-| **API Gateway (YARP)** | TLS termination, JWT validation at the edge, rate limiting, routing to downstream services | YARP, .NET Aspire | .NET | REST (public) | Routes to downstream | ✅ Yes | ✅ Defined |
+| **API Gateway (YARP)** | TLS termination, JWT validation at the edge, rate limiting, routing to downstream services | YARP | .NET | REST (public) | Routes to downstream | ✅ Yes | ✅ Defined |
 | **Identity (STS)** | Authentication, JWT issuance, token revocation, RBAC, secret management, audit event emission | OpenIddict, OIDC, OAuth2, Redis blocklist, Vault | .NET | REST / OIDC | REST (JWKS, introspection) | ✅ Yes | ✅ Defined |
 | **Order & Transaction** | Hot-path checkout: accept orders, process payments, initiate the fulfillment saga, implement transactional outbox | MassTransit, Outbox Pattern, Polly | .NET | REST (via gateway) | Publishes events | ✅ Yes | ✅ Defined |
 | **Fulfillment Orchestrator** | Saga coordinator: assign drones, sequence compensating transactions on failure, own the delivery state machine | Saga Pattern, MassTransit, state machine | .NET | None | Consumes + publishes events | ✅ Yes | ✅ Defined |

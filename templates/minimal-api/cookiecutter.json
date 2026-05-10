@@ -1,0 +1,4 @@
+{
+    "project_name": "my-default-project",
+    "project_namespace": "{{ cookiecutter.project_name.replace('-', ' ').replace('_', ' ').title().replace(' ', '') }}"
+}
