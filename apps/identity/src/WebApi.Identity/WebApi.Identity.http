@@ -1,0 +1,6 @@
+@WebApi.Identity_HostAddress = http://localhost:5171
+
+GET {{WebApi.Identity_HostAddress}}/health/
+Accept: application/json
+
+###

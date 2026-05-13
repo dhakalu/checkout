@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Mvc.Testing;
 
-namespace Tests;
+namespace WebApi.Identity.Tests.Tests;
 
 public class ProgramTests
 {
