@@ -12,6 +12,8 @@ public class Program
         // Add services to the container.
         // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
         builder.Services.AddOpenApi();
+        builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
+        builder.Services.AddProblemDetails();
 
         var app = builder.Build();
 
@@ -23,6 +25,7 @@ public class Program
         }
 
         app.UseHttpsRedirection();
+        app.UseExceptionHandler();
 
         app.MapGet("/health", () =>
         {
