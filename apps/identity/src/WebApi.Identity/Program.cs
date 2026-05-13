@@ -1,5 +1,5 @@
 using Scalar.AspNetCore;
-
+using WebApi.Identity.Features.Signup;
 namespace WebApi.Identity;
 
 
@@ -13,6 +13,11 @@ public class Program
         // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
         builder.Services.AddOpenApi();
 
+        builder.Services.AddScoped<ISignupService, SignupService>();
+
+        builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
+        builder.Services.AddProblemDetails();
+
         var app = builder.Build();
 
         // Configure the HTTP request pipeline.
@@ -23,12 +28,15 @@ public class Program
         }
 
         app.UseHttpsRedirection();
+        app.UseExceptionHandler();
 
         app.MapGet("/health", () =>
         {
             return Results.Ok(new { status = "Healthy" });
         })
         .WithName("GetHealth");
+
+        SignupEndpoints.MapEndpoints(app);
 
         await app.StartAsync();
         var serverUrls = app.Urls; 

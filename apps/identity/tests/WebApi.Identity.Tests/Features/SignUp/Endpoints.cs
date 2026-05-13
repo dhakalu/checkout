@@ -1,4 +1,6 @@
-namespace WebApi.Identity.Tests.Features.SignUp;
+using System.Net;
+
+namespace WebApi.Identity.Tests.Features.Signup;
 
 
 public class EndpointsTests
@@ -17,6 +19,21 @@ public class EndpointsTests
             lastName = "User"
         }, TestContext.Current.CancellationToken);
         result.EnsureSuccessStatusCode();
+    }
+
+    [Fact]
+    public async Task When_SignUp_Is_Called_With_Missing_Fields_Returns_BadRequest()
+    {
+        var app = new IdentityWebApplicationFactory();
+        var client = app.CreateClient();
+        var result = await client.PostAsJsonAsync("/signup", new
+        {
+            Email = "",
+            Password = "",
+            firstName = "Test",
+            lastName = "User"
+        }, TestContext.Current.CancellationToken);
+        Assert.Equal(HttpStatusCode.BadRequest, result.StatusCode);
     }
 
 }

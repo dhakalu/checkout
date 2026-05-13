@@ -20,11 +20,12 @@ builder.Services.AddRateLimiter(options =>
     });
 });
 
+
 var app = builder.Build();
 
 app.UseRateLimiter();
 app.MapReverseProxy();
-
+app.UseExceptionHandler();
 app.Run();
 
 
