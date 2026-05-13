@@ -1,8 +1,5 @@
 namespace WebApi.Identity;
 
-using Microsoft.AspNetCore.Diagnostics;
-using Microsoft.AspNetCore.Mvc;
-
 public class GlobalExceptionHandler : IExceptionHandler
 {
 

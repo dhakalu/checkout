@@ -1,5 +1,3 @@
-using Scalar.AspNetCore;
-using WebApi.Identity.Features.Signup;
 namespace WebApi.Identity;
 
 

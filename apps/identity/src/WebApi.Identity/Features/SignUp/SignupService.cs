@@ -1,8 +1,5 @@
 namespace WebApi.Identity.Features.Signup;
 
-using WebApi.Identity.Features.Signup.Dto;
-using WebApi.Identity.Features.Signup;
-
 public class SignupService : ISignupService
 {
     public async Task<SignupResponse> SignUp(SignUpRequest request, CancellationToken cancellationToken)

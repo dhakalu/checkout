@@ -1,7 +1,5 @@
 namespace WebApi.Identity.Features.Signup;
 
-using WebApi.Identity.Features.Signup.Dto;
-
 public interface ISignupService
 {
     // Signup registers a new user with the provided details 
