@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Mvc.Testing;
 
-namespace Tests;
+namespace {{cookiecutter.tests_namespace}}.Tests;
 
 public class ProgramTests
 {

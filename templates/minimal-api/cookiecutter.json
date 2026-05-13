@@ -1,4 +1,6 @@
 {
     "project_name": "my-default-project",
-    "project_namespace": "{{ cookiecutter.project_name.replace('-', ' ').replace('_', ' ').title().replace(' ', '') }}"
+    "project_namespace": "WebApi.{{ cookiecutter.project_name.replace('-', ' ').replace('_', ' ').title().replace(' ', '') }}",
+    "tests_namespace": "WebApi.{{ cookiecutter.project_name.replace('-', ' ').replace('_', ' ').title().replace(' ', '') }}.Tests"
+
 }

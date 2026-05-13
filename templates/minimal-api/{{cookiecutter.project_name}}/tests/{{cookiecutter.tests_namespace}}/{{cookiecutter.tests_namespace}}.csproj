@@ -15,7 +15,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="../src/identity.csproj" />
+    <ProjectReference Include="../../src/{{cookiecutter.project_namespace}}/{{cookiecutter.project_namespace}}.csproj" />
   </ItemGroup>
 
   <ItemGroup>
