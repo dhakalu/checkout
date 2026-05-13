@@ -1,0 +1,15 @@
+<Solution>
+  <Folder Name="/apps/" />
+  <Folder Name="/apps/app-gateway/" />
+  <Folder Name="/apps/app-gateway/src/">
+    <Project Path="apps/app-gateway/src/app-gateway.csproj" />
+  </Folder>
+  <Folder Name="/apps/identity/" />
+  <Folder Name="/apps/identity/src/">
+    <Project Path="apps/identity/src/WebApi.Identity/WebApi.Identity.csproj" />
+  </Folder>
+  <Folder Name="/apps/identity/tests/">
+    <Project Path="apps/identity/tests/WebApi.Identity.Tests/WebApi.Identity.Tests.csproj" />
+  </Folder>
+ 
+</Solution>
