@@ -7,12 +7,8 @@ builder.Services.AddReverseProxy()
     .LoadFromConfig(builder.Configuration.GetSection("ReverseProxy"));
 
 
-RateLimitOptions rateLimitOptions = builder.Configuration.GetSection("RateLimit").Get<RateLimitOptions>();
+RateLimitOptions rateLimitOptions = builder.Configuration.GetSection("RateLimit").Get<RateLimitOptions>() ?? throw new MissingFieldException("RateLimit configuration section is missing or invalid.");
 
-if (rateLimitOptions == null)
-{
-    throw new MissingFieldException("RateLimit configuration section is missing or invalid.");
-}
 builder.Services.AddRateLimiter(options =>
 {
     options.AddFixedWindowLimiter("Fixed", opts =>
