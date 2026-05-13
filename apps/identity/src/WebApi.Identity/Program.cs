@@ -24,7 +24,7 @@ public class Program
         if (app.Environment.IsDevelopment())
         {
             app.MapOpenApi();
-            app.MapScalarApiReference(); 
+            app.MapScalarApiReference();
         }
 
         app.UseHttpsRedirection();
@@ -39,11 +39,11 @@ public class Program
         SignupEndpoints.MapEndpoints(app);
 
         await app.StartAsync();
-        var serverUrls = app.Urls; 
+        var serverUrls = app.Urls;
         Console.WriteLine("\n🚀 Application started! Click below to open documentation:");
         foreach (var url in serverUrls)
         {
-            Console.WriteLine($"🔗 {url}/scalar/v1"); 
+            Console.WriteLine($"🔗 {url}/scalar/v1");
         }
         Console.WriteLine("\nPress Ctrl+C to shut down.\n");
 

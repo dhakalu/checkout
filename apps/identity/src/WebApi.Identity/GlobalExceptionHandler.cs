@@ -3,7 +3,7 @@ namespace WebApi.Identity;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 
-public class GlobalExceptionHandler: IExceptionHandler
+public class GlobalExceptionHandler : IExceptionHandler
 {
 
     public async ValueTask<bool> TryHandleAsync(HttpContext httpContext, Exception exception, CancellationToken cancellationToken)
@@ -27,7 +27,7 @@ public class GlobalExceptionHandler: IExceptionHandler
             Instance = httpContext.Request.Path
         };
         await httpContext.Response.WriteAsJsonAsync(
-            errorResponse, 
+            errorResponse,
             cancellationToken);
         return await new ValueTask<bool>(true);
     }
