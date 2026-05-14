@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 
 public class IdentityDbContext(DbContextOptions<IdentityDbContext> options) : DbContext(options)
 {
-    public DbSet<Features.Signup.Data.Identity> Identities { get; set; } = default!;
+    public DbSet<Features.Users.Data.Identity> Identities { get; set; } = default!;
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

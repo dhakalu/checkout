@@ -1,7 +1,7 @@
 using System.Net;
 using Microsoft.AspNetCore.Mvc;
 
-namespace WebApi.Identity.Tests.Features.Authorize;
+namespace WebApi.Identity.Tests.Features.Auth;
 
 
 public class EndpointsTests

@@ -1,3 +1,3 @@
-namespace WebApi.Identity.Features.Authorize.Dto;
+namespace WebApi.Identity.Features.Auth.Dto;
 
 public record AuthorizeResponse(string IdToken, string AccessToken);

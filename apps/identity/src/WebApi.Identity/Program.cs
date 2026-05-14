@@ -1,9 +1,10 @@
 using System.Reflection;
 using Scalar.AspNetCore;
-using WebApi.Identity.Features.Signup;
+using WebApi.Identity.Features.Users;
 using WebApi.Identity.Extentions.DependencyInjection;
 using Microsoft.AspNetCore.Identity;
-using WebApi.Identity.Features.Authorize;
+using WebApi.Identity.Features.Auth;
+using WebApi.Identity.Features.Users.RegisterUser;
 
 namespace WebApi.Identity;
 
@@ -20,7 +21,7 @@ public class Program
         // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
         builder.Services.AddOpenApi();
 
-        builder.Services.AddScoped<ISignupService, SignupService>();
+        builder.Services.AddScoped<IRegisterUserService, RegisterUserService>();
         builder.Services.AddScoped<AuthorizeService>();
 
 

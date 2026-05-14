@@ -21,7 +21,7 @@ namespace WebApi.Identity.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
-            modelBuilder.Entity("WebApi.Identity.Features.Signup.Data.Identity", b =>
+            modelBuilder.Entity("WebApi.Identity.Features.Users.Data.Identity", b =>
                 {
                     b.Property<string>("Id")
                         .HasColumnType("varchar(36)")

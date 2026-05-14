@@ -1,8 +1,8 @@
 using Microsoft.AspNetCore.Identity;
-using WebApi.Identity.Features.Authorize.Dto;
-using WebApi.Identity.Features.Signup.Data;
+using WebApi.Identity.Features.Auth.Dto;
+using WebApi.Identity.Features.Users.Data;
 
-namespace WebApi.Identity.Features.Authorize;
+namespace WebApi.Identity.Features.Auth;
 
 public class AuthorizeService(ILogger<AuthorizeService> logger, IdentityRepository identityRepository, IPasswordHasher<string> passwordHasher)
 {
@@ -20,7 +20,14 @@ public class AuthorizeService(ILogger<AuthorizeService> logger, IdentityReposito
         {
           throw new UnauthorizedAccessException("Invalid email or password");  
         }
+        await GenerateAccessToken(identity, cancellationToken);
         return new AuthorizeResponse(identity.FirstName, identity.Email);   
+    }
+
+    public async Task<string> GenerateAccessToken(WebApi.Identity.Features.Users.Data.Identity identity, CancellationToken cancellationToken)
+    {
+        
+        return "";
     }
     
 }

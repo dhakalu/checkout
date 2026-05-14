@@ -1,7 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace WebApi.Identity.Features.Signup.Data;
+namespace WebApi.Identity.Features.Users.Data;
 
 public class IdentityConfiguration : IEntityTypeConfiguration<Identity>
 {

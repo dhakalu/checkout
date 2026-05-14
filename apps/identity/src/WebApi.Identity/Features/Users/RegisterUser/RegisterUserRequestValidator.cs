@@ -1,13 +1,13 @@
 using System;
 using FluentValidation;
-using WebApi.Identity.Features.Signup.Dto;
+using WebApi.Identity.Features.Users.Dto;
 
-namespace WebApi.Identity.Features.Signup.Validators;
+namespace WebApi.Identity.Features.Users.RegisterUser;
 
-public class SignupRequestValidator: AbstractValidator<SignUpRequest>
+public class RegisterUserRequestValidator: AbstractValidator<RegisterUserRequest>
 {
 
-    public SignupRequestValidator()
+    public RegisterUserRequestValidator()
     {
         RuleFor(x => x.Email)
             .NotEmpty().WithMessage("Email is required.")

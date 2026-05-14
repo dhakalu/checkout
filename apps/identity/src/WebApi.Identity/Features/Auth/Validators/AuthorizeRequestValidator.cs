@@ -1,8 +1,8 @@
 using System;
 using FluentValidation;
-using WebApi.Identity.Features.Authorize.Dto;
+using WebApi.Identity.Features.Auth.Dto;
 
-namespace WebApi.Identity.Features.Authorize.Validators;
+namespace WebApi.Identity.Features.Auth.Validators;
 
 public class AuthorizeRequestValidator: AbstractValidator<AuthorizeRequest>
 {

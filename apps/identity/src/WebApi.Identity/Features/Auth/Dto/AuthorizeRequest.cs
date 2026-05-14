@@ -1,4 +1,4 @@
-namespace WebApi.Identity.Features.Authorize.Dto;
+namespace WebApi.Identity.Features.Auth.Dto;
 
 public class AuthorizeRequest
 {

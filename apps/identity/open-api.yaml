@@ -1,0 +1,999 @@
+openapi: 3.1.0
+info:
+  title: Identity / STS Service
+  description: |
+    Security Token Service (STS) for the drone delivery platform.
+    Handles authentication, JWT issuance, token revocation, RBAC, and audit event emission.
+    OIDC/OAuth2 compliant. `/connect/*` endpoints follow the OpenIddict spec exactly.
+  version: 1.0.0
+  contact:
+    name: Platform Team
+
+servers:
+  - url: https://identity.internal
+    description: Internal (gateway-routed)
+  - url: https://api.example.com/identity
+    description: Public (OIDC discovery + token endpoints only)
+
+tags:
+  - name: OIDC
+    description: Standard OpenID Connect / OAuth2 endpoints
+  - name: Users
+    description: User lifecycle management (internal/admin only)
+  - name: Roles
+    description: Role management (internal/admin only)
+  - name: Credentials
+    description: Password and MFA management
+  - name: Sessions
+    description: Session and token lifecycle
+
+# ─────────────────────────────────────────────
+# PATHS
+# ─────────────────────────────────────────────
+paths:
+
+  # ── OIDC ──────────────────────────────────
+
+  /.well-known/openid-configuration:
+    get:
+      tags: [OIDC]
+      operationId: getOidcDiscovery
+      summary: OIDC discovery document
+      description: Returns the OpenID Connect provider metadata (issuer, endpoints, supported algorithms, etc.)
+      security: []
+      responses:
+        '200':
+          description: OIDC provider metadata
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OidcDiscovery'
+
+  /.well-known/jwks:
+    get:
+      tags: [OIDC]
+      operationId: getJwks
+      summary: JSON Web Key Set
+      description: Public keys used to verify JWTs. Consumed by API Gateway and downstream services.
+      security: []
+      responses:
+        '200':
+          description: JWKS document
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Jwks'
+
+  /connect/token:
+    post:
+      tags: [OIDC]
+      operationId: issueToken
+      summary: Issue access + refresh tokens
+      description: |
+        OAuth2 token endpoint. Supported grants:
+        - `password` — user credentials (customers, admins)
+        - `client_credentials` — service-to-service
+        - `refresh_token` — exchange refresh token for new access token
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/TokenRequest'
+      responses:
+        '200':
+          description: Token response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TokenResponse'
+        '400':
+          $ref: '#/components/responses/OAuthError'
+        '401':
+          $ref: '#/components/responses/OAuthError'
+
+  /connect/revoke:
+    post:
+      tags: [OIDC]
+      operationId: revokeToken
+      summary: Revoke a token
+      description: Revokes an access or refresh token. Adds to Redis blocklist immediately.
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              required: [token]
+              properties:
+                token:
+                  type: string
+                  description: The token to revoke
+                token_type_hint:
+                  type: string
+                  enum: [access_token, refresh_token]
+      responses:
+        '200':
+          description: Token revoked (spec requires 200 even if token was invalid)
+        '400':
+          $ref: '#/components/responses/OAuthError'
+
+  /connect/introspect:
+    post:
+      tags: [OIDC]
+      operationId: introspectToken
+      summary: Token introspection
+      description: |
+        RFC 7662 token introspection. Use only for services that cannot validate JWTs locally
+        (e.g. non-.NET services, legacy integrations). API Gateway does not use this endpoint.
+      security:
+        - clientCredentials: []
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              required: [token]
+              properties:
+                token:
+                  type: string
+                token_type_hint:
+                  type: string
+                  enum: [access_token, refresh_token]
+      responses:
+        '200':
+          description: Introspection result
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IntrospectionResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+
+  /connect/userinfo:
+    get:
+      tags: [OIDC]
+      operationId: getUserInfo
+      summary: Return current claims for the bearer token
+      description: |
+        OIDC UserInfo endpoint. Returns live (non-cached) claims from the server.
+        Reflects role/email changes made after token issuance.
+        Primarily for OIDC spec compliance; prefer JWT claims for most internal use.
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: User claims
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserInfo'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+
+  # ── USERS ─────────────────────────────────
+
+  /users:
+    post:
+      tags: [Users]
+      operationId: registerUser
+      summary: Register a new user
+      description: Creates a new user account. Emits `UserRegistered` event to the bus.
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RegisterUserRequest'
+      responses:
+        '201':
+          description: User created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserResponse'
+        '400':
+          $ref: '#/components/responses/ValidationError'
+        '409':
+          description: Email already registered
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+
+  /users/{userId}:
+    get:
+      tags: [Users]
+      operationId: getUser
+      summary: Get user profile and roles
+      description: Returns auth-relevant fields only (email, roles, lock status). Not domain/profile data.
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/UserId'
+      responses:
+        '200':
+          description: User found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserResponse'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+    put:
+      tags: [Users]
+      operationId: updateUser
+      summary: Update email or account info
+      description: Updates auth-relevant fields. Password changes use `/users/{userId}/password`.
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/UserId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateUserRequest'
+      responses:
+        '200':
+          description: User updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserResponse'
+        '400':
+          $ref: '#/components/responses/ValidationError'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+    delete:
+      tags: [Users]
+      operationId: deleteUser
+      summary: Soft-delete / deactivate account
+      description: Marks user as deactivated. Does not hard-delete. Revokes all active sessions.
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/UserId'
+      responses:
+        '204':
+          description: User deactivated
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  /users/{userId}/lock:
+    post:
+      tags: [Users]
+      operationId: lockUser
+      summary: Lock a user account
+      description: Prevents login. Emits `AccountLocked` event. Admin only.
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/UserId'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                reason:
+                  type: string
+                  description: Reason for locking (recorded in audit log)
+      responses:
+        '204':
+          description: Account locked
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  /users/{userId}/unlock:
+    post:
+      tags: [Users]
+      operationId: unlockUser
+      summary: Unlock a user account
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/UserId'
+      responses:
+        '204':
+          description: Account unlocked
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  # ── ROLES ─────────────────────────────────
+
+  /roles:
+    get:
+      tags: [Roles]
+      operationId: listRoles
+      summary: List all roles
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: List of roles
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Role'
+
+    post:
+      tags: [Roles]
+      operationId: createRole
+      summary: Create a role
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateRoleRequest'
+      responses:
+        '201':
+          description: Role created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Role'
+        '409':
+          description: Role name already exists
+
+  /roles/{roleId}:
+    delete:
+      tags: [Roles]
+      operationId: deleteRole
+      summary: Delete a role
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: roleId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '204':
+          description: Role deleted
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '409':
+          description: Role still assigned to users
+
+  /users/{userId}/roles:
+    post:
+      tags: [Roles]
+      operationId: assignRoles
+      summary: Assign roles to a user
+      description: Emits `RoleAssigned` event.
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/UserId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [roles]
+              properties:
+                roles:
+                  type: array
+                  items:
+                    type: string
+                  example: [customer, ops]
+      responses:
+        '204':
+          description: Roles assigned
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  /users/{userId}/roles/{role}:
+    delete:
+      tags: [Roles]
+      operationId: removeRole
+      summary: Remove a role from a user
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/UserId'
+        - name: role
+          in: path
+          required: true
+          schema:
+            type: string
+          example: ops
+      responses:
+        '204':
+          description: Role removed
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  # ── CREDENTIALS ───────────────────────────
+
+  /users/{userId}/password:
+    post:
+      tags: [Credentials]
+      operationId: changePassword
+      summary: Change password
+      description: Requires current password. Emits `PasswordChanged` event. Revokes all existing sessions.
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/UserId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ChangePasswordRequest'
+      responses:
+        '204':
+          description: Password changed
+        '400':
+          $ref: '#/components/responses/ValidationError'
+        '401':
+          description: Current password incorrect
+
+  /auth/forgot-password:
+    post:
+      tags: [Credentials]
+      operationId: forgotPassword
+      summary: Initiate password reset flow
+      description: Sends a reset link to the user's email. Always returns 204 to prevent email enumeration.
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [email]
+              properties:
+                email:
+                  type: string
+                  format: email
+      responses:
+        '204':
+          description: Reset email sent (or silently ignored if email not found)
+
+  /auth/reset-password:
+    post:
+      tags: [Credentials]
+      operationId: resetPassword
+      summary: Complete password reset
+      description: Validates the reset token and sets the new password.
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ResetPasswordRequest'
+      responses:
+        '204':
+          description: Password reset successful
+        '400':
+          description: Invalid or expired reset token
+
+  /users/{userId}/mfa/enable:
+    post:
+      tags: [Credentials]
+      operationId: enableMfa
+      summary: Enable TOTP MFA
+      description: Returns a TOTP secret and QR code URI for the authenticator app. MFA is not active until verified.
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/UserId'
+      responses:
+        '200':
+          description: TOTP setup info
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MfaSetupResponse'
+
+  /users/{userId}/mfa/verify:
+    post:
+      tags: [Credentials]
+      operationId: verifyMfa
+      summary: Verify TOTP code and activate MFA
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/UserId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [code]
+              properties:
+                code:
+                  type: string
+                  minLength: 6
+                  maxLength: 6
+                  example: "482910"
+      responses:
+        '204':
+          description: MFA activated
+        '400':
+          description: Invalid TOTP code
+
+  /users/{userId}/mfa:
+    delete:
+      tags: [Credentials]
+      operationId: disableMfa
+      summary: Disable MFA
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/UserId'
+      responses:
+        '204':
+          description: MFA disabled
+
+  # ── SESSIONS ──────────────────────────────
+
+  /users/{userId}/sessions:
+    get:
+      tags: [Sessions]
+      operationId: listSessions
+      summary: List active sessions
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/UserId'
+      responses:
+        '200':
+          description: Active sessions
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Session'
+
+    delete:
+      tags: [Sessions]
+      operationId: revokeAllSessions
+      summary: Revoke all sessions (force logout everywhere)
+      description: Adds all refresh tokens to Redis blocklist.
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/UserId'
+      responses:
+        '204':
+          description: All sessions revoked
+
+  /users/{userId}/sessions/{sessionId}:
+    delete:
+      tags: [Sessions]
+      operationId: revokeSession
+      summary: Revoke a specific session
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/UserId'
+        - name: sessionId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '204':
+          description: Session revoked
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+# ─────────────────────────────────────────────
+# COMPONENTS
+# ─────────────────────────────────────────────
+components:
+
+  parameters:
+    UserId:
+      name: userId
+      in: path
+      required: true
+      schema:
+        type: string
+        format: uuid
+      description: The user's unique identifier (JWT `sub` claim)
+
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+    clientCredentials:
+      type: oauth2
+      flows:
+        clientCredentials:
+          tokenUrl: /connect/token
+          scopes:
+            introspect: Allows token introspection
+
+  schemas:
+
+    # ── OIDC ────────────────────────────────
+
+    OidcDiscovery:
+      type: object
+      properties:
+        issuer:
+          type: string
+          example: https://identity.internal
+        authorization_endpoint:
+          type: string
+        token_endpoint:
+          type: string
+        userinfo_endpoint:
+          type: string
+        jwks_uri:
+          type: string
+        introspection_endpoint:
+          type: string
+        revocation_endpoint:
+          type: string
+        response_types_supported:
+          type: array
+          items:
+            type: string
+        grant_types_supported:
+          type: array
+          items:
+            type: string
+        subject_types_supported:
+          type: array
+          items:
+            type: string
+        id_token_signing_alg_values_supported:
+          type: array
+          items:
+            type: string
+
+    Jwks:
+      type: object
+      properties:
+        keys:
+          type: array
+          items:
+            type: object
+            properties:
+              kty:
+                type: string
+                example: RSA
+              use:
+                type: string
+                example: sig
+              kid:
+                type: string
+              alg:
+                type: string
+                example: RS256
+              n:
+                type: string
+              e:
+                type: string
+
+    TokenRequest:
+      type: object
+      required: [grant_type]
+      properties:
+        grant_type:
+          type: string
+          enum: [password, client_credentials, refresh_token]
+        username:
+          type: string
+          description: Required for `password` grant
+        password:
+          type: string
+          description: Required for `password` grant
+        client_id:
+          type: string
+        client_secret:
+          type: string
+        refresh_token:
+          type: string
+          description: Required for `refresh_token` grant
+        scope:
+          type: string
+          example: "orders:read profile:write"
+
+    TokenResponse:
+      type: object
+      properties:
+        access_token:
+          type: string
+        token_type:
+          type: string
+          example: Bearer
+        expires_in:
+          type: integer
+          example: 900
+          description: Access token TTL in seconds (15 min)
+        refresh_token:
+          type: string
+        id_token:
+          type: string
+          description: Present for OIDC flows only
+        scope:
+          type: string
+
+    IntrospectionResponse:
+      type: object
+      properties:
+        active:
+          type: boolean
+        sub:
+          type: string
+          format: uuid
+        username:
+          type: string
+        scope:
+          type: string
+        client_id:
+          type: string
+        exp:
+          type: integer
+        iat:
+          type: integer
+        roles:
+          type: array
+          items:
+            type: string
+
+    UserInfo:
+      type: object
+      properties:
+        sub:
+          type: string
+          format: uuid
+        email:
+          type: string
+          format: email
+        email_verified:
+          type: boolean
+        roles:
+          type: array
+          items:
+            type: string
+        mfa_enabled:
+          type: boolean
+
+    # ── USERS ────────────────────────────────
+
+    RegisterUserRequest:
+      type: object
+      required: [email, password]
+      properties:
+        email:
+          type: string
+          format: email
+        password:
+          type: string
+          minLength: 12
+        initial_roles:
+          type: array
+          items:
+            type: string
+          default: [customer]
+
+    UpdateUserRequest:
+      type: object
+      properties:
+        email:
+          type: string
+          format: email
+
+    UserResponse:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        email:
+          type: string
+          format: email
+        email_verified:
+          type: boolean
+        roles:
+          type: array
+          items:
+            type: string
+        locked:
+          type: boolean
+        mfa_enabled:
+          type: boolean
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+
+    # ── ROLES ────────────────────────────────
+
+    Role:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+          example: ops
+        description:
+          type: string
+        created_at:
+          type: string
+          format: date-time
+
+    CreateRoleRequest:
+      type: object
+      required: [name]
+      properties:
+        name:
+          type: string
+          example: ops
+        description:
+          type: string
+
+    # ── CREDENTIALS ──────────────────────────
+
+    ChangePasswordRequest:
+      type: object
+      required: [current_password, new_password]
+      properties:
+        current_password:
+          type: string
+        new_password:
+          type: string
+          minLength: 12
+
+    ResetPasswordRequest:
+      type: object
+      required: [token, new_password]
+      properties:
+        token:
+          type: string
+          description: Reset token from email link
+        new_password:
+          type: string
+          minLength: 12
+
+    MfaSetupResponse:
+      type: object
+      properties:
+        secret:
+          type: string
+          description: Base32-encoded TOTP secret
+        qr_uri:
+          type: string
+          description: otpauth:// URI for QR code generation
+        backup_codes:
+          type: array
+          items:
+            type: string
+          description: One-time backup codes
+
+    # ── SESSIONS ─────────────────────────────
+
+    Session:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        created_at:
+          type: string
+          format: date-time
+        last_used_at:
+          type: string
+          format: date-time
+        expires_at:
+          type: string
+          format: date-time
+        user_agent:
+          type: string
+        ip_address:
+          type: string
+
+    # ── ERRORS ───────────────────────────────
+
+    ProblemDetails:
+      type: object
+      properties:
+        type:
+          type: string
+          format: uri
+        title:
+          type: string
+        status:
+          type: integer
+        detail:
+          type: string
+        instance:
+          type: string
+
+    OAuthErrorResponse:
+      type: object
+      properties:
+        error:
+          type: string
+          enum:
+            - invalid_request
+            - invalid_client
+            - invalid_grant
+            - unauthorized_client
+            - unsupported_grant_type
+            - invalid_scope
+        error_description:
+          type: string
+
+    ValidationErrorResponse:
+      type: object
+      properties:
+        type:
+          type: string
+        title:
+          type: string
+          example: One or more validation errors occurred.
+        status:
+          type: integer
+          example: 400
+        errors:
+          type: object
+          additionalProperties:
+            type: array
+            items:
+              type: string
+          example:
+            email: ["The email field is required."]
+            password: ["Password must be at least 12 characters."]
+
+  responses:
+    OAuthError:
+      description: OAuth2 error response
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/OAuthErrorResponse'
+
+    Unauthorized:
+      description: Missing or invalid bearer token
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ProblemDetails'
+
+    NotFound:
+      description: Resource not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ProblemDetails'
+
+    ValidationError:
+      description: Request validation failed
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ValidationErrorResponse'

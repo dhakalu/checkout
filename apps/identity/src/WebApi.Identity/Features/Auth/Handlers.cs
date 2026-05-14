@@ -1,8 +1,8 @@
 using FluentValidation;
-using WebApi.Identity.Features.Authorize.Dto;
-using WebApi.Identity.Features.Authorize.Validators;
+using WebApi.Identity.Features.Auth.Dto;
+using WebApi.Identity.Features.Auth.Validators;
 
-namespace WebApi.Identity.Features.Authorize;
+namespace WebApi.Identity.Features.Auth;
 
 public static class AuthorizeHandlers
 {

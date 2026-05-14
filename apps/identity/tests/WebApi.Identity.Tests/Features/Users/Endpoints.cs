@@ -1,7 +1,7 @@
 using System.Net;
 using Microsoft.AspNetCore.Mvc;
 
-namespace WebApi.Identity.Tests.Features.Signup;
+namespace WebApi.Identity.Tests.Features.Users;
 
 
 public class EndpointsTests

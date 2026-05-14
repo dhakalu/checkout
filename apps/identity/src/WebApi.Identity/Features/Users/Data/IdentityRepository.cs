@@ -1,4 +1,4 @@
-namespace WebApi.Identity.Features.Signup.Data;
+namespace WebApi.Identity.Features.Users.Data;
 
 using Microsoft.EntityFrameworkCore;
 

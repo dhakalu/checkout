@@ -1,4 +1,4 @@
-namespace WebApi.Identity.Features.Authorize;
+namespace WebApi.Identity.Features.Auth;
 
 public static class AuthorizeEndpoints
 {

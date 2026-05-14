@@ -1,20 +1,22 @@
-namespace WebApi.Identity.Features.Signup;
+namespace WebApi.Identity.Features.Users.RegisterUser;
 
 using Microsoft.AspNetCore.Identity;
-using WebApi.Identity.Features.Signup.Data;
-using WebApi.Identity.Features.Signup.Dto;
-public class SignupService(ILogger<SignupService> logger, IPasswordHasher<string> passwordHasher) : ISignupService
+using WebApi.Identity.Features.Users.Data;
+using WebApi.Identity.Features.Users.Dto;
+public class RegisterUserService(ILogger<RegisterUserService> logger,
+    IPasswordHasher<string> passwordHasher,
+    IdentityRepository identityRepository) : IRegisterUserService
 {
-    private readonly ILogger<SignupService> _logger = logger;
+    private readonly ILogger<RegisterUserService> _logger = logger;
     private readonly IPasswordHasher<string> _passwordHasher = passwordHasher;
 
-    public async Task<SignupResponse> SignUp(SignUpRequest request, 
-     IdentityRepository identityRepository,
+    private readonly IdentityRepository _identityRepository = identityRepository;
+    public async Task<RegisterUserResponse> Register(RegisterUserRequest request,
      CancellationToken cancellationToken)
     {
         // check if the email is already registered
-        var existingIdentity = await identityRepository.GetIdentityByEmailAsync(request.Email, cancellationToken);
-        if (existingIdentity != null) 
+        var existingIdentity = await _identityRepository.GetIdentityByEmailAsync(request.Email, cancellationToken);
+        if (existingIdentity != null)
         {
             _logger.LogWarning("Attempt to register with an already registered email: {Email}", request.Email);
             throw new InvalidOperationException("Email is already registered.");
@@ -26,7 +28,7 @@ public class SignupService(ILogger<SignupService> logger, IPasswordHasher<string
         }
 
         var id = Guid.NewGuid().ToString();
-        await identityRepository.AddIdentityAsync(new Identity
+        await _identityRepository.AddIdentityAsync(new Identity
         {
             Id = id,
             Email = request.Email,
@@ -36,6 +38,6 @@ public class SignupService(ILogger<SignupService> logger, IPasswordHasher<string
             LastName = request.LastName
         });
         // Return a dummy response with a new user ID
-        return new SignupResponse { Id = id };
+        return new RegisterUserResponse { Id = id };
     }
 }
