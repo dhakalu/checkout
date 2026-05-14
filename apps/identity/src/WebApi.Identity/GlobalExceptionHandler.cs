@@ -4,12 +4,13 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace WebApi.Identity;
 
-public class GlobalExceptionHandler : IExceptionHandler
+public class GlobalExceptionHandler(ILogger<GlobalExceptionHandler> logger) : IExceptionHandler
 {
+    private readonly ILogger<GlobalExceptionHandler> _logger = logger;
 
     public async ValueTask<bool> TryHandleAsync(HttpContext httpContext, Exception exception, CancellationToken cancellationToken)
     {
-
+        logger.LogError(exception, "An unhandled exception occurred while processing the request.");
 
         if (exception is ValidationException validationException)
         {
@@ -43,6 +44,8 @@ public class GlobalExceptionHandler : IExceptionHandler
                 (StatusCodes.Status400BadRequest, "Bad request", argEx.Message),
             KeyNotFoundException kEx => (
                 StatusCodes.Status404NotFound, "Not found", kEx.Message),
+            InvalidOperationException ioEx => (
+                StatusCodes.Status409Conflict, "Conflict", ioEx.Message),
             _ =>
                 (StatusCodes.Status500InternalServerError, "Internal server error", "An unexpected error occurred.")
         };

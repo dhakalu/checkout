@@ -2,9 +2,11 @@ namespace WebApi.Identity.Features.Signup.Data;
 
 using Microsoft.EntityFrameworkCore;
 
-public class IdentityRepository(IdentityDbContext dbContext)
+public class IdentityRepository(IdentityDbContext dbContext, ILogger<IdentityRepository> logger)
 {
     private readonly IdentityDbContext _dbContext = dbContext;
+
+    private readonly ILogger<IdentityRepository> _logger = logger;
 
     public async Task AddIdentityAsync(Identity identity)
     {
@@ -12,8 +14,9 @@ public class IdentityRepository(IdentityDbContext dbContext)
         await _dbContext.SaveChangesAsync();
     }
 
-    public async Task<Identity?> GetIdentityByEmailAsync(string email)
+    public async Task<Identity?> GetIdentityByEmailAsync(string email, CancellationToken cancellationToken)
     {
-        return await _dbContext.Identities.FirstOrDefaultAsync(i => i.Email == email);
+        _logger.LogInformation("Checking for existing identity with email: {Email}", email);
+        return await _dbContext.Identities.FirstOrDefaultAsync(i => i.Email == email, cancellationToken);
     }
 }

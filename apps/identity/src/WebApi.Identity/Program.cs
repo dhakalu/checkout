@@ -1,8 +1,8 @@
 using System.Reflection;
 using Scalar.AspNetCore;
 using WebApi.Identity.Features.Signup;
-using Microsoft.EntityFrameworkCore;
 using WebApi.Identity.Extentions.DependencyInjection;
+using Microsoft.AspNetCore.Identity;
 
 namespace WebApi.Identity;
 
@@ -13,6 +13,8 @@ public class Program
     {
         var builder = WebApplication.CreateBuilder(args);
 
+        builder.Logging.ClearProviders();
+        builder.Logging.AddConsole();   
         // Add services to the container.
         // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
         builder.Services.AddOpenApi();
@@ -21,11 +23,17 @@ public class Program
 
 
         builder.Services.AddSharedErrorHandler(Assembly.GetExecutingAssembly());
-        builder.Services.AddDbContext<IdentityDbContext>(options =>
+        builder.Services.AddDb(builder.Configuration);
+
+        builder.Services.AddLogging(config =>
         {
-            options.EnableSensitiveDataLogging();
-options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection"));
+            config.AddConsole();
+            config.SetMinimumLevel(LogLevel.Information);
         });
+
+        // The generic type string is a placeholder; it isn't utilized by the hash string calculations
+        builder.Services.AddScoped<IPasswordHasher<string>, PasswordHasher<string>>();
+
 
         var app = builder.Build();
 
