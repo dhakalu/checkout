@@ -3,6 +3,7 @@ using Scalar.AspNetCore;
 using WebApi.Identity.Features.Signup;
 using WebApi.Identity.Extentions.DependencyInjection;
 using Microsoft.AspNetCore.Identity;
+using WebApi.Identity.Features.Authorize;
 
 namespace WebApi.Identity;
 
@@ -20,6 +21,7 @@ public class Program
         builder.Services.AddOpenApi();
 
         builder.Services.AddScoped<ISignupService, SignupService>();
+        builder.Services.AddScoped<AuthorizeService>();
 
 
         builder.Services.AddSharedErrorHandler(Assembly.GetExecutingAssembly());
@@ -54,6 +56,7 @@ public class Program
         .WithName("GetHealth");
 
         SignupEndpoints.MapEndpoints(app);
+        AuthorizeEndpoints.MapAuthorizeEndpoints(app);
 
         await app.StartAsync();
         var serverUrls = app.Urls;

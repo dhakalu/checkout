@@ -46,6 +46,9 @@ public class GlobalExceptionHandler(ILogger<GlobalExceptionHandler> logger) : IE
                 StatusCodes.Status404NotFound, "Not found", kEx.Message),
             InvalidOperationException ioEx => (
                 StatusCodes.Status409Conflict, "Conflict", ioEx.Message),
+            UnauthorizedAccessException uEx => (
+                StatusCodes.Status401Unauthorized, "Unauthorized", uEx.Message
+            ),
             _ =>
                 (StatusCodes.Status500InternalServerError, "Internal server error", "An unexpected error occurred.")
         };
