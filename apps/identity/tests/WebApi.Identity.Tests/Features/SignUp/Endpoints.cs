@@ -53,4 +53,29 @@ public class EndpointsTests
             }, TestContext.Current.CancellationToken);
     }
 
+    [Fact]
+    public async Task When_SignUp_Is_Called_With_Existing_Email_Returns_Conflict()
+    {
+        var app = new IdentityWebApplicationFactory();
+        var client = app.CreateClient();
+
+        await client.PostAsJsonAsync("/signup", new
+        {
+            Email = "test@example.com",
+            Password = "Password123!",
+            firstName = "Test",
+            lastName = "User"
+        }, TestContext.Current.CancellationToken);
+
+        // Then, try to sign up with the same email
+        var result2 = await client.PostAsJsonAsync("/signup", new
+        {
+            Email = "test@example.com",
+            Password = "AnotherPassword123!",
+            firstName = "Another",
+            lastName = "User"
+        }, TestContext.Current.CancellationToken);
+
+        Assert.Equal(HttpStatusCode.Conflict, result2.StatusCode);
+    }
 }
