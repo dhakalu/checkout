@@ -1,0 +1,23 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "build-identity-web",
+            "command": "dotnet",
+            "type": "process",
+            "args": [
+                "build",
+                "${workspaceFolder}/apps/identity/src/WebApi.Identity/WebApi.Identity.csproj",
+                "/property:GenerateFullPaths=true",
+                "/consoleloggerparameters:NoSummary"
+            ],
+            "problemMatcher": "$msCompile",
+            "options": {
+                "env": {
+                    "PATH": "/usr/local/share/dotnet:${env:PATH}",
+                    "DOTNET_ROOT": "/usr/local/share/dotnet"
+                }
+            }
+        }
+    ]
+}
