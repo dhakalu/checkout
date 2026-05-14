@@ -2,8 +2,7 @@ using System.Reflection;
 using Scalar.AspNetCore;
 using WebApi.Identity.Features.Signup;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
-using Npgsql.EntityFrameworkCore.PostgreSQL;
+using WebApi.Identity.Extentions.DependencyInjection;
 
 namespace WebApi.Identity;
 

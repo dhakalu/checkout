@@ -1,10 +1,9 @@
-using System;
 using System.Reflection;
 using FluentValidation;
 
-namespace WebApi.Identity;
+namespace WebApi.Identity.Extentions.DependencyInjection;
 
-public static class WebApplicationExtentions
+public static class SharedErrorHandler
 {
 
     public static IServiceCollection AddSharedErrorHandler(this IServiceCollection services, Assembly serviceAssembly)
