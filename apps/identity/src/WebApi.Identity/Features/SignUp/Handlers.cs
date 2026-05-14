@@ -1,3 +1,5 @@
+using WebApi.Identity.Features.Signup.Dto;
+
 namespace WebApi.Identity.Features.Signup;
 
 public class SignupHandlers
