@@ -1,3 +1,4 @@
+using System.Reflection;
 using Scalar.AspNetCore;
 using WebApi.Identity.Features.Signup;
 
@@ -16,8 +17,7 @@ public class Program
 
         builder.Services.AddScoped<ISignupService, SignupService>();
 
-        builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
-        builder.Services.AddProblemDetails();
+        builder.Services.AddSharedErrorHandler(Assembly.GetExecutingAssembly());
 
         var app = builder.Build();
 
@@ -29,7 +29,7 @@ public class Program
         }
 
         app.UseHttpsRedirection();
-        app.UseExceptionHandler();
+        app.UseSharedErrorHandling();
 
         app.MapGet("/health", () =>
         {
