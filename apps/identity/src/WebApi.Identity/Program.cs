@@ -1,6 +1,9 @@
 using System.Reflection;
 using Scalar.AspNetCore;
 using WebApi.Identity.Features.Signup;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
+using Npgsql.EntityFrameworkCore.PostgreSQL;
 
 namespace WebApi.Identity;
 
@@ -17,7 +20,13 @@ public class Program
 
         builder.Services.AddScoped<ISignupService, SignupService>();
 
+
         builder.Services.AddSharedErrorHandler(Assembly.GetExecutingAssembly());
+        builder.Services.AddDbContext<IdentityDbContext>(options =>
+        {
+            options.EnableSensitiveDataLogging();
+options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection"));
+        });
 
         var app = builder.Build();
 
