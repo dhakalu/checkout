@@ -2,12 +2,12 @@ using System;
 using FluentValidation;
 using WebApi.Identity.Features.Auth.Dto;
 
-namespace WebApi.Identity.Features.Auth.Validators;
+namespace WebApi.Identity.Features.Auth.Token;
 
-public class AuthorizeRequestValidator: AbstractValidator<AuthorizeRequest>
+public class IssueTokenRequestValidator: AbstractValidator<AuthorizeRequest>
 {
 
-    public AuthorizeRequestValidator()
+    public IssueTokenRequestValidator()
     {
         RuleFor(x => x.Email)
             .NotEmpty().WithMessage("Email is required.")

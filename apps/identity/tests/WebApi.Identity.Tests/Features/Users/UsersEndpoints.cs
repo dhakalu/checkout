@@ -1,10 +1,11 @@
 using System.Net;
 using Microsoft.AspNetCore.Mvc;
+using WebApi.Identity.Features.Users;
 
 namespace WebApi.Identity.Tests.Features.Users;
 
 
-public class EndpointsTests
+public class UsersEndpointsTests
 {
     [Fact]
     public async Task When_SignUp_Is_Called_Returns_Ok()
@@ -12,7 +13,7 @@ public class EndpointsTests
         var app = new IdentityWebApplicationFactory();
         var client = app.CreateClient();
 
-        var result = await client.PostAsJsonAsync("/signup", new
+        var result = await client.PostAsJsonAsync(UsersEndpoints.BasePath, new
         {
             Email = "test@example.com",
             Password = "Password123!",
@@ -27,7 +28,7 @@ public class EndpointsTests
     {
         var app = new IdentityWebApplicationFactory();
         var client = app.CreateClient();
-        var result = await client.PostAsJsonAsync("/signup", new
+        var result = await client.PostAsJsonAsync(UsersEndpoints.BasePath, new
         {
             Email = "",
             Password = "",
@@ -59,7 +60,7 @@ public class EndpointsTests
         var app = new IdentityWebApplicationFactory();
         var client = app.CreateClient();
 
-        await client.PostAsJsonAsync("/signup", new
+        await client.PostAsJsonAsync(UsersEndpoints.BasePath, new
         {
             Email = "test@example.com",
             Password = "Password123!",
@@ -68,7 +69,7 @@ public class EndpointsTests
         }, TestContext.Current.CancellationToken);
 
         // Then, try to sign up with the same email
-        var result2 = await client.PostAsJsonAsync("/signup", new
+        var result2 = await client.PostAsJsonAsync(UsersEndpoints.BasePath, new
         {
             Email = "test@example.com",
             Password = "AnotherPassword123!",

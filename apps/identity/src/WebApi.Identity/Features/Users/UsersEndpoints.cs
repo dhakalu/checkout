@@ -4,16 +4,16 @@ using WebApi.Identity.Features.Users.RegisterUser;
 namespace WebApi.Identity.Features.Users;
 
 
-public class SignupEndpoints
+public class UsersEndpoints
 {
-    public const string Users = "/users";
+    public const string BasePath = "/users";
 
     public static void MapEndpoints(WebApplication app)
     {
 
-        var group = app.MapGroup(Users);
+        var group = app.MapGroup(BasePath);
 
-        group.MapPost(Users, RegisterUserHandler.HandleAsync)
+        group.MapPost("", RegisterUserHandler.HandleAsync)
         .WithName("RegisterUser");
     }
 }

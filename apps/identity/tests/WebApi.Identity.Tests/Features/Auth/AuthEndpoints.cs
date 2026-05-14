@@ -1,22 +1,22 @@
 using System.Net;
 using Microsoft.AspNetCore.Mvc;
+using WebApi.Identity.Features.Auth;
+using WebApi.Identity.Features.Users;
 
 namespace WebApi.Identity.Tests.Features.Auth;
 
 
-public class EndpointsTests
+public class AuthEndpointsTests
 
 {
-    private readonly string sighnUpEndpoint = "/signup";
-    private readonly string authorizeEndpoint = "/authorize";
-    #region Authorize Tests
+    #region token endpoints
     [Fact]
     public async Task When_Authorize_Is_Called_With_Valid_Credentials_Returns_Ok()
     {
         var app = new IdentityWebApplicationFactory();
         var client = app.CreateClient();
 
-        var createResult = await client.PostAsJsonAsync(sighnUpEndpoint, new
+        var createResult = await client.PostAsJsonAsync(UsersEndpoints.BasePath, new
         {
             Email = "test_authorize_success@example.com",
             Password = "Password123!",
@@ -25,7 +25,7 @@ public class EndpointsTests
         }, TestContext.Current.CancellationToken);
         createResult.EnsureSuccessStatusCode();
 
-        var result = await client.PostAsJsonAsync(authorizeEndpoint, new
+        var result = await client.PostAsJsonAsync(AuthEndpoints.BasePath, new
         {
             Email = "test_authorize_success@example.com",
             Password = "Password123!"
@@ -40,7 +40,7 @@ public class EndpointsTests
         var app = new IdentityWebApplicationFactory();
         var client = app.CreateClient();
  
-        var createResult = await client.PostAsJsonAsync(sighnUpEndpoint, new
+        var createResult = await client.PostAsJsonAsync(UsersEndpoints.BasePath, new
         {
             Email = "test_authorize_invalid_password@example.com",
             Password = "Password123!",
@@ -49,7 +49,7 @@ public class EndpointsTests
         }, TestContext.Current.CancellationToken);
         createResult.EnsureSuccessStatusCode();
 
-        var result = await client.PostAsJsonAsync(authorizeEndpoint, new
+        var result = await client.PostAsJsonAsync(AuthEndpoints.BasePath, new
         {
             Email = "test_authorize_invalid_password@example.com",
             Password = "InvalidPassword!"
@@ -64,14 +64,14 @@ public class EndpointsTests
         var app = new IdentityWebApplicationFactory();
         var client = app.CreateClient();
 
-        var result = await client.PostAsJsonAsync(authorizeEndpoint, new
+        var result = await client.PostAsJsonAsync(AuthEndpoints.BasePath, new
         {
-            Email = "nonexistent@example.com",
+            Email = "testuser-does-not-exist@example.com",
             Password = "Password123!"
         }, TestContext.Current.CancellationToken);
-
+        var validationErrors = await result.Content.ReadFromJsonAsync<ValidationProblemDetails>(cancellationToken: TestContext.Current.CancellationToken);
         Assert.Equal(HttpStatusCode.Unauthorized, result.StatusCode);
-    }
+   }
 
     [Fact]
     public async Task When_Authorize_Is_Called_With_Empty_Fields_Returns_BadRequest()
@@ -79,7 +79,7 @@ public class EndpointsTests
         var app = new IdentityWebApplicationFactory();
         var client = app.CreateClient();
 
-        var result = await client.PostAsJsonAsync(authorizeEndpoint, new
+        var result = await client.PostAsJsonAsync(AuthEndpoints.BasePath, new
         {
             Email = "",
             Password = ""

@@ -5,6 +5,7 @@ using WebApi.Identity.Extentions.DependencyInjection;
 using Microsoft.AspNetCore.Identity;
 using WebApi.Identity.Features.Auth;
 using WebApi.Identity.Features.Users.RegisterUser;
+using WebApi.Identity.Features.Auth.Token;
 
 namespace WebApi.Identity;
 
@@ -22,7 +23,7 @@ public class Program
         builder.Services.AddOpenApi();
 
         builder.Services.AddScoped<IRegisterUserService, RegisterUserService>();
-        builder.Services.AddScoped<AuthorizeService>();
+        builder.Services.AddScoped<IssueTokenCommand>();
 
 
         builder.Services.AddSharedErrorHandler(Assembly.GetExecutingAssembly());
@@ -56,8 +57,8 @@ public class Program
         })
         .WithName("GetHealth");
 
-        SignupEndpoints.MapEndpoints(app);
-        AuthorizeEndpoints.MapAuthorizeEndpoints(app);
+        UsersEndpoints.MapEndpoints(app);
+        AuthEndpoints.MapAuthorizeEndpoints(app);
 
         await app.StartAsync();
         var serverUrls = app.Urls;
