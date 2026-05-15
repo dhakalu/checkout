@@ -25,7 +25,7 @@ public class Program
 
         builder.Services.AddScoped<RegisterUserHandler>();
         builder.Services.AddScoped<GetUserHandler>();
-        builder.Services.AddScoped<IssueTokenCommand>();
+        builder.Services.AddScoped<IssueTokenHandler>();
 
 
         builder.Services.AddSharedErrorHandler(Assembly.GetExecutingAssembly());

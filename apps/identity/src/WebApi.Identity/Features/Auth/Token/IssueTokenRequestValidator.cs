@@ -4,7 +4,7 @@ using WebApi.Identity.Features.Auth.Dto;
 
 namespace WebApi.Identity.Features.Auth.Token;
 
-public class IssueTokenRequestValidator: AbstractValidator<AuthorizeRequest>
+public class IssueTokenRequestValidator: AbstractValidator<IssueTokenRequest>
 {
 
     public IssueTokenRequestValidator()

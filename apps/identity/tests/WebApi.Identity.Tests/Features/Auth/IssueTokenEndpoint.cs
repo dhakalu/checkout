@@ -1,12 +1,12 @@
 using System.Net;
 using Microsoft.AspNetCore.Mvc;
-using WebApi.Identity.Features.Auth;
+using WebApi.Identity.Features.Auth.Token;
 using WebApi.Identity.Features.Users.RegisterUser;
 
 namespace WebApi.Identity.Tests.Features.Auth;
 
 
-public class AuthEndpointsTests
+public class IssueTokenEndpointTests
 
 {
     #region token endpoints
@@ -25,7 +25,7 @@ public class AuthEndpointsTests
         }, TestContext.Current.CancellationToken);
         createResult.EnsureSuccessStatusCode();
 
-        var result = await client.PostAsJsonAsync(AuthEndpoints.BasePath, new
+        var result = await client.PostAsJsonAsync(IssueTokenEndpoint.BasePath, new
         {
             Email = "test_authorize_success@example.com",
             Password = "Password123!"
@@ -49,7 +49,7 @@ public class AuthEndpointsTests
         }, TestContext.Current.CancellationToken);
         createResult.EnsureSuccessStatusCode();
 
-        var result = await client.PostAsJsonAsync(AuthEndpoints.BasePath, new
+        var result = await client.PostAsJsonAsync(IssueTokenEndpoint.BasePath, new
         {
             Email = "test_authorize_invalid_password@example.com",
             Password = "InvalidPassword!"
@@ -64,7 +64,7 @@ public class AuthEndpointsTests
         var app = new IdentityWebApplicationFactory();
         var client = app.CreateClient();
 
-        var result = await client.PostAsJsonAsync(AuthEndpoints.BasePath, new
+        var result = await client.PostAsJsonAsync(IssueTokenEndpoint.BasePath, new
         {
             Email = "testuser-does-not-exist@example.com",
             Password = "Password123!"
@@ -79,7 +79,7 @@ public class AuthEndpointsTests
         var app = new IdentityWebApplicationFactory();
         var client = app.CreateClient();
 
-        var result = await client.PostAsJsonAsync(AuthEndpoints.BasePath, new
+        var result = await client.PostAsJsonAsync(IssueTokenEndpoint.BasePath, new
         {
             Email = "",
             Password = ""
