@@ -7,7 +7,7 @@ using WebApi.Identity.Features.Users.RegisterUser;
 namespace WebApi.Identity.Tests.Features.Users;
 
 
-public partial class UsersEndpointsTest
+public partial class GetUserEndpointTests
 {
     [Fact]
     public async Task When_GetUser_Is_Called_WithCorrectId_Returns_Ok()

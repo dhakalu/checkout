@@ -5,7 +5,7 @@ using WebApi.Identity.Features.Users.RegisterUser;
 namespace WebApi.Identity.Tests.Features.Users;
 
 
-public partial class UsersEndpointsTest
+public partial class RegisterUserEndpointTests
 {
     [Fact]
     public async Task When_SignUp_Is_Called_Returns_Ok()
