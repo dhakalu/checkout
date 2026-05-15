@@ -4,7 +4,9 @@ using WebApi.Identity.Features.Users.Data;
 
 namespace WebApi.Identity.Features.Auth.Token;
 
-public class PasswordGrantHandler(ILogger<PasswordGrantHandler> logger, UserRepository identityRepository, IPasswordHasher<string> passwordHasher)
+public class PasswordGrantHandler(ILogger<PasswordGrantHandler> logger,
+    UserRepository identityRepository, 
+    IPasswordHasher<string> passwordHasher): IHandler
 {
 
     private readonly IPasswordHasher<string> _passwordHasher = passwordHasher;

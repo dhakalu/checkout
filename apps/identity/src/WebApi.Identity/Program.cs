@@ -22,10 +22,12 @@ public class Program
         // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
         builder.Services.AddOpenApi();
 
-        builder.Services.AddScoped<RegisterUserHandler>();
-        builder.Services.AddScoped<GetUserHandler>();
-        builder.Services.AddScoped<PasswordGrantHandler>();
-        builder.Services.AddScoped<RegisterClientHandler>();
+        // builder.Services.AddScoped<RegisterUserHandler>();
+        // builder.Services.AddScoped<GetUserHandler>();
+        // builder.Services.AddScoped<PasswordGrantHandler>();
+        // builder.Services.AddScoped<RegisterClientHandler>();
+
+        builder.Services.AddAllHandlers();
 
 
         builder.Services.AddSharedErrorHandler(Assembly.GetExecutingAssembly());

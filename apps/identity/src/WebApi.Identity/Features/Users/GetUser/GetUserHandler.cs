@@ -2,7 +2,7 @@ using WebApi.Identity.Features.Users.Data;
 
 namespace WebApi.Identity.Features.Users.GetUser;
 
-public class GetUserHandler(UserRepository identityRepository)
+public class GetUserHandler(UserRepository identityRepository): IHandler
 {
     
     private readonly UserRepository _identityRepository = identityRepository;
