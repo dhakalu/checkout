@@ -22,7 +22,7 @@ namespace WebApi.Identity.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
-            modelBuilder.Entity("WebApi.Identity.Features.Users.Data.Identity", b =>
+            modelBuilder.Entity("WebApi.Identity.Features.Users.Data.User", b =>
                 {
                     b.Property<string>("Id")
                         .HasColumnType("varchar(36)")
@@ -77,7 +77,7 @@ namespace WebApi.Identity.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("identities", (string)null);
+                    b.ToTable("users", (string)null);
                 });
 #pragma warning restore 612, 618
         }

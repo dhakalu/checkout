@@ -3,11 +3,11 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace WebApi.Identity.Features.Users.Data;
 
-public class IdentityConfiguration : IEntityTypeConfiguration<Identity>
+public class UserConfiguration : IEntityTypeConfiguration<User>
 {
-    public void Configure(EntityTypeBuilder<Identity> builder)
+    public void Configure(EntityTypeBuilder<User> builder)
     {
-        builder.ToTable("identities");
+        builder.ToTable("users");
 
         builder.HasKey(i => i.Id);
         builder.Property(i => i.Id)

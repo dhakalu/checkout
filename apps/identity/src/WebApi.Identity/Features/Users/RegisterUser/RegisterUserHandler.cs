@@ -4,12 +4,12 @@ using Microsoft.AspNetCore.Identity;
 using WebApi.Identity.Features.Users.Data;
 public class RegisterUserHandler(ILogger<RegisterUserHandler> logger,
     IPasswordHasher<string> passwordHasher,
-    IdentityRepository identityRepository)
+    UserRepository identityRepository)
 {
     private readonly ILogger<RegisterUserHandler> _logger = logger;
     private readonly IPasswordHasher<string> _passwordHasher = passwordHasher;
 
-    private readonly IdentityRepository _identityRepository = identityRepository;
+    private readonly UserRepository _identityRepository = identityRepository;
     public async Task<RegisterUserResponse> Handle(RegisterUserCommand cmd,
      CancellationToken cancellationToken)
     {
@@ -27,7 +27,7 @@ public class RegisterUserHandler(ILogger<RegisterUserHandler> logger,
         }
 
         var id = Guid.NewGuid().ToString();
-        await _identityRepository.AddIdentityAsync(new Identity
+        await _identityRepository.AddIdentityAsync(new User
         {
             Id = id,
             Email = cmd.Email,

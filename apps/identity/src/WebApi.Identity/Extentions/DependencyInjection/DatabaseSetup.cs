@@ -11,7 +11,7 @@ public static class DatabaseSetup
             options.EnableSensitiveDataLogging();
             options.UseNpgsql(configuration.GetConnectionString("DefaultConnection"));
         });
-        services.AddScoped<Features.Users.Data.IdentityRepository>();
+        services.AddScoped<Features.Users.Data.UserRepository>();
         return services;
     }
 

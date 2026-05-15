@@ -4,12 +4,12 @@ using WebApi.Identity.Features.Users.Data;
 
 namespace WebApi.Identity.Features.Auth.Token;
 
-public class PasswordGrantHandler(ILogger<PasswordGrantHandler> logger, IdentityRepository identityRepository, IPasswordHasher<string> passwordHasher)
+public class PasswordGrantHandler(ILogger<PasswordGrantHandler> logger, UserRepository identityRepository, IPasswordHasher<string> passwordHasher)
 {
 
     private readonly IPasswordHasher<string> _passwordHasher = passwordHasher;
     private readonly ILogger<PasswordGrantHandler> _logger = logger;
-    private readonly IdentityRepository _identityRepository = identityRepository;
+    private readonly UserRepository _identityRepository = identityRepository;
 
     public async Task<AuthorizeResponse> Execute(PasswordGrantCommand command, CancellationToken cancellationToken)
     {
@@ -30,7 +30,7 @@ public class PasswordGrantHandler(ILogger<PasswordGrantHandler> logger, Identity
         return new AuthorizeResponse(identity.FirstName, identity.Email);   
     }
 
-    public async Task<string> GenerateAccessToken(WebApi.Identity.Features.Users.Data.Identity identity, CancellationToken cancellationToken)
+    public async Task<string> GenerateAccessToken(WebApi.Identity.Features.Users.Data.User identity, CancellationToken cancellationToken)
     {
         
         return "";

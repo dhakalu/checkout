@@ -1,7 +1,7 @@
 namespace WebApi.Identity.Features.Users.Data;
 
 
-public class Identity
+public class User
 {
     public string Id { get; set; } = default!;
     public string Email { get; set; } = default!;

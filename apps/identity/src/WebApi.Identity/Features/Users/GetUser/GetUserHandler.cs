@@ -2,10 +2,10 @@ using WebApi.Identity.Features.Users.Data;
 
 namespace WebApi.Identity.Features.Users.GetUser;
 
-public class GetUserHandler(IdentityRepository identityRepository)
+public class GetUserHandler(UserRepository identityRepository)
 {
     
-    private readonly IdentityRepository _identityRepository = identityRepository;
+    private readonly UserRepository _identityRepository = identityRepository;
     public async Task<GetUserResponse> HandleAsync(GetUserQuery query, CancellationToken cancellationToken)
     {
         var identity = await _identityRepository.GetIdentityByIdAsync(query.Id, cancellationToken)
