@@ -22,4 +22,21 @@ public static class Endpoints
 
         return app;
     }
+
+    public static IServiceCollection AddAllHandlers(this IServiceCollection services)
+    {
+        var handlerTypes = Assembly.GetExecutingAssembly()
+            .GetTypes()
+            .Where(t => typeof(IHandler).IsAssignableFrom(t) 
+                        && !t.IsInterface 
+                        && !t.IsAbstract);
+
+        foreach (var type in handlerTypes)
+        {
+            services.AddScoped(type); 
+            services.AddScoped(typeof(IHandler), type); 
+        }
+
+        return services;
+    }
 }
