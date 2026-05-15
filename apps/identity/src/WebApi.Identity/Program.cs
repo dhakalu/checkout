@@ -1,12 +1,11 @@
 using System.Reflection;
 using Scalar.AspNetCore;
-using WebApi.Identity.Features.Users;
 using WebApi.Identity.Extentions.DependencyInjection;
 using Microsoft.AspNetCore.Identity;
-using WebApi.Identity.Features.Auth;
 using WebApi.Identity.Features.Users.RegisterUser;
 using WebApi.Identity.Features.Auth.Token;
 using WebApi.Identity.Features.Users.GetUser;
+using WebApi.Identity.Features.Clients;
 
 namespace WebApi.Identity;
 
@@ -26,6 +25,7 @@ public class Program
         builder.Services.AddScoped<RegisterUserHandler>();
         builder.Services.AddScoped<GetUserHandler>();
         builder.Services.AddScoped<PasswordGrantHandler>();
+        builder.Services.AddScoped<RegisterClientHandler>();
 
 
         builder.Services.AddSharedErrorHandler(Assembly.GetExecutingAssembly());
