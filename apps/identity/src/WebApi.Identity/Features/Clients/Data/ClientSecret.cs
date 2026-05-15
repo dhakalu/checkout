@@ -13,9 +13,9 @@ public class ClientSecret
     public string Secret {get; set;} = default!;
 
     // When was the secret first created?
-    public DateTime CreatedAt {get; set;}
+    public DateTime CreatedAt {get; set;} = DateTime.UtcNow;
 
     // when was this secret last roated?
-    public DateTime RoatedAt {get; set;}
+    public DateTime RoatedAt {get; set;} = DateTime.UtcNow;
 
 }

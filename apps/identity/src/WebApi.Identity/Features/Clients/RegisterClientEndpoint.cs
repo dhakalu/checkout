@@ -1,6 +1,7 @@
 namespace WebApi.Identity.Features.Clients;
 
 using System.ComponentModel;
+using FluentValidation;
 using Microsoft.AspNetCore.Http.HttpResults;
 using WebApi.Identity;
 
@@ -14,13 +15,18 @@ public class RegisterClientEndpoint : IEndpoint
 
     private async Task<IResult> HandleAsync(
         RegisterClientRequest request,
-        RegisterClientHandler handler)
+        RegisterClientValidator validator,
+        RegisterClientHandler handler,
+        CancellationToken cancellationToken
+    )
     {
+        await validator.ValidateAndThrowAsync(request, cancellationToken);
         var cmd = new RegisterClientCommand
         {
+            Name = request.Name,
             Description = request.Description
         };
-        var isCreated = await handler.HandleAsync(cmd);
+        var isCreated = await handler.HandleAsync(cmd, cancellationToken);
         if (isCreated)
         {
             return Results.Created();

@@ -1,3 +1,4 @@
+using System.Text.Json;
 using FluentValidation;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
@@ -40,6 +41,8 @@ public class GlobalExceptionHandler(ILogger<GlobalExceptionHandler> logger) : IE
 
         var (statusCode, message, detail) = exception switch
         {
+            JsonException jsonException => 
+                (StatusCodes.Status400BadRequest, "Bad request", jsonException.Message),
             ArgumentException argEx =>
                 (StatusCodes.Status400BadRequest, "Bad request", argEx.Message),
             KeyNotFoundException kEx => (

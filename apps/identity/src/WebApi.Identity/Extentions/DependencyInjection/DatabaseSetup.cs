@@ -12,6 +12,7 @@ public static class DatabaseSetup
             options.UseNpgsql(configuration.GetConnectionString("DefaultConnection"));
         });
         services.AddScoped<Features.Users.Data.UserRepository>();
+        services.AddScoped<Features.Clients.Data.ClientRepository>();
         return services;
     }
 

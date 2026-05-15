@@ -1,10 +1,14 @@
 namespace WebApi.Identity;
 
 using Microsoft.EntityFrameworkCore;
+using WebApi.Identity.Features.Clients.Data;
+using WebApi.Identity.Features.Users.Data;
 
 public class IdentityDbContext(DbContextOptions<IdentityDbContext> options) : DbContext(options)
 {
-    public DbSet<Features.Users.Data.User> Identities { get; set; } = default!;
+    public DbSet<User> Identities { get; set; } = default!;
+
+    public DbSet<Client> Clients {get; set;} = default!;
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
