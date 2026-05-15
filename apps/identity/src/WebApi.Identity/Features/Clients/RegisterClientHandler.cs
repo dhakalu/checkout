@@ -6,7 +6,7 @@ public class RegisterClientHandler(ClientRepository clientRepository)
 {
 
     private readonly ClientRepository _clientRepository = clientRepository;
-    public async Task<bool> HandleAsync(RegisterClientCommand cmd, CancellationToken cancellationToken)
+    public async Task<Guid> HandleAsync(RegisterClientCommand cmd, CancellationToken cancellationToken)
     {
 
         var existingClient = await _clientRepository.GetByNameAsync(cmd.Name, cancellationToken);

@@ -26,11 +26,7 @@ public class RegisterClientEndpoint : IEndpoint
             Name = request.Name,
             Description = request.Description
         };
-        var isCreated = await handler.HandleAsync(cmd, cancellationToken);
-        if (isCreated)
-        {
-            return Results.Created();
-        }
-        throw new Exception("Cannot create client at this time.");
+        var id = await handler.HandleAsync(cmd, cancellationToken);
+        return Results.Created($"/clients/{id}", new RegisterClientResponse(id));
     }
 }
