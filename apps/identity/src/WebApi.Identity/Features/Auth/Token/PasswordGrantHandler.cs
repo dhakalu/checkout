@@ -4,14 +4,14 @@ using WebApi.Identity.Features.Users.Data;
 
 namespace WebApi.Identity.Features.Auth.Token;
 
-public class IssueTokenHandler(ILogger<IssueTokenHandler> logger, IdentityRepository identityRepository, IPasswordHasher<string> passwordHasher)
+public class PasswordGrantHandler(ILogger<PasswordGrantHandler> logger, IdentityRepository identityRepository, IPasswordHasher<string> passwordHasher)
 {
 
     private readonly IPasswordHasher<string> _passwordHasher = passwordHasher;
-    private readonly ILogger<IssueTokenHandler> _logger = logger;
+    private readonly ILogger<PasswordGrantHandler> _logger = logger;
     private readonly IdentityRepository _identityRepository = identityRepository;
 
-    public async Task<AuthorizeResponse> Execute(IssueTokenCommand command, CancellationToken cancellationToken)
+    public async Task<AuthorizeResponse> Execute(PasswordGrantCommand command, CancellationToken cancellationToken)
     {
         var identity = await _identityRepository.GetIdentityByEmailAsync(command.Email, cancellationToken);
 

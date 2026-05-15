@@ -12,14 +12,21 @@ public class IssueTokenEndpoint: IEndpoint
         route.MapPost("/authorize", HandleAsync);
     }
 
-    private static async Task HandleAsync(IssueTokenRequest request, IssueTokenRequestValidator requestValidator, IssueTokenHandler handler, CancellationToken cancellationToken)
+    private static async Task HandleAsync(IssueTokenRequest request, IssueTokenRequestValidator requestValidator, PasswordGrantHandler handler, CancellationToken cancellationToken)
     {
         requestValidator.ValidateAndThrow(request);
-        var cmd = new IssueTokenCommand
+        switch (request.GrantType)
         {
-            Email = request.Email,
-            Password = request.Password
-        };
-        await handler.Execute(cmd, cancellationToken);
+            case "password":
+                var cmd = new PasswordGrantCommand{
+                    Email = request.Email!,
+                    Password = request.Password!
+                };
+                await handler.Execute(cmd, cancellationToken);
+                break;
+            case "client_credentials":
+                break;
+        }
+        
     }
 }
