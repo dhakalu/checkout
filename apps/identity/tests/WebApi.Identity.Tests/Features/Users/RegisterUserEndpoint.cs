@@ -1,6 +1,6 @@
 using System.Net;
 using Microsoft.AspNetCore.Mvc;
-using WebApi.Identity.Features.Users;
+using WebApi.Identity.Features.Users.RegisterUser;
 
 namespace WebApi.Identity.Tests.Features.Users;
 
@@ -13,7 +13,7 @@ public partial class UsersEndpointsTest
         var app = new IdentityWebApplicationFactory();
         var client = app.CreateClient();
 
-        var result = await client.PostAsJsonAsync(UsersEndpoints.BasePath, new
+        var result = await client.PostAsJsonAsync(RegisterUserEndpoint.Path, new
         {
             Email = "test@example.com",
             Password = "Password123!",
@@ -28,7 +28,7 @@ public partial class UsersEndpointsTest
     {
         var app = new IdentityWebApplicationFactory();
         var client = app.CreateClient();
-        var result = await client.PostAsJsonAsync(UsersEndpoints.BasePath, new
+        var result = await client.PostAsJsonAsync(RegisterUserEndpoint.Path, new
         {
             Email = "",
             Password = "",
@@ -60,7 +60,7 @@ public partial class UsersEndpointsTest
         var app = new IdentityWebApplicationFactory();
         var client = app.CreateClient();
 
-        await client.PostAsJsonAsync(UsersEndpoints.BasePath, new
+        await client.PostAsJsonAsync(RegisterUserEndpoint.Path, new
         {
             Email = "test@example.com",
             Password = "Password123!",
@@ -69,7 +69,7 @@ public partial class UsersEndpointsTest
         }, TestContext.Current.CancellationToken);
 
         // Then, try to sign up with the same email
-        var result2 = await client.PostAsJsonAsync(UsersEndpoints.BasePath, new
+        var result2 = await client.PostAsJsonAsync(RegisterUserEndpoint.Path, new
         {
             Email = "test@example.com",
             Password = "AnotherPassword123!",

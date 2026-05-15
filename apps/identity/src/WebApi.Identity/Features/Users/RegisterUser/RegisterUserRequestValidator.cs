@@ -1,6 +1,5 @@
 using System;
 using FluentValidation;
-using WebApi.Identity.Features.Users.Dto;
 
 namespace WebApi.Identity.Features.Users.RegisterUser;
 

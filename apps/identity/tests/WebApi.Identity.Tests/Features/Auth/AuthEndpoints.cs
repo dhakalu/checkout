@@ -1,7 +1,7 @@
 using System.Net;
 using Microsoft.AspNetCore.Mvc;
 using WebApi.Identity.Features.Auth;
-using WebApi.Identity.Features.Users;
+using WebApi.Identity.Features.Users.RegisterUser;
 
 namespace WebApi.Identity.Tests.Features.Auth;
 
@@ -16,7 +16,7 @@ public class AuthEndpointsTests
         var app = new IdentityWebApplicationFactory();
         var client = app.CreateClient();
 
-        var createResult = await client.PostAsJsonAsync(UsersEndpoints.BasePath, new
+        var createResult = await client.PostAsJsonAsync(RegisterUserEndpoint.Path, new
         {
             Email = "test_authorize_success@example.com",
             Password = "Password123!",
@@ -40,7 +40,7 @@ public class AuthEndpointsTests
         var app = new IdentityWebApplicationFactory();
         var client = app.CreateClient();
  
-        var createResult = await client.PostAsJsonAsync(UsersEndpoints.BasePath, new
+        var createResult = await client.PostAsJsonAsync(RegisterUserEndpoint.Path, new
         {
             Email = "test_authorize_invalid_password@example.com",
             Password = "Password123!",

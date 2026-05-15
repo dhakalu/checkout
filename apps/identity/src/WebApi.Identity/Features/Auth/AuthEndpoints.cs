@@ -1,13 +1,13 @@
 namespace WebApi.Identity.Features.Auth;
-
+using WebApi.Identity;
 using WebApi.Identity.Features.Auth.Token;
 
-public static class AuthEndpoints
+public class AuthEndpoints: IEndpoint
 {
 
     public const string BasePath = "/authorize";
-    public static void MapAuthorizeEndpoints(this WebApplication app)
+    public void MapEndpoints(IEndpointRouteBuilder route)
     {
-        app.MapPost("/authorize", IssueTokenHandler.HandleAsync);
+        route.MapPost("/authorize", IssueTokenHandler.HandleAsync);
     }
 }

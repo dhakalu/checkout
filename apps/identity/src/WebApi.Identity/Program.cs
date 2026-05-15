@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Identity;
 using WebApi.Identity.Features.Auth;
 using WebApi.Identity.Features.Users.RegisterUser;
 using WebApi.Identity.Features.Auth.Token;
+using WebApi.Identity.Features.Users.GetUser;
 
 namespace WebApi.Identity;
 
@@ -22,7 +23,8 @@ public class Program
         // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
         builder.Services.AddOpenApi();
 
-        builder.Services.AddScoped<RegisterUserCommand>();
+        builder.Services.AddScoped<RegisterUserHandler>();
+        builder.Services.AddScoped<GetUserHandler>();
         builder.Services.AddScoped<IssueTokenCommand>();
 
 
@@ -57,9 +59,7 @@ public class Program
         })
         .WithName("GetHealth");
 
-        UsersEndpoints.MapEndpoints(app);
-        AuthEndpoints.MapAuthorizeEndpoints(app);
-
+        app.MapAllEndpoints();
         await app.StartAsync();
         var serverUrls = app.Urls;
         Console.WriteLine("\n🚀 Application started! Click below to open documentation:");

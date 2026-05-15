@@ -1,7 +1,8 @@
 using System.Net;
 using Microsoft.AspNetCore.Mvc;
 using WebApi.Identity.Features.Users;
-using WebApi.Identity.Features.Users.Dto;
+using WebApi.Identity.Features.Users.GetUser;
+using WebApi.Identity.Features.Users.RegisterUser;
 
 namespace WebApi.Identity.Tests.Features.Users;
 
@@ -20,13 +21,15 @@ public partial class UsersEndpointsTest
             FirstName="Test",
             LastName="Test"
         };
-        var registerNewUserResult = await client.PostAsJsonAsync(UsersEndpoints.BasePath, registrationRequest, TestContext.Current.CancellationToken);
+        var registerNewUserResult = await client.PostAsJsonAsync(RegisterUserEndpoint.Path, registrationRequest, TestContext.Current.CancellationToken);
 
         registerNewUserResult.EnsureSuccessStatusCode();
 
         var newUserRegistrationResponse = await registerNewUserResult.Content.ReadFromJsonAsync<RegisterUserResponse>(cancellationToken: TestContext.Current.CancellationToken);
         Assert.NotNull(newUserRegistrationResponse);
-        var getUserDetailsResult = await client.GetAsync($"{UsersEndpoints.BasePath}/${newUserRegistrationResponse.Id}", TestContext.Current.CancellationToken);
+        Assert.NotEmpty(newUserRegistrationResponse.Id);
+        var path = $"{GetUserEndpoint.Path}/{newUserRegistrationResponse.Id}";
+        var getUserDetailsResult = await client.GetAsync(path, TestContext.Current.CancellationToken);
         getUserDetailsResult.EnsureSuccessStatusCode();
 
         var userDetails = await getUserDetailsResult.Content.ReadFromJsonAsync<GetUserResponse>(cancellationToken: TestContext.Current.CancellationToken);
@@ -45,7 +48,7 @@ public partial class UsersEndpointsTest
         var webApp = new IdentityWebApplicationFactory();
         var client = webApp.CreateClient();
         var randomGuid = Guid.NewGuid().ToString();
-        var result = await client.GetAsync($"{UsersEndpoints.BasePath}/${randomGuid}", TestContext.Current.CancellationToken);
+        var result = await client.GetAsync($"{GetUserEndpoint.Path}/{randomGuid}", TestContext.Current.CancellationToken);
 
         Assert.Equal(HttpStatusCode.NotFound, result.StatusCode);
     }
