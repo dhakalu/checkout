@@ -10,9 +10,9 @@ public class RegisterUserHandler
 
     public static Task<RegisterUserResponse> HandleAsync(RegisterUserRequest request, 
     RegisterUserRequestValidator validator,
-    IRegisterUserService signupService, CancellationToken cancellationToken)
+    RegisterUserCommand cmd, CancellationToken cancellationToken)
     {
         validator.ValidateAndThrow(request);
-        return signupService.Register(request, cancellationToken);
+        return cmd.Execute(request, cancellationToken);
     }
 }

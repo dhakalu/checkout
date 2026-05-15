@@ -3,15 +3,15 @@ namespace WebApi.Identity.Features.Users.RegisterUser;
 using Microsoft.AspNetCore.Identity;
 using WebApi.Identity.Features.Users.Data;
 using WebApi.Identity.Features.Users.Dto;
-public class RegisterUserService(ILogger<RegisterUserService> logger,
+public class RegisterUserCommand(ILogger<RegisterUserCommand> logger,
     IPasswordHasher<string> passwordHasher,
-    IdentityRepository identityRepository) : IRegisterUserService
+    IdentityRepository identityRepository)
 {
-    private readonly ILogger<RegisterUserService> _logger = logger;
+    private readonly ILogger<RegisterUserCommand> _logger = logger;
     private readonly IPasswordHasher<string> _passwordHasher = passwordHasher;
 
     private readonly IdentityRepository _identityRepository = identityRepository;
-    public async Task<RegisterUserResponse> Register(RegisterUserRequest request,
+    public async Task<RegisterUserResponse> Execute(RegisterUserRequest request,
      CancellationToken cancellationToken)
     {
         // check if the email is already registered
