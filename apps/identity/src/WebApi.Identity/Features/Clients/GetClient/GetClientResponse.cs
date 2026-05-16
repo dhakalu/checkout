@@ -1,5 +1,3 @@
-using System;
-
 namespace WebApi.Identity.Features.Clients.GetClient;
 
 public record GetClientResponse

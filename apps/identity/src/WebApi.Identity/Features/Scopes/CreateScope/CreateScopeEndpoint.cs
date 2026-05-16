@@ -1,5 +1,3 @@
-using System;
-using System.Security.Cryptography.X509Certificates;
 using FluentValidation;
 
 namespace WebApi.Identity.Features.Scopes.CreateScope;

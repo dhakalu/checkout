@@ -1,6 +1,4 @@
 using System.Net;
-using Microsoft.AspNetCore.Mvc;
-using WebApi.Identity.Features.Users;
 using WebApi.Identity.Features.Users.GetUser;
 using WebApi.Identity.Features.Users.RegisterUser;
 

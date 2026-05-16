@@ -1,6 +1,4 @@
-using System.Reflection.Metadata;
 using FluentValidation;
-using WebApi.Identity;
 
 namespace WebApi.Identity.Features.Users.RegisterUser;
 

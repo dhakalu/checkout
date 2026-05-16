@@ -2,10 +2,6 @@ using System.Reflection;
 using Scalar.AspNetCore;
 using WebApi.Identity.Extentions.DependencyInjection;
 using Microsoft.AspNetCore.Identity;
-using WebApi.Identity.Features.Users.RegisterUser;
-using WebApi.Identity.Features.Auth.Token;
-using WebApi.Identity.Features.Users.GetUser;
-using WebApi.Identity.Features.Clients;
 
 namespace WebApi.Identity;
 

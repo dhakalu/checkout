@@ -1,4 +1,3 @@
-using System;
 using WebApi.Identity.Features.Scopes.Data;
 
 namespace WebApi.Identity.Features.Scopes.ValidateScopes;

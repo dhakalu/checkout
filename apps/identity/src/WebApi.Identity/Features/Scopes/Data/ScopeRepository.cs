@@ -1,5 +1,3 @@
-using System;
-using Microsoft.AspNetCore.Http.Features;
 using Microsoft.EntityFrameworkCore;
 
 namespace WebApi.Identity.Features.Scopes.Data;

@@ -1,5 +1,3 @@
-using System;
-
 namespace WebApi.Identity.Features.Scopes.Data;
 
 public class Scope

@@ -1,7 +1,5 @@
-using System;
 using System.Net;
 using WebApi.Identity.Features.Users.RegisterUser;
-using WebApi.Identity.Tests;
 
 namespace WebApi.Identity.Tests.Features.Users;
 

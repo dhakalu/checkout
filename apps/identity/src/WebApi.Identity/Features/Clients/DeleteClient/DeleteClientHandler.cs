@@ -1,4 +1,3 @@
-using System;
 using WebApi.Identity.Features.Clients.Data;
 
 namespace WebApi.Identity.Features.Clients.DeleteClient;
