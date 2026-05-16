@@ -14,6 +14,7 @@ public class IdentityWebApplicationFactory : WebApplicationFactory<Program>
         .Build();
     protected override IHost CreateHost(IHostBuilder builder)
     {
+        builder.UseEnvironment("Testing"); 
          // 1. Explicitly start the Docker container synchronously/sequentially
         _dbContainer.StartAsync().GetAwaiter().GetResult();
 

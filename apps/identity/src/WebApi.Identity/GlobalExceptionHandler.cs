@@ -24,7 +24,7 @@ public class GlobalExceptionHandler(ILogger<GlobalExceptionHandler> logger) : IE
                 .ToDictionary(
                     g => System.Text.Json.JsonNamingPolicy.CamelCase.ConvertName(g.Key),
                     g => g.Select(e => e.ErrorMessage).ToArray()
-                ); 
+                );
 
             var validationProblemDetails = new ValidationProblemDetails(errors)
             {
@@ -36,25 +36,42 @@ public class GlobalExceptionHandler(ILogger<GlobalExceptionHandler> logger) : IE
             await httpContext.Response.WriteAsJsonAsync(
                 validationProblemDetails,
                 cancellationToken);
-            return await new ValueTask<bool>(true);
+            return true;
         }
 
-        var (statusCode, message, detail) = exception switch
+        var (statusCode, message, detail) = (200, "", "");
+        if (exception is BadHttpRequestException badHttpRequestException)
         {
-            JsonException jsonException => 
-                (StatusCodes.Status400BadRequest, "Bad request", jsonException.Message),
-            ArgumentException argEx =>
-                (StatusCodes.Status400BadRequest, "Bad request", argEx.Message),
-            KeyNotFoundException kEx => (
-                StatusCodes.Status404NotFound, "Not found", kEx.Message),
-            InvalidOperationException ioEx => (
-                StatusCodes.Status409Conflict, "Conflict", ioEx.Message),
-            UnauthorizedAccessException uEx => (
-                StatusCodes.Status401Unauthorized, "Unauthorized", uEx.Message
-            ),
-            _ =>
-                (StatusCodes.Status500InternalServerError, "Internal server error", "An unexpected error occurred.")
-        };
+            string clientFriendlyMessage = "One or more parameters provided in the request URL are malformed or invalid.";
+
+            var env = httpContext.RequestServices.GetRequiredService<IWebHostEnvironment>();
+            if (env.IsDevelopment() || env.IsEnvironment("Testing"))
+            {
+                clientFriendlyMessage = badHttpRequestException.Message;
+            }
+            (statusCode, message, detail) = (StatusCodes.Status400BadRequest,"Bad Request", clientFriendlyMessage);
+        }
+        else
+        {
+            (statusCode, message, detail) = exception switch
+            {
+                JsonException jsonException =>
+                    (StatusCodes.Status400BadRequest, "Bad request", jsonException.Message),
+                ArgumentException argEx =>
+                    (StatusCodes.Status400BadRequest, "Bad request", argEx.Message),
+                KeyNotFoundException kEx => (
+                    StatusCodes.Status404NotFound, "Not found", kEx.Message),
+                InvalidOperationException ioEx => (
+                    StatusCodes.Status409Conflict, "Conflict", ioEx.Message),
+                UnauthorizedAccessException uEx => (
+                    StatusCodes.Status401Unauthorized, "Unauthorized", uEx.Message
+                ),
+                _ =>
+                    (StatusCodes.Status500InternalServerError, "Internal server error", "An unexpected error occurred.")
+            };
+        }
+
+
 
         httpContext.Response.StatusCode = statusCode;
         httpContext.Response.ContentType = "application/json";
@@ -69,6 +86,6 @@ public class GlobalExceptionHandler(ILogger<GlobalExceptionHandler> logger) : IE
         await httpContext.Response.WriteAsJsonAsync(
             problemDetails,
             cancellationToken);
-        return await new ValueTask<bool>(true);
+        return true;
     }
 }

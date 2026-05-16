@@ -1,3 +1,4 @@
+using System.Net;
 using WebApi.Identity.Features.Clients;
 using WebApi.Identity.Features.Clients.GetClient;
 
@@ -18,15 +19,27 @@ public class GetClientEndpointTests(IdentityWebApplicationFactory app): IClassFi
           Description = "Created to test the get by id successful",
           IsActive = false  
         };
-        var clientId = "";
-        var getClientResult = await _client.GetAsync($"/clients/{clientId}", TestContext.Current.CancellationToken);
+        var cancellationToken = TestContext.Current.CancellationToken;
+        var createClientResult = await _client.PostAsJsonAsync(RegisterClientEndpoint.Path, createClient, cancellationToken);
+        Assert.Equal(HttpStatusCode.Created, createClientResult.StatusCode);
+        var createClientResponse = await createClientResult.Content.ReadFromJsonAsync<RegisterClientResponse>(cancellationToken);
+        Assert.NotNull(createClientResponse);
+        var getClientResult = await _client.GetAsync($"/clients/{createClientResponse.Id}", TestContext.Current.CancellationToken);
         getClientResult.EnsureSuccessStatusCode();
 
-        var getClientResponse = await getClientResult.Content.ReadFromJsonAsync<GetClientResponse>(TestContext.Current.CancellationToken);
+        var getClientResponse = await getClientResult.Content.ReadFromJsonAsync<GetClientResponse>(cancellationToken);
         Assert.NotNull(getClientResponse);
         Assert.Equal(createClient.Description, getClientResponse.Description);
         Assert.Equal(createClient.Name, getClientResponse.Name);
         Assert.False(getClientResponse.IsActive);
-    }   
+    }  
+
+    [Fact]
+    public async Task GetClient_InvalidGuidAsId_ReturnsBadRequest()
+    {
+        var cancellationToken = TestContext.Current.CancellationToken;
+        var getClientResult = await _client.GetAsync("/clients/testid", cancellationToken);
+        Assert.Equal(HttpStatusCode.BadRequest, getClientResult.StatusCode);
+    }  
 
 }
