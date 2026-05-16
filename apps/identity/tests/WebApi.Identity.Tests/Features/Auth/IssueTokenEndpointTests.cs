@@ -9,9 +9,9 @@ namespace WebApi.Identity.Tests.Features.Auth;
 public class IssueTokenEndpointTests
 
 {
-    #region token endpoints
+    #region password grant type
     [Fact]
-    public async Task When_IssueToken_Is_Called_With_Valid_Credentials_Returns_Ok()
+    public async Task IssueToken_PasswordGrantType_ValidCredentials_ReturnsOk()
     {
         var app = new IdentityWebApplicationFactory();
         var client = app.CreateClient();
@@ -36,7 +36,7 @@ public class IssueTokenEndpointTests
     }
 
     [Fact]
-    public async Task When_IssueToken_Is_Called_With_Invalid_Credentials_Returns_Unauthorized()
+    public async Task IssueToken_PasswordGrantType_InvalidCredentials_ReturnsUnauthorized()
     {
         var app = new IdentityWebApplicationFactory();
         var client = app.CreateClient();
@@ -61,7 +61,7 @@ public class IssueTokenEndpointTests
     }
 
     [Fact]
-    public async Task When_IssueToken_Is_Called_With_Nonexistent_Email_Returns_Unauthorized()
+    public async Task IssueToken_PasswordGrantType_NonexistentEmail_ReturnsUnauthorized()
     {
         var app = new IdentityWebApplicationFactory();
         var client = app.CreateClient();
@@ -77,7 +77,7 @@ public class IssueTokenEndpointTests
    }
 
     [Fact]
-    public async Task When_IssueToken_IsCalledWith_EmptyEmailAndPassword_WhenGrantTypeIsPassword_Returns_BadRequest()
+    public async Task IssueToken_PasswordGrantType_EmptyEmailAndPassword_ReturnsBadRequest()
     {
         var app = new IdentityWebApplicationFactory();
         var client = app.CreateClient();
@@ -98,9 +98,10 @@ public class IssueTokenEndpointTests
         Assert.Contains("Email is required when grant type is 'password'.", validationErrors.Errors["email"]);
         Assert.Contains("Password is required when grant type is 'password'.", validationErrors.Errors["password"]);
     }
-
-    [Fact]
-     public async Task When_IssueToken_Is_EmptyEmailAndPassword_WhenScopeIsClientCredentials_Returns_BadRequest()
+    #endregion
+    #region client credentials
+     [Fact]
+     public async Task IssueToken_ClientCredentialsGrantType_EmptyEmailAndPassword_DoesNotIncludeEmailPasswordErrors()
     {
         var app = new IdentityWebApplicationFactory();
         var client = app.CreateClient();
