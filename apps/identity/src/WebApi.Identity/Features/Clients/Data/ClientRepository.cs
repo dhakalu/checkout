@@ -1,5 +1,6 @@
 using System.Collections.Immutable;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Query.SqlExpressions;
 using WebApi.Identity.Features.Clients.GetClient;
 
 namespace WebApi.Identity.Features.Clients.Data;
@@ -16,11 +17,9 @@ public class ClientRepository(IdentityDbContext dbContext)
         return client.Id;
     }
 
-    public async Task<Client?> GetByNameAsync(string name, CancellationToken cancellationToken)
+    public async Task<bool> ExistsByNameAsync(string name, CancellationToken cancellationToken)
     {
-       return await _dbContext
-        .Clients
-        .FirstOrDefaultAsync(c => c.Name == name, cancellationToken);
+        return await _dbContext.Clients.AnyAsync(c => c.Name == name, cancellationToken);
     }
 
     public async Task<GetClientResponse?> GetByIdAsync(Guid id, CancellationToken cancellationToken)

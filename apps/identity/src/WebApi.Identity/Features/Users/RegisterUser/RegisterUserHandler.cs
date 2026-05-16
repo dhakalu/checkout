@@ -14,8 +14,8 @@ public class RegisterUserHandler(ILogger<RegisterUserHandler> logger,
      CancellationToken cancellationToken)
     {
         // check if the email is already registered
-        var existingIdentity = await _identityRepository.GetByEmailAsync(cmd.Email, cancellationToken);
-        if (existingIdentity != null)
+        var exists = await _identityRepository.ExistsByEmailAsync(cmd.Email, cancellationToken);
+        if (exists)
         {
             _logger.LogWarning("Attempt to register with an already registered email: {Email}", cmd.Email);
             throw new InvalidOperationException("Email is already registered.");

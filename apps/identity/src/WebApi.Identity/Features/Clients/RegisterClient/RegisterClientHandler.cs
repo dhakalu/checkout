@@ -9,8 +9,8 @@ public class RegisterClientHandler(ClientRepository clientRepository): IHandler
     public async Task<Guid> HandleAsync(RegisterClientCommand cmd, CancellationToken cancellationToken)
     {
 
-        var existingClient = await _clientRepository.GetByNameAsync(cmd.Name, cancellationToken);
-        if (existingClient != null)
+        var exits = await _clientRepository.ExistsByNameAsync(cmd.Name, cancellationToken);
+        if (exits)
         {
             throw new InvalidOperationException("Client with given name already exists");
         }

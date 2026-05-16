@@ -34,6 +34,7 @@ public class DeleteClientEndpointTests(IdentityWebApplicationFactory app): IClas
         var fetchClientMessage = await _client.GetAsync($"/clients/{createdClient.Id}", cancellationToken);
         Assert.Equal(HttpStatusCode.NotFound, fetchClientMessage.StatusCode);
 
+
     }
 
     [Fact]
