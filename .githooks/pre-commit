@@ -1,0 +1,12 @@
+#!/bin/sh
+echo "Verifying formatting for all solutions..."
+
+# Find all solution files and run format verification on them
+for sln in $(find . -name "*.slnx"); do
+    echo "Checking $sln..."
+    dotnet format "$sln" --verify-no-changes
+    if [ $? -ne 0 ]; then
+        echo "Error: Formatting failed in $sln"
+        exit 1
+    fi
+done
