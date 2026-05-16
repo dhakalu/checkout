@@ -1,6 +1,6 @@
 using System.Net;
 using Microsoft.AspNetCore.Mvc;
-using WebApi.Identity.Features.Clients;
+using WebApi.Identity.Features.Clients.RegisterClient;
 
 namespace WebApi.Identity.Tests.Features.Clients;
 

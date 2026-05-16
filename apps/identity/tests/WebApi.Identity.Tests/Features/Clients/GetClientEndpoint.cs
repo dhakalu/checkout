@@ -1,5 +1,5 @@
 using System.Net;
-using WebApi.Identity.Features.Clients;
+using WebApi.Identity.Features.Clients.RegisterClient;
 using WebApi.Identity.Features.Clients.GetClient;
 
 namespace WebApi.Identity.Tests.Features.Clients;

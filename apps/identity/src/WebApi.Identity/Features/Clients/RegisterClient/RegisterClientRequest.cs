@@ -1,4 +1,4 @@
-namespace WebApi.Identity.Features.Clients;
+namespace WebApi.Identity.Features.Clients.RegisterClient;
 
 public record RegisterClientRequest
 {
