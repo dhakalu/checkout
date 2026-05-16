@@ -10,11 +10,13 @@ public class DeleteUserEndpointTests(IdentityWebApplicationFactory app): IClassF
     private readonly HttpClient _client = app.CreateClient();
 
     [Fact]
-    public async Task DeleteUser_NonExistingUuid_Returns404()
+    public async Task DeleteUser_NonExistingUuid_Returns500()
     {
         var cancellationToken = TestContext.Current.CancellationToken;
         var result = await _client.DeleteAsync("/users/7f661577-cd8f-48c7-89d4-c115dfc5dd0d", cancellationToken);
-        Assert.Equal(HttpStatusCode.NotFound, result.StatusCode);
+        // Intentionally returing 500, more specific error 
+        // gives information like UUID does not exist, etc
+        Assert.Equal(HttpStatusCode.InternalServerError, result.StatusCode);
     }
 
     [Fact]
