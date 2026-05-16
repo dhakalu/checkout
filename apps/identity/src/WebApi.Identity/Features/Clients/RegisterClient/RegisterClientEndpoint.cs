@@ -24,7 +24,8 @@ public class RegisterClientEndpoint : IEndpoint
         var cmd = new RegisterClientCommand
         {
             Name = request.Name,
-            Description = request.Description
+            IsActive = request.IsActive,
+            Description = request.Description,
         };
         var id = await handler.HandleAsync(cmd, cancellationToken);
         return Results.Created($"/clients/{id}", new RegisterClientResponse(id));

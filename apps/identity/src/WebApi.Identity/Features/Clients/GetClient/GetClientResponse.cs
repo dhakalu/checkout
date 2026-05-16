@@ -13,4 +13,5 @@ public record GetClientResponse
 
     public bool IsActive { get; init; } = default;
 
+    public IReadOnlyCollection<string> Scopes { get; init; } = [];
 }

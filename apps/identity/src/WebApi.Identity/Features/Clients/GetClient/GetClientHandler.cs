@@ -11,13 +11,7 @@ public class GetClientHandler(ClientRepository clientRepository): IHandler
     {
         var client = await _clientRepository.GetByIdAsync(query.Id, cancellationToken) 
             ?? throw new KeyNotFoundException("Client with given id does not exist");
-        return new GetClientResponse
-       {
-           Id = client.Id,
-           Name = client.Name,
-           Description = client.Description,
-           IsActive = client.IsActive
-       };
+        return client;
     }
 
 }

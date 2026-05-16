@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using WebApi.Identity.Features.Clients.GetClient;
 
 namespace WebApi.Identity.Features.Clients.Data;
 
@@ -21,8 +22,19 @@ public class ClientRepository(IdentityDbContext dbContext)
         .FirstOrDefaultAsync(c => c.Name == name, cancellationToken);
     }
 
-    public async Task<Client?> GetByIdAsync(Guid id, CancellationToken cancellationToken)
+    public async Task<GetClientResponse?> GetByIdAsync(Guid id, CancellationToken cancellationToken)
     {
-        return await _dbContext.Clients.FirstOrDefaultAsync(c => c.Id == id, cancellationToken);
+        return await _dbContext
+            .Clients
+            .Where(c => c.Id == id)
+            .Select(c => new GetClientResponse
+            {
+                Id = c.Id,
+                Name = c.Name,
+                Description = c.Description,
+                IsActive = c.IsActive,
+                Scopes = c.Scopes.Select(s => s.ScopeKey).ToList()
+            })
+            .FirstOrDefaultAsync(c => c.Id == id, cancellationToken);
     }
 }
