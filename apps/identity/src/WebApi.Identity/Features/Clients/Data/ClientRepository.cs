@@ -53,4 +53,9 @@ public class ClientRepository(IdentityDbContext dbContext)
         var c = await _dbContext.SaveChangesAsync(cancellationToken);
         return c > 0;
     }
+
+    internal async Task<int> DeleteAsync(Guid id, CancellationToken cancellationToken)
+    {
+       return await _dbContext.Clients.Where(c => c.Id == id).ExecuteDeleteAsync(cancellationToken);
+    }
 }
