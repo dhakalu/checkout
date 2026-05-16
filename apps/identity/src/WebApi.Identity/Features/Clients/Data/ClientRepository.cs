@@ -1,3 +1,4 @@
+using System.Collections.Immutable;
 using Microsoft.EntityFrameworkCore;
 using WebApi.Identity.Features.Clients.GetClient;
 
@@ -36,5 +37,20 @@ public class ClientRepository(IdentityDbContext dbContext)
                 Scopes = c.Scopes.Select(s => s.ScopeKey).ToList()
             })
             .FirstOrDefaultAsync(c => c.Id == id, cancellationToken);
+    }
+
+
+    public async Task<bool> UpdateScopesAsync(Guid id, IReadOnlyCollection<string> scopes, CancellationToken cancellationToken)
+    {
+        var client = await _dbContext
+            .Clients
+            .Include(c => c.Scopes)
+            .FirstOrDefaultAsync(c => c.Id == id, cancellationToken) ?? throw new KeyNotFoundException("Client with gievn id does not exist.");
+
+        client.Scopes.Clear();
+
+        client.Scopes.AddRange(scopes.Select(s => new ClientScope{ ScopeKey = s}));
+        var c = await _dbContext.SaveChangesAsync(cancellationToken);
+        return c > 0;
     }
 }

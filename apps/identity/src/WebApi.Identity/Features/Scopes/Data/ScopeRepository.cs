@@ -14,7 +14,7 @@ public class ScopeRepository(IdentityDbContext context)
         return nOfChenges == 1;
     }
 
-    internal async Task<List<Scope>> ExistsAsync(List<string> scopes, CancellationToken cancellationToken)
+    internal async Task<List<Scope>> ExistsAsync(IReadOnlyCollection<string> scopes, CancellationToken cancellationToken)
     {
         return await _conext.Scopes.Where(p => scopes.Contains(p.Key)).ToListAsync(cancellationToken);
     }
