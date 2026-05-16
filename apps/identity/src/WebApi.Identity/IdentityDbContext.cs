@@ -13,6 +13,8 @@ public class IdentityDbContext(DbContextOptions<IdentityDbContext> options) : Db
 
     public DbSet<Features.Scopes.Data.Scope> Scopes { get; set; } = default!;
 
+    public DbSet<ClientScope> ClientScopes { get; set; } = default!;
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);

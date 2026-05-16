@@ -15,4 +15,6 @@ public class Client
 
     public List<ClientSecret> Secrets {get; set;} = [];
 
+    public List<ClientScope> Scopes { get; set; } = [];
+
 }
