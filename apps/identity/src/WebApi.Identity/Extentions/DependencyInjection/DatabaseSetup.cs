@@ -1,5 +1,8 @@
 namespace WebApi.Identity.Extentions.DependencyInjection;
 using Microsoft.EntityFrameworkCore;
+using WebApi.Identity.Features.Clients.Data;
+using WebApi.Identity.Features.Scopes.Data;
+using WebApi.Identity.Features.Users.Data;
 
 public static class DatabaseSetup
 {
@@ -11,8 +14,9 @@ public static class DatabaseSetup
             options.EnableSensitiveDataLogging();
             options.UseNpgsql(configuration.GetConnectionString("DefaultConnection"));
         });
-        services.AddScoped<Features.Users.Data.UserRepository>();
-        services.AddScoped<Features.Clients.Data.ClientRepository>();
+        services.AddScoped<UserRepository>();
+        services.AddScoped<ClientRepository>();
+        services.AddScoped<ScopeRepository>();
         return services;
     }
 
