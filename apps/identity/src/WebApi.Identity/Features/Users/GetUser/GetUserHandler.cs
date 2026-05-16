@@ -8,7 +8,7 @@ public class GetUserHandler(UserRepository identityRepository): IHandler
     private readonly UserRepository _identityRepository = identityRepository;
     public async Task<GetUserResponse> HandleAsync(GetUserQuery query, CancellationToken cancellationToken)
     {
-        var identity = await _identityRepository.GetIdentityByIdAsync(query.Id, cancellationToken)
+        var identity = await _identityRepository.GetByIdAsync(query.Id, cancellationToken)
         ?? throw new KeyNotFoundException("User does not exist.");
         
         return new GetUserResponse

@@ -16,7 +16,7 @@ public class GetUserEndpoint: IEndpoint
         .WithName("GetUser");
     }
 
-    private static async Task<GetUserResponse> HandleRegisterUserAsync([FromRoute]string id, 
+    private static async Task<GetUserResponse> HandleRegisterUserAsync([FromRoute]Guid id, 
     GetUserHandler handler, CancellationToken cancellationToken)
     {
         var cmd = new GetUserQuery(id);

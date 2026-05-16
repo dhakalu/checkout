@@ -11,7 +11,7 @@ public class GlobalExceptionHandler(ILogger<GlobalExceptionHandler> logger) : IE
 
     public async ValueTask<bool> TryHandleAsync(HttpContext httpContext, Exception exception, CancellationToken cancellationToken)
     {
-        logger.LogError(exception, "An unhandled exception occurred while processing the request.");
+        _logger.LogError(exception, "An unhandled exception occurred while processing the request.");
 
         if (exception is ValidationException validationException)
         {

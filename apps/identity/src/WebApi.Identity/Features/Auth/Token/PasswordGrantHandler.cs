@@ -15,7 +15,7 @@ public class PasswordGrantHandler(ILogger<PasswordGrantHandler> logger,
 
     public async Task<AuthorizeResponse> Execute(PasswordGrantCommand command, CancellationToken cancellationToken)
     {
-        var identity = await _identityRepository.GetIdentityByEmailAsync(command.Email, cancellationToken);
+        var identity = await _identityRepository.GetByEmailAsync(command.Email, cancellationToken);
 
         if (identity == null)
         {
