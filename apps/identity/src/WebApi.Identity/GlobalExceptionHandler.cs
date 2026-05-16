@@ -49,7 +49,7 @@ public class GlobalExceptionHandler(ILogger<GlobalExceptionHandler> logger) : IE
             {
                 clientFriendlyMessage = badHttpRequestException.Message;
             }
-            (statusCode, message, detail) = (StatusCodes.Status400BadRequest,"Bad Request", clientFriendlyMessage);
+            (statusCode, message, detail) = (StatusCodes.Status400BadRequest, "Bad Request", clientFriendlyMessage);
         }
         else
         {

@@ -9,7 +9,7 @@ public class IdentityDbContext(DbContextOptions<IdentityDbContext> options) : Db
 {
     public DbSet<User> Identities { get; set; } = default!;
 
-    public DbSet<Client> Clients {get; set;} = default!;
+    public DbSet<Client> Clients { get; set; } = default!;
 
     public DbSet<Features.Scopes.Data.Scope> Scopes { get; set; } = default!;
 

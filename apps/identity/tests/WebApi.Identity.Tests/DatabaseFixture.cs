@@ -1,10 +1,11 @@
 namespace WebApi.Identity.Tests;
+
 using Testcontainers.PostgreSql;
 using Microsoft.EntityFrameworkCore;
 using WebApi.Identity;
 using Xunit;
 
-public class DatabaseFixture: IAsyncLifetime
+public class DatabaseFixture : IAsyncLifetime
 {
     private readonly PostgreSqlContainer _postgresContainer = new PostgreSqlBuilder("postgres:15-alpine")
         .WithDatabase("central_test_db")

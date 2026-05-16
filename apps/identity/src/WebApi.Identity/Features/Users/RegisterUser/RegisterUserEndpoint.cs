@@ -5,11 +5,11 @@ using WebApi.Identity;
 namespace WebApi.Identity.Features.Users.RegisterUser;
 
 
-public class RegisterUserEndpoint: IEndpoint
+public class RegisterUserEndpoint : IEndpoint
 {
     public const string Path = "/users";
 
-    public  void MapEndpoints(IEndpointRouteBuilder app)
+    public void MapEndpoints(IEndpointRouteBuilder app)
     {
 
         var group = app.MapGroup(Path);
@@ -18,7 +18,7 @@ public class RegisterUserEndpoint: IEndpoint
         .WithName("RegisterUser");
     }
 
-    private static Task<RegisterUserResponse> HandleRegisterUserAsync(RegisterUserRequest request, 
+    private static Task<RegisterUserResponse> HandleRegisterUserAsync(RegisterUserRequest request,
     RegisterUserRequestValidator validator,
     RegisterUserHandler handler, CancellationToken cancellationToken)
     {

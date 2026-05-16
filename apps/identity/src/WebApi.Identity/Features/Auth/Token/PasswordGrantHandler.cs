@@ -5,8 +5,8 @@ using WebApi.Identity.Features.Users.Data;
 namespace WebApi.Identity.Features.Auth.Token;
 
 public class PasswordGrantHandler(ILogger<PasswordGrantHandler> logger,
-    UserRepository identityRepository, 
-    IPasswordHasher<string> passwordHasher): IHandler
+    UserRepository identityRepository,
+    IPasswordHasher<string> passwordHasher) : IHandler
 {
 
     private readonly IPasswordHasher<string> _passwordHasher = passwordHasher;
@@ -22,20 +22,20 @@ public class PasswordGrantHandler(ILogger<PasswordGrantHandler> logger,
             _logger.LogInformation("Attempted logging in with wrong email {email}", command.Email);
             throw new UnauthorizedAccessException("Invalid email or password");
         }
-        
+
         var result = _passwordHasher.VerifyHashedPassword("user-placeholder", identity.PasswordHash, command.Password);
         if (result != PasswordVerificationResult.Success)
         {
-          throw new UnauthorizedAccessException("Invalid email or password");  
+            throw new UnauthorizedAccessException("Invalid email or password");
         }
         await GenerateAccessToken(identity, cancellationToken);
-        return new AuthorizeResponse(identity.FirstName, identity.Email);   
+        return new AuthorizeResponse(identity.FirstName, identity.Email);
     }
 
     public async Task<string> GenerateAccessToken(WebApi.Identity.Features.Users.Data.User identity, CancellationToken cancellationToken)
     {
-        
+
         return "";
     }
-    
+
 }

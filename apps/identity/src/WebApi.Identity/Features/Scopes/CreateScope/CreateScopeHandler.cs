@@ -3,7 +3,7 @@ using WebApi.Identity.Features.Scopes.Data;
 
 namespace WebApi.Identity.Features.Scopes.CreateScope;
 
-public class CreateScopeHandler(ScopeRepository repository): IHandler
+public class CreateScopeHandler(ScopeRepository repository) : IHandler
 {
 
     private readonly ScopeRepository _repository = repository;

@@ -6,7 +6,7 @@ using WebApi.Identity.Features.Scopes.ValidateScopes;
 
 namespace WebApi.Identity.Features.Clients.ManageClientScope;
 
-public class ManageClientScopeHandler(ValidateScopesHandler validateScopesHandler, ClientRepository clientRepository): IHandler
+public class ManageClientScopeHandler(ValidateScopesHandler validateScopesHandler, ClientRepository clientRepository) : IHandler
 {
 
     private readonly ValidateScopesHandler _validateScopesHandler = validateScopesHandler;
@@ -15,7 +15,7 @@ public class ManageClientScopeHandler(ValidateScopesHandler validateScopesHandle
 
     public async Task<bool> HandleAsync(ManageClientScopeCommand cmd, CancellationToken cancellationToken)
     {
-        var scopeValidation =  await _validateScopesHandler.HandleAsync(new ValidateScopesCommand(cmd.Scopes), cancellationToken);
+        var scopeValidation = await _validateScopesHandler.HandleAsync(new ValidateScopesCommand(cmd.Scopes), cancellationToken);
 
         if (scopeValidation.Invalid.Count > 0)
         {

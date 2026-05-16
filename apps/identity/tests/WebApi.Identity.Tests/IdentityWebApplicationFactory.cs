@@ -14,8 +14,8 @@ public class IdentityWebApplicationFactory : WebApplicationFactory<Program>
         .Build();
     protected override IHost CreateHost(IHostBuilder builder)
     {
-        builder.UseEnvironment("Testing"); 
-         // 1. Explicitly start the Docker container synchronously/sequentially
+        builder.UseEnvironment("Testing");
+        // 1. Explicitly start the Docker container synchronously/sequentially
         _dbContainer.StartAsync().GetAwaiter().GetResult();
 
         // 2. Build the underlying web host application
@@ -40,15 +40,15 @@ public class IdentityWebApplicationFactory : WebApplicationFactory<Program>
         builder.ConfigureServices(services =>
         {
             // Locate and remove the original DbContext registration
-            var descriptor = services.SingleOrDefault(d => 
+            var descriptor = services.SingleOrDefault(d =>
                 d.ServiceType == typeof(DbContextOptions<IdentityDbContext>));
-                
+
             if (descriptor != null) services.Remove(descriptor);
 
             // Inject the dynamic connection string provided by the running Testcontainer
             services.AddDbContext<IdentityDbContext>(options =>
                 options.UseNpgsql(_dbContainer.GetConnectionString()));
-            
+
 
         });
     }

@@ -7,8 +7,8 @@ public static class Endpoints
     {
         var endpointTypes = Assembly.GetExecutingAssembly()
             .GetTypes()
-            .Where(t => typeof(IEndpoint).IsAssignableFrom(t) 
-                        && !t.IsInterface 
+            .Where(t => typeof(IEndpoint).IsAssignableFrom(t)
+                        && !t.IsInterface
                         && !t.IsAbstract);
 
         foreach (var type in endpointTypes)
@@ -27,14 +27,14 @@ public static class Endpoints
     {
         var handlerTypes = Assembly.GetExecutingAssembly()
             .GetTypes()
-            .Where(t => typeof(IHandler).IsAssignableFrom(t) 
-                        && !t.IsInterface 
+            .Where(t => typeof(IHandler).IsAssignableFrom(t)
+                        && !t.IsInterface
                         && !t.IsAbstract);
 
         foreach (var type in handlerTypes)
         {
-            services.AddScoped(type); 
-            services.AddScoped(typeof(IHandler), type); 
+            services.AddScoped(type);
+            services.AddScoped(typeof(IHandler), type);
         }
 
         return services;

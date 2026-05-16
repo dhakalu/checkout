@@ -9,9 +9,9 @@ public class IssueTokenRequest
 
     [JsonPropertyName("grant_type")]
 
-    public string GrantType {get; init; } = "password"; 
+    public string GrantType { get; init; } = "password";
 
-    public string? ClientId {get; init;}
+    public string? ClientId { get; init; }
 
-    public string? ClientSecret {get; init;}
+    public string? ClientSecret { get; init; }
 }

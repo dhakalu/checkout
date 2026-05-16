@@ -16,7 +16,7 @@ public class ScopeConfiguration : IEntityTypeConfiguration<Scope>
             .HasColumnName("key")
             .HasColumnType("varchar(50)")
             .HasDefaultValueSql("gen_random_uuid()");
-        
+
         builder.Property(c => c.Name)
             .HasColumnName("name")
             .HasColumnType("varchar(100)")

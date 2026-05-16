@@ -3,7 +3,7 @@ using FluentValidation;
 
 namespace WebApi.Identity.Features.Clients.RegisterClient;
 
-public class RegisterClientValidator: AbstractValidator<RegisterClientRequest>
+public class RegisterClientValidator : AbstractValidator<RegisterClientRequest>
 {
 
 

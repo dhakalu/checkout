@@ -22,7 +22,7 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
             .HasColumnName("is_email_verified")
             .HasColumnType("boolean")
             .HasDefaultValue(false);
-        
+
         builder.Property(i => i.IsLocked)
             .HasColumnName("is_locked")
             .HasColumnType("boolean")
@@ -49,10 +49,10 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
             .HasColumnName("created_at")
             .HasColumnType("timestamp with time zone")
             .HasDefaultValueSql("now()");
-        
+
         builder.Property(i => i.CreatedAt)
             .HasColumnName("updated_at")
             .HasColumnType("timestamp with time zone")
-            .HasDefaultValueSql("now()");   
-        }
+            .HasDefaultValueSql("now()");
+    }
 }

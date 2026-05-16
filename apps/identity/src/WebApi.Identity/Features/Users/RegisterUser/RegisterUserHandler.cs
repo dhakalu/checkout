@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Identity;
 using WebApi.Identity.Features.Users.Data;
 public class RegisterUserHandler(ILogger<RegisterUserHandler> logger,
     IPasswordHasher<string> passwordHasher,
-    UserRepository identityRepository): IHandler
+    UserRepository identityRepository) : IHandler
 {
     private readonly ILogger<RegisterUserHandler> _logger = logger;
     private readonly IPasswordHasher<string> _passwordHasher = passwordHasher;

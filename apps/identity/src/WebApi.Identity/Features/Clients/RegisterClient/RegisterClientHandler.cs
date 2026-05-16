@@ -2,7 +2,7 @@ using WebApi.Identity.Features.Clients.Data;
 
 namespace WebApi.Identity.Features.Clients.RegisterClient;
 
-public class RegisterClientHandler(ClientRepository clientRepository): IHandler
+public class RegisterClientHandler(ClientRepository clientRepository) : IHandler
 {
 
     private readonly ClientRepository _clientRepository = clientRepository;

@@ -14,12 +14,12 @@ public class ClientScopeConfiguration : IEntityTypeConfiguration<ClientScope>
                 c.ClientId,
                 c.ScopeKey
             });
-        
+
         builder.Property(cs => cs.ClientId)
             .HasColumnName("client_id")
             .HasColumnType("uuid")
             .IsRequired();
-        
+
         builder.Property(cs => cs.ScopeKey)
             .HasColumnName("scope_key")
             .HasColumnType("varchar(50)")
@@ -28,7 +28,7 @@ public class ClientScopeConfiguration : IEntityTypeConfiguration<ClientScope>
         builder.HasOne(cs => cs.Client)
             .WithMany(c => c.Scopes)
             .HasForeignKey(cs => cs.ClientId);
-        
+
         builder.HasOne(cs => cs.Scope)
             .WithMany()
             .HasForeignKey(cs => cs.ScopeKey);

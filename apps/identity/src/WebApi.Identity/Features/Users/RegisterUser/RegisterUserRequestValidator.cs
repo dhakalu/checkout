@@ -3,7 +3,7 @@ using FluentValidation;
 
 namespace WebApi.Identity.Features.Users.RegisterUser;
 
-public class RegisterUserRequestValidator: AbstractValidator<RegisterUserRequest>
+public class RegisterUserRequestValidator : AbstractValidator<RegisterUserRequest>
 {
 
     public RegisterUserRequestValidator()
@@ -18,7 +18,7 @@ public class RegisterUserRequestValidator: AbstractValidator<RegisterUserRequest
 
         RuleFor(x => x.FirstName)
             .NotEmpty().WithMessage("First name is required.");
-        
+
         RuleFor(x => x.LastName)
             .NotEmpty().WithMessage("Last name is required.");
     }

@@ -3,16 +3,16 @@ using WebApi.Identity.Features.Scopes.Data;
 
 namespace WebApi.Identity.Features.Scopes.ValidateScopes;
 
-public class ValidateScopesHandler(ScopeRepository repository): IHandler
+public class ValidateScopesHandler(ScopeRepository repository) : IHandler
 {
 
     private readonly ScopeRepository _repository = repository;
     public async Task<ValidateScopesResponse> HandleAsync(ValidateScopesCommand cmd, CancellationToken cancellationToken)
     {
-        
+
         List<Scope> scopes = await _repository.ExistsAsync(cmd.Scopes, cancellationToken);
         List<string> validScopes = [.. scopes.Select(s => s.Key)];
-        
+
         if (validScopes.Count == cmd.Scopes.Count)
         {
             return new ValidateScopesResponse

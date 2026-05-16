@@ -6,7 +6,7 @@ public record CreateScopeRequest
 {
 
     public string Key { get; init; } = default!;
-    
+
     public string Name { get; init; } = default!;
 
     public string Description { get; init; } = default!;

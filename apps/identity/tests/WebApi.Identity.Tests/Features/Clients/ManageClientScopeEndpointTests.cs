@@ -106,7 +106,7 @@ public class ManageClientScopeEndpointTests(IdentityWebApplicationFactory app) :
 
     }
 
-     [Fact]
+    [Fact]
     public async Task ManageScope_WithNewValidScopes_OverridesExisting()
     {
 
@@ -139,7 +139,7 @@ public class ManageClientScopeEndpointTests(IdentityWebApplicationFactory app) :
         Assert.Equal(HttpStatusCode.Created, createClientResponseMessage.StatusCode);
         var client = await createClientResponseMessage.Content.ReadFromJsonAsync<RegisterClientResponse>(cancellationToken);
         Assert.NotNull(client);
-        
+
         // add scope to the client
         var result = await _client.PutAsJsonAsync($"/clients/{client.Id}/scopes", new ManageClientScopeRequest(["ManageScope_WithNewValidScopes_OverridesExisting"]), cancellationToken);
         Assert.Equal(HttpStatusCode.NoContent, result.StatusCode);

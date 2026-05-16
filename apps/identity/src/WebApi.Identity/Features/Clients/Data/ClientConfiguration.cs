@@ -16,7 +16,7 @@ public class ClientConfiguration : IEntityTypeConfiguration<Client>
             .HasColumnName("id")
             .HasColumnType("uuid")
             .HasDefaultValueSql("gen_random_uuid()");
-        
+
         builder.Property(c => c.Name)
             .HasColumnName("name")
             .HasColumnType("varchar(100)")
@@ -28,7 +28,7 @@ public class ClientConfiguration : IEntityTypeConfiguration<Client>
             .HasColumnType("varchar(500)")
             .HasMaxLength(500)
             .IsRequired();
-        
+
         builder.Property(c => c.IsActive)
             .HasColumnName("is_active")
             .HasColumnType("boolean")

@@ -9,7 +9,7 @@ public class User
 
     public bool IsLocked { get; set; } = false;
 
-    public bool IsMfaEnabled {get; set; } = false;
+    public bool IsMfaEnabled { get; set; } = false;
     public string PasswordHash { get; set; } = default!;
     public string FirstName { get; set; } = default!;
     public string LastName { get; set; } = default!;

@@ -4,10 +4,10 @@ using WebApi.Identity.Features.Clients.GetClient;
 
 namespace WebApi.Identity.Tests.Features.Clients;
 
-public class GetClientEndpointTests(IdentityWebApplicationFactory app): IClassFixture<IdentityWebApplicationFactory>
+public class GetClientEndpointTests(IdentityWebApplicationFactory app) : IClassFixture<IdentityWebApplicationFactory>
 {
-    private readonly HttpClient _client = app.CreateClient(); 
-    
+    private readonly HttpClient _client = app.CreateClient();
+
 
     [Fact]
     public async Task GetClient_ValidId_ReturnsOk()
@@ -15,9 +15,9 @@ public class GetClientEndpointTests(IdentityWebApplicationFactory app): IClassFi
 
         var createClient = new RegisterClientRequest
         {
-          Name = "Test Client",
-          Description = "Created to test the get by id successful",
-          IsActive = false  
+            Name = "Test Client",
+            Description = "Created to test the get by id successful",
+            IsActive = false
         };
         var cancellationToken = TestContext.Current.CancellationToken;
         var createClientResult = await _client.PostAsJsonAsync(RegisterClientEndpoint.Path, createClient, cancellationToken);
@@ -33,7 +33,7 @@ public class GetClientEndpointTests(IdentityWebApplicationFactory app): IClassFi
         Assert.Equal(createClient.Name, getClientResponse.Name);
         Assert.False(getClientResponse.IsActive);
         Assert.Empty(getClientResponse.Scopes);
-    }  
+    }
 
     [Fact]
     public async Task GetClient_InvalidGuidAsId_ReturnsBadRequest()
@@ -41,6 +41,6 @@ public class GetClientEndpointTests(IdentityWebApplicationFactory app): IClassFi
         var cancellationToken = TestContext.Current.CancellationToken;
         var getClientResult = await _client.GetAsync("/clients/testid", cancellationToken);
         Assert.Equal(HttpStatusCode.BadRequest, getClientResult.StatusCode);
-    }  
+    }
 
 }

@@ -1,4 +1,5 @@
 namespace WebApi.Identity.Extentions.DependencyInjection;
+
 using Microsoft.EntityFrameworkCore;
 using WebApi.Identity.Features.Clients.Data;
 using WebApi.Identity.Features.Scopes.Data;

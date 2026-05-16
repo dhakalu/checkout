@@ -3,7 +3,7 @@ namespace WebApi.Identity.Features.Auth.Token;
 using FluentValidation;
 using WebApi.Identity;
 
-public class IssueTokenEndpoint: IEndpoint
+public class IssueTokenEndpoint : IEndpoint
 {
 
     public const string BasePath = "/authorize";
@@ -18,7 +18,8 @@ public class IssueTokenEndpoint: IEndpoint
         switch (request.GrantType)
         {
             case "password":
-                var cmd = new PasswordGrantCommand{
+                var cmd = new PasswordGrantCommand
+                {
                     Email = request.Email!,
                     Password = request.Password!
                 };
@@ -27,6 +28,6 @@ public class IssueTokenEndpoint: IEndpoint
             case "client_credentials":
                 break;
         }
-        
+
     }
 }

@@ -1,6 +1,5 @@
 using System.Collections.Immutable;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Query.SqlExpressions;
 using WebApi.Identity.Features.Clients.GetClient;
 
 namespace WebApi.Identity.Features.Clients.Data;
@@ -12,7 +11,7 @@ public class ClientRepository(IdentityDbContext dbContext)
 
     public async Task<Guid> SaveAsync(Client client, CancellationToken cancellationToken)
     {
-        await  _dbContext.Clients.AddAsync(client, cancellationToken);
+        await _dbContext.Clients.AddAsync(client, cancellationToken);
         await _dbContext.SaveChangesAsync(cancellationToken);
         return client.Id;
     }
@@ -48,13 +47,13 @@ public class ClientRepository(IdentityDbContext dbContext)
 
         client.Scopes.Clear();
 
-        client.Scopes.AddRange(scopes.Select(s => new ClientScope{ ScopeKey = s}));
+        client.Scopes.AddRange(scopes.Select(s => new ClientScope { ScopeKey = s }));
         var c = await _dbContext.SaveChangesAsync(cancellationToken);
         return c > 0;
     }
 
     internal async Task<int> DeleteAsync(Guid id, CancellationToken cancellationToken)
     {
-       return await _dbContext.Clients.Where(c => c.Id == id).ExecuteDeleteAsync(cancellationToken);
+        return await _dbContext.Clients.Where(c => c.Id == id).ExecuteDeleteAsync(cancellationToken);
     }
 }

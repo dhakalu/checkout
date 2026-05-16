@@ -15,7 +15,8 @@ public class CreateScopeEndpointTests(IdentityWebApplicationFactory app) : IClas
     {
         var cancellationToken = TestContext.Current.CancellationToken;
         var result = await _client.PostAsJsonAsync("/scopes", new
-        CreateScopeRequest{
+        CreateScopeRequest
+        {
             Key = "scopes:create",
             Name = "Create Scope",
             Description = "Allows user to create scopes"
@@ -28,7 +29,8 @@ public class CreateScopeEndpointTests(IdentityWebApplicationFactory app) : IClas
     {
         var cancellationToken = TestContext.Current.CancellationToken;
         var result = await _client.PostAsJsonAsync("/scopes", new
-        CreateScopeRequest{
+        CreateScopeRequest
+        {
             Key = "",
             Name = "",
             Description = ""
@@ -50,7 +52,8 @@ public class CreateScopeEndpointTests(IdentityWebApplicationFactory app) : IClas
     {
         var cancellationToken = TestContext.Current.CancellationToken;
         var result = await _client.PostAsJsonAsync("/scopes", new
-        CreateScopeRequest{
+        CreateScopeRequest
+        {
             Key = FakerUtil.GetRandomStringWithLength(51),
             Name = FakerUtil.GetRandomStringWithLength(101),
             Description = FakerUtil.GetRandomStringWithLength(501)

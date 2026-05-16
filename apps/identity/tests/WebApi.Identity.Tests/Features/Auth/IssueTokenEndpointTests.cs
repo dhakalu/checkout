@@ -40,7 +40,7 @@ public class IssueTokenEndpointTests
     {
         var app = new IdentityWebApplicationFactory();
         var client = app.CreateClient();
- 
+
         var createResult = await client.PostAsJsonAsync(RegisterUserEndpoint.Path, new
         {
             Email = "test_authorize_invalid_password@example.com",
@@ -74,7 +74,7 @@ public class IssueTokenEndpointTests
         }, TestContext.Current.CancellationToken);
         await result.Content.ReadFromJsonAsync<ValidationProblemDetails>(cancellationToken: TestContext.Current.CancellationToken);
         Assert.Equal(HttpStatusCode.Unauthorized, result.StatusCode);
-   }
+    }
 
     [Fact]
     public async Task IssueToken_PasswordGrantType_EmptyEmailAndPassword_ReturnsBadRequest()
@@ -100,14 +100,15 @@ public class IssueTokenEndpointTests
     }
     #endregion
     #region client credentials
-     [Fact]
-     public async Task IssueToken_ClientCredentialsGrantType_EmptyEmailAndPassword_DoesNotIncludeEmailPasswordErrors()
+    [Fact]
+    public async Task IssueToken_ClientCredentialsGrantType_EmptyEmailAndPassword_DoesNotIncludeEmailPasswordErrors()
     {
         var app = new IdentityWebApplicationFactory();
         var client = app.CreateClient();
 
         var result = await client.PostAsJsonAsync(IssueTokenEndpoint.BasePath, new
-        IssueTokenRequest{
+        IssueTokenRequest
+        {
             Email = "",
             Password = "",
             GrantType = "client_credentials"
@@ -121,7 +122,7 @@ public class IssueTokenEndpointTests
         Assert.DoesNotContain("password", validationErrors.Errors.Keys);
         Assert.Contains("clientId", validationErrors.Errors.Keys);
         Assert.Contains("clientSecret", validationErrors.Errors.Keys);
-         Assert.Contains("Client id is required when grant type is 'client_credentials'.", validationErrors.Errors["clientId"]);
+        Assert.Contains("Client id is required when grant type is 'client_credentials'.", validationErrors.Errors["clientId"]);
         Assert.Contains("Client secret is required when grant type is 'client_credentials'.", validationErrors.Errors["clientSecret"]);
 
     }

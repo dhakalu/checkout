@@ -5,7 +5,7 @@ using WebApi.Identity.Tests;
 
 namespace WebApi.Identity.Tests.Features.Users;
 
-public class DeleteUserEndpointTests(IdentityWebApplicationFactory app): IClassFixture<IdentityWebApplicationFactory>
+public class DeleteUserEndpointTests(IdentityWebApplicationFactory app) : IClassFixture<IdentityWebApplicationFactory>
 {
     private readonly HttpClient _client = app.CreateClient();
 

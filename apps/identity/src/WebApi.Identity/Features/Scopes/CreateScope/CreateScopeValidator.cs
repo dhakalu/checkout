@@ -3,7 +3,7 @@ using FluentValidation;
 
 namespace WebApi.Identity.Features.Scopes.CreateScope;
 
-public class CreateScopeValidator: AbstractValidator<CreateScopeRequest>
+public class CreateScopeValidator : AbstractValidator<CreateScopeRequest>
 {
 
 

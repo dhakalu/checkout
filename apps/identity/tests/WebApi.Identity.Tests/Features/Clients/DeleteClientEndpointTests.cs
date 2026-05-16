@@ -4,7 +4,7 @@ using WebApi.Identity.Features.Clients.RegisterClient;
 
 namespace WebApi.Identity.Tests.Features.Clients;
 
-public class DeleteClientEndpointTests(IdentityWebApplicationFactory app): IClassFixture<IdentityWebApplicationFactory>
+public class DeleteClientEndpointTests(IdentityWebApplicationFactory app) : IClassFixture<IdentityWebApplicationFactory>
 {
 
 
@@ -19,8 +19,8 @@ public class DeleteClientEndpointTests(IdentityWebApplicationFactory app): IClas
 
         var createClientMessage = await _client.PostAsJsonAsync(RegisterClientEndpoint.Path, new RegisterClientRequest
         {
-            Name="DeleteClient_WhenValidGuild_ShouldReturnNoContent",
-            Description="DeleteClient_WhenValidGuild_ShouldReturnNoContent",
+            Name = "DeleteClient_WhenValidGuild_ShouldReturnNoContent",
+            Description = "DeleteClient_WhenValidGuild_ShouldReturnNoContent",
             IsActive = false
         }, cancellationToken);
         Assert.Equal(HttpStatusCode.Created, createClientMessage.StatusCode);

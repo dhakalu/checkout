@@ -15,11 +15,12 @@ public partial class GetUserEndpointTests
         var app = new IdentityWebApplicationFactory();
         var client = app.CreateClient();
 
-        var registrationRequest = new {
-            Email="get_users_correct_id@example.com",
-            Password="Password123!",
-            FirstName="Test",
-            LastName="Test"
+        var registrationRequest = new
+        {
+            Email = "get_users_correct_id@example.com",
+            Password = "Password123!",
+            FirstName = "Test",
+            LastName = "Test"
         };
         var registerNewUserResult = await client.PostAsJsonAsync(RegisterUserEndpoint.Path, registrationRequest, TestContext.Current.CancellationToken);
 
@@ -53,5 +54,5 @@ public partial class GetUserEndpointTests
         Assert.Equal(HttpStatusCode.NotFound, result.StatusCode);
     }
 
-    
+
 }

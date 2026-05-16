@@ -3,7 +3,7 @@ using WebApi.Identity.Features.Clients.Data;
 
 namespace WebApi.Identity.Features.Clients.DeleteClient;
 
-public class DeleteClientHandler(ClientRepository clientRepository): IHandler
+public class DeleteClientHandler(ClientRepository clientRepository) : IHandler
 {
 
     private readonly ClientRepository _clientRepository = clientRepository;
