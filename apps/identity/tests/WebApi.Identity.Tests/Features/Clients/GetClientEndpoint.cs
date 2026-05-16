@@ -32,6 +32,7 @@ public class GetClientEndpointTests(IdentityWebApplicationFactory app): IClassFi
         Assert.Equal(createClient.Description, getClientResponse.Description);
         Assert.Equal(createClient.Name, getClientResponse.Name);
         Assert.False(getClientResponse.IsActive);
+        Assert.Empty(getClientResponse.Scopes);
     }  
 
     [Fact]
