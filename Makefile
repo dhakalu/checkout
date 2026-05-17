@@ -3,7 +3,8 @@
 recreate-id:
 	@echo "Recreating Identity project..."
 	cd apps && rm -rf identity && cookiecutter ../templates/minimal-api/ --no-input project_name="identity"
-
+dkr-id:
+	docker compose --profile id up -d
 run-id:
 	@echo "Running Identity project..."
 	cd apps/identity && dotnet run --project src/WebApi.Identity/WebApi.Identity.csproj dotnet run --configuration Debug

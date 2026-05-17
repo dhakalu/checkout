@@ -1,0 +1,23 @@
+services:
+  id-db:
+    image: postgres
+    container_name: id-db
+    environment:
+      - POSTGRES_USER=identity
+      - POSTGRES_DB=identity
+      - POSTGRES_HOST_AUTH_METHOD=trust
+    ports:
+      - "5432:5432" 
+    profiles: 
+      - id
+  rabbit-mq:
+    image: rabbitmq:4.3-management-alpine
+    hostname: main-hub
+    environment:
+      - RABBITMQ_DEFAULT_USER=user
+      - RABBITMQ_DEFAULT_PASS=password
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    profiles:
+      - id
