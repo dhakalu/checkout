@@ -13,7 +13,10 @@ public static class DatabaseSetup
         services.AddDbContext<IdentityDbContext>(options =>
         {
             options.EnableSensitiveDataLogging();
-            options.UseNpgsql(configuration.GetConnectionString("DefaultConnection"));
+            options.UseNpgsql(configuration.GetConnectionString("DefaultConnection"), (npgsqlOptionsAction) =>
+            {
+                npgsqlOptionsAction.EnableRetryOnFailure(3);
+            });
         });
         services.AddScoped<UserRepository>();
         services.AddScoped<ClientRepository>();
