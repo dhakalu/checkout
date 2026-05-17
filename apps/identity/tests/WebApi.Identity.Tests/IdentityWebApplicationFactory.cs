@@ -6,17 +6,6 @@ namespace WebApi.Identity.Tests;
 
 public class IdentityWebApplicationFactory : WebApplicationFactory<Program>
 {
-
-
-
-
-
-
-
-
-
-
-    
     private readonly PostgreSqlContainer _dbContainer = new PostgreSqlBuilder("postgres:16-alpine")
         .WithDatabase("identity_test_db")
         .WithUsername("test_identity_user")
