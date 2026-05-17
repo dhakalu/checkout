@@ -1,5 +1,3 @@
-using Microsoft.AspNetCore.Mvc.Testing;
-
 namespace WebApi.Identity.Tests.Tests;
 
 public class ProgramTests

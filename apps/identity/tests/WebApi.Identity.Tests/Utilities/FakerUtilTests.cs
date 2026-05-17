@@ -1,4 +1,3 @@
-using System;
 using WebApi.Identity.Utilities;
 
 namespace WebApi.Identity.Tests.Utilities;

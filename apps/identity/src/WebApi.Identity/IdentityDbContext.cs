@@ -1,7 +1,6 @@
 namespace WebApi.Identity;
 
 using Microsoft.EntityFrameworkCore;
-using Microsoft.OpenApi;
 using WebApi.Identity.Features.Clients.Data;
 using WebApi.Identity.Features.Users.Data;
 

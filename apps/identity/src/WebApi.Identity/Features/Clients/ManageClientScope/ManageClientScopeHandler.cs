@@ -1,4 +1,3 @@
-using System;
 using FluentValidation;
 using FluentValidation.Results;
 using WebApi.Identity.Features.Clients.Data;

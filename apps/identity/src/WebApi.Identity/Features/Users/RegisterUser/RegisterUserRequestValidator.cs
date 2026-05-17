@@ -1,4 +1,3 @@
-using System;
 using FluentValidation;
 
 namespace WebApi.Identity.Features.Users.RegisterUser;

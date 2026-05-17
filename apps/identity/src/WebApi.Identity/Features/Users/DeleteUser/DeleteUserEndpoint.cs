@@ -1,4 +1,3 @@
-using System;
 using Microsoft.AspNetCore.Mvc;
 
 namespace WebApi.Identity.Features.Users.DeleteUser;

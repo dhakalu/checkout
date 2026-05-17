@@ -1,8 +1,6 @@
 namespace WebApi.Identity.Features.Clients.RegisterClient;
 
-using System.ComponentModel;
 using FluentValidation;
-using Microsoft.AspNetCore.Http.HttpResults;
 using WebApi.Identity;
 
 public class RegisterClientEndpoint : IEndpoint
