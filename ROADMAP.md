@@ -10,7 +10,6 @@
 
 ### What gets built
 
-- **Identity (STS)** — bare minimum: user registration, login, JWT issuance, refresh token. No MFA, no federation yet. OpenIddict wired up with PostgreSQL.
 - **API Gateway (YARP)** — single entry point, JWT validation at the edge, routes to Order Service and STS. TLS via dev cert locally.
 - **Order & Transaction** — accept an order payload, validate it, persist to PostgreSQL, return a confirmation. No payment, no fulfillment — synchronous response only.
 - **Customer / Profile** — store name, email, and one delivery address. Used by Order Service to validate the recipient.
