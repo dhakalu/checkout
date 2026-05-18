@@ -1,5 +1,9 @@
 .PHONY: recreate-identity
 
+
+cert-rotate:
+	openssl genpkey -algorithm EC -out ec_private.pem -pkeyopt ec_paramgen_curve:P-256
+	openssl ec -pubout -in ec_private.pem -out ec_public.pem
 recreate-id:
 	@echo "Recreating Identity project..."
 	cd apps && rm -rf identity && cookiecutter ../templates/minimal-api/ --no-input project_name="identity"

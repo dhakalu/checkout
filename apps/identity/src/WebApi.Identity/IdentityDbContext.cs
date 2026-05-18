@@ -20,5 +20,7 @@ public class IdentityDbContext(DbContextOptions<IdentityDbContext> options) : Db
 
         // Scans the current assembly for any IEntityTypeConfiguration classes
         modelBuilder.ApplyConfigurationsFromAssembly(typeof(Program).Assembly);
+
+        modelBuilder.UseOpenIddict();
     }
 }

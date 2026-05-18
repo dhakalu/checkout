@@ -23,6 +23,33 @@ public class Program
 
         builder.Services.AddAllHandlers();
 
+        builder.Services.AddOpenIddict()
+            .AddCore(options =>
+                options.UseEntityFrameworkCore()
+                .UseDbContext<IdentityDbContext>()
+            )
+            .AddServer(options =>
+            {
+                options.SetTokenEndpointUris("/connect/token")
+                    .SetAuthorizationEndpointUris("/connect/authorize");
+                options.AllowAuthorizationCodeFlow()
+                        .AllowRefreshTokenFlow()
+                        .AllowPasswordFlow();
+                if (builder.Environment.IsDevelopment())
+                {
+                    options.AddDevelopmentEncryptionCertificate()
+                        .AddDevelopmentSigningCertificate();
+                }
+
+                var aspNetCoreOptions = options.UseAspNetCore()
+                .EnableEndUserVerificationEndpointPassthrough();
+
+                if (builder.Environment.IsDevelopment())
+                {
+                    aspNetCoreOptions.DisableTransportSecurityRequirement();
+                }
+
+            });
 
         builder.Services.AddSharedErrorHandler(Assembly.GetExecutingAssembly());
         builder.Services.AddDb(builder.Configuration);
@@ -38,6 +65,7 @@ public class Program
 
 
         var app = builder.Build();
+        app.UseRouting();
 
         // Configure the HTTP request pipeline.
         if (app.Environment.IsDevelopment())
@@ -47,6 +75,9 @@ public class Program
         }
 
         app.UseHttpsRedirection();
+        app.UseAuthentication();
+        // app.UseAuthorization();
+
         app.UseSharedErrorHandling();
 
         app.MapGet("/health", () =>

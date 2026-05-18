@@ -6,17 +6,15 @@ namespace WebApi.Identity.Features.Auth.Token;
 
 public class PasswordGrantHandler(ILogger<PasswordGrantHandler> logger,
     UserRepository identityRepository,
-    IPasswordHasher<string> passwordHasher,
-    TokenProvider tokenProvider) : IHandler
+    IPasswordHasher<string> passwordHasher) : IHandler
 {
 
     private readonly IPasswordHasher<string> _passwordHasher = passwordHasher;
     private readonly ILogger<PasswordGrantHandler> _logger = logger;
     private readonly UserRepository _identityRepository = identityRepository;
 
-    private readonly TokenProvider _tokenProvider = tokenProvider;
 
-    public async Task<AuthorizeResponse> Execute(PasswordGrantCommand command, CancellationToken cancellationToken)
+    public async Task<User> Execute(PasswordGrantCommand command, CancellationToken cancellationToken)
     {
         var user = await _identityRepository.GetByEmailAsync(command.Email, cancellationToken);
 
@@ -41,8 +39,7 @@ public class PasswordGrantHandler(ILogger<PasswordGrantHandler> logger,
         {
             throw new UnauthorizedAccessException("Invalid email or password");
         }
-        var token = _tokenProvider.Create(user);
-        return new AuthorizeResponse(null, token);
+        return user;
     }
 
 }

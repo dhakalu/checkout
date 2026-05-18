@@ -21,3 +21,17 @@ services:
       - "15672:15672"
     profiles:
       - id
+  azure-keyvault-emulator:
+    image: jamesgoulddev/azure-keyvault-emulator:latest
+    container_name: azure-keyvault-emulator
+    ports:
+      - "8443:8443"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+    volumes:
+      - keyvault-data:/app/data
+    profiles:
+      - id
+
+volumes:
+  keyvault-data:
