@@ -2,6 +2,7 @@ using System.Reflection;
 using Scalar.AspNetCore;
 using WebApi.Identity.Extentions.DependencyInjection;
 using Microsoft.AspNetCore.Identity;
+using WebApi.Identity.Features.Auth.Token;
 
 namespace WebApi.Identity;
 
@@ -18,10 +19,7 @@ public class Program
         // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
         builder.Services.AddOpenApi();
 
-        // builder.Services.AddScoped<RegisterUserHandler>();
-        // builder.Services.AddScoped<GetUserHandler>();
-        // builder.Services.AddScoped<PasswordGrantHandler>();
-        // builder.Services.AddScoped<RegisterClientHandler>();
+        builder.Services.AddScoped<TokenProvider>();
 
         builder.Services.AddAllHandlers();
 

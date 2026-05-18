@@ -98,6 +98,7 @@ public class IssueTokenEndpointTests
         Assert.Contains("Email is required when grant type is 'password'.", validationErrors.Errors["email"]);
         Assert.Contains("Password is required when grant type is 'password'.", validationErrors.Errors["password"]);
     }
+    // todo test if user's email is verified, and account is locked property.
     #endregion
     #region client credentials
     [Fact]
