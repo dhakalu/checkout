@@ -1,3 +1,4 @@
+using Shared.DependencyInjection;
 using WebApi.Identity.Features.Scopes.Data;
 
 namespace WebApi.Identity.Features.Scopes.CreateScope;

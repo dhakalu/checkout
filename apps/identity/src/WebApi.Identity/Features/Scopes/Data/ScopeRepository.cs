@@ -1,8 +1,9 @@
 using Microsoft.EntityFrameworkCore;
+using Shared.DependencyInjection;
 
 namespace WebApi.Identity.Features.Scopes.Data;
 
-public class ScopeRepository(IdentityDbContext context)
+public class ScopeRepository(IdentityDbContext context) : IRepository
 {
     private readonly IdentityDbContext _conext = context;
     public async Task<bool> AddAsync(Scope scope, CancellationToken cancellationToken)

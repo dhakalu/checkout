@@ -1,3 +1,4 @@
+using Shared.DependencyInjection;
 using WebApi.Identity.Features.Clients.Data;
 
 namespace WebApi.Identity.Features.Clients.RegisterClient;

@@ -1,3 +1,4 @@
+using Shared.DependencyInjection;
 using WebApi.Identity.Features.Users.Data;
 
 namespace WebApi.Identity.Features.Users.DeleteUser;

@@ -1,8 +1,9 @@
 namespace WebApi.Identity.Features.Users.Data;
 
 using Microsoft.EntityFrameworkCore;
+using Shared.DependencyInjection;
 
-public class UserRepository(IdentityDbContext dbContext)
+public class UserRepository(IdentityDbContext dbContext) : IRepository
 {
     private readonly IdentityDbContext _dbContext = dbContext;
 

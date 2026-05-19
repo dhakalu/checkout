@@ -1,6 +1,6 @@
 using System.Reflection;
 using Scalar.AspNetCore;
-using WebApi.Identity.Extentions.DependencyInjection;
+using Shared.DependencyInjection;
 using Microsoft.AspNetCore.Identity;
 using WebApi.Identity.Features.Auth.Token;
 
@@ -11,6 +11,7 @@ public class Program
 {
     public static async Task Main(string[] args)
     {
+        var assembly = Assembly.GetExecutingAssembly();
         var builder = WebApplication.CreateBuilder(args);
 
         builder.Logging.ClearProviders();
@@ -21,7 +22,7 @@ public class Program
 
         builder.Services.AddScoped<TokenProvider>();
 
-        builder.Services.AddAllHandlers();
+        builder.Services.AddAllHandlers(assembly);
 
         builder.Services.AddOpenIddict()
             .AddCore(options =>
@@ -52,7 +53,7 @@ public class Program
             });
 
         builder.Services.AddSharedErrorHandler(Assembly.GetExecutingAssembly());
-        builder.Services.AddDb(builder.Configuration);
+        builder.Services.AddDb<IdentityDbContext>(builder.Configuration, assembly);
 
         builder.Services.AddLogging(config =>
         {
@@ -86,7 +87,7 @@ public class Program
         })
         .WithName("GetHealth");
 
-        app.MapAllEndpoints();
+        app.MapAllEndpoints(assembly);
         await app.StartAsync();
         var serverUrls = app.Urls;
         Console.WriteLine("\n🚀 Application started! Click below to open documentation:");

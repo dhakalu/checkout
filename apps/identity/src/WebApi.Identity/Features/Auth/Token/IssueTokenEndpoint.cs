@@ -7,6 +7,7 @@ using OpenIddict.Server.AspNetCore;
 using OpenIddict.Abstractions;
 using WebApi.Identity;
 using System.Security.Claims;
+using Shared.DependencyInjection;
 
 public class IssueTokenEndpoint : IEndpoint
 {

@@ -1,4 +1,5 @@
 using FluentValidation;
+using Shared.DependencyInjection;
 
 namespace WebApi.Identity.Features.Scopes.CreateScope;
 

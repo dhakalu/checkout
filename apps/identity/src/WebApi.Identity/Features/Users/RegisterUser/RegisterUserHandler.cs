@@ -1,6 +1,7 @@
 namespace WebApi.Identity.Features.Users.RegisterUser;
 
 using Microsoft.AspNetCore.Identity;
+using Shared.DependencyInjection;
 using WebApi.Identity.Features.Users.Data;
 public class RegisterUserHandler(ILogger<RegisterUserHandler> logger,
     IPasswordHasher<string> passwordHasher,

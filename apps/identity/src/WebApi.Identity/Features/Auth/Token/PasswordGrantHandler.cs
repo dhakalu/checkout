@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Identity;
+using Shared.DependencyInjection;
 using WebApi.Identity.Features.Auth.Dto;
 using WebApi.Identity.Features.Users.Data;
 

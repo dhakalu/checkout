@@ -1,9 +1,10 @@
 using Microsoft.EntityFrameworkCore;
+using Shared.DependencyInjection;
 using WebApi.Identity.Features.Clients.GetClient;
 
 namespace WebApi.Identity.Features.Clients.Data;
 
-public class ClientRepository(IdentityDbContext dbContext)
+public class ClientRepository(IdentityDbContext dbContext) : IRepository
 {
 
     private readonly IdentityDbContext _dbContext = dbContext;

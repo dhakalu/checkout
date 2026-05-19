@@ -1,6 +1,7 @@
 namespace WebApi.Identity.Features.Clients.RegisterClient;
 
 using FluentValidation;
+using Shared.DependencyInjection;
 using WebApi.Identity;
 
 public class RegisterClientEndpoint : IEndpoint
