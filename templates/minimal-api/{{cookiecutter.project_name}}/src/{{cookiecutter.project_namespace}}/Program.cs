@@ -1,4 +1,7 @@
+using System.Reflection;
 using Scalar.AspNetCore;
+using Shared.DependencyInjection;
+using Microsoft.AspNetCore.Identity;
 
 namespace {{cookiecutter.project_namespace}};
 
