@@ -11,16 +11,7 @@
   <Folder Name="/apps/identity/tests/">
     <Project Path="apps/identity/tests/WebApi.Identity.Tests/WebApi.Identity.Tests.csproj" />
   </Folder>
-  <Folder Name="/apps/orders/" />
-  <Folder Name="/apps/orders/src/">
-    <Project Path="apps/orders/src/WebApi.Orders/WebApi.Orders.csproj" />
-  </Folder>
-  <Folder Name="/apps/orders/tests/">
-    <Project Path="apps/orders/tests/WebApi.Orders.Tests/WebApi.Orders.Tests.csproj" />
-  </Folder>
   <Folder Name="/nuget-packages/" />
-  <Folder Name="/nuget-packages/src/">
-    <Project Path="nuget-packages/src/Shared.DependencyInjection/Shared.DependencyInjection.csproj" />
-  </Folder>
+  <Folder Name="/nuget-packages/src/" />
  
 </Solution>

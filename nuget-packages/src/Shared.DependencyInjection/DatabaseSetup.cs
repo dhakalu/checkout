@@ -19,8 +19,8 @@ public static class DatabaseSetup
                 npgsqlOptionsAction.EnableRetryOnFailure(3);
             });
         });
-       services.AddAllRepositories(assembly);
-       return services;
+        services.AddAllRepositories(assembly);
+        return services;
     }
 
     private static IServiceCollection AddAllRepositories(this IServiceCollection services, Assembly assembly)
