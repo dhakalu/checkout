@@ -1,0 +1,20 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+
+    <!-- NuGet Package Settings -->
+    <PackageId>Orders.Contracts</PackageId>
+    <Version>1.0.0</Version>
+    <Authors>Upen Dhakal</Authors>
+    <Company>Checkout</Company>
+    <Description>Contracts for orders</Description>
+    <PackageTags>checkout;orders</PackageTags>
+
+    <!-- Optional: Repository metadata -->
+    <RepositoryUrl>https://github.com/dhakalu/checkout</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+  </PropertyGroup>
+</Project>

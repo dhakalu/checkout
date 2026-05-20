@@ -1,0 +1,6 @@
+@Orders.WebApi_HostAddress = http://localhost:5171
+
+GET {{Orders.WebApi_HostAddress}}/health/
+Accept: application/json
+
+###
