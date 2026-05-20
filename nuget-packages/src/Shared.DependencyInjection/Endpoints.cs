@@ -1,6 +1,7 @@
 using System.Reflection;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
+using Shared.Annotations;
 
 
 namespace Shared.DependencyInjection;

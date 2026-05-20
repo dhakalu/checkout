@@ -2,6 +2,7 @@ using System.Reflection;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Configuration;
 using Microsoft.EntityFrameworkCore;
+using Shared.Annotations;
 using Npgsql;
 
 namespace Shared.DependencyInjection;
@@ -9,7 +10,7 @@ namespace Shared.DependencyInjection;
 public static class DatabaseSetup
 {
 
-    public static IServiceCollection AddDb<T>(this IServiceCollection services, IConfiguration configuration, Assembly assembly) where T : DbContext
+    public static IServiceCollection AddDb<T>(this IServiceCollection services, IConfiguration configuration) where T : DbContext
     {
         services.AddDbContext<T>(options =>
         {
@@ -19,7 +20,7 @@ public static class DatabaseSetup
                 npgsqlOptionsAction.EnableRetryOnFailure(3);
             });
         });
-        services.AddAllRepositories(assembly);
+        services.AddAllRepositories(typeof(T).Assembly);
         return services;
     }
 

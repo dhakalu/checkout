@@ -1,5 +1,5 @@
 
-namespace Shared.DependencyInjection;
+namespace Shared.Annotations;
 
 public interface IHandler
 {

@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Routing;
 
-namespace Shared.DependencyInjection;
+namespace Shared.Annotations;
 
 public interface IEndpoint
 {
