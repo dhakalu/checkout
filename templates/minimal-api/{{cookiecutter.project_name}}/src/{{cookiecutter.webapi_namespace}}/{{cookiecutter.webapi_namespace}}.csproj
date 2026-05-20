@@ -7,7 +7,10 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="../../../../nuget-packages/src/Shared.DependencyInjection/Shared.DependencyInjection.csproj" />
+    
+    <ProjectReference Include="$(RepoRoot)nuget-packages/src/Shared.DependencyInjection/Shared.DependencyInjection.csproj" />
+    <ProjectReference Include="$(RepoRoot)apps/{{cookiecutter.project_name}}/src/{{cookiecutter.contracts_namespace}}/{{cookiecutter.contracts_namespace}}.csproj" />
+    <ProjectReference Include="$(RepoRoot)apps/{{cookiecutter.project_name}}/src/{{cookiecutter.infra_namespace}}/{{cookiecutter.infra_namespace}}.csproj" />
   </ItemGroup>
 
   <ItemGroup>

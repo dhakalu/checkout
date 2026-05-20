@@ -4,7 +4,7 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <OutputType>Exe</OutputType>
-    <RootNamespace>tests</RootNamespace>
+    <RootNamespace>{{cookiecutter.webapi_tests_namespace}}.Tests</RootNamespace>
     <TargetFramework>net10.0</TargetFramework>
     <UseMicrosoftTestingPlatformRunner>true</UseMicrosoftTestingPlatformRunner>
   </PropertyGroup>
@@ -15,7 +15,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="../../src/{{cookiecutter.project_namespace}}/{{cookiecutter.project_namespace}}.csproj" />
+    <ProjectReference Include="../../src/{{cookiecutter.webapi_namespace}}/{{cookiecutter.webapi_namespace}}.csproj" />
   </ItemGroup>
 
   <ItemGroup>

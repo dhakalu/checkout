@@ -1,6 +1,19 @@
 {
     "project_name": "my-default-project",
     "__clean_name": "{{ cookiecutter.project_name.replace('-', ' ').replace('_', ' ').title().replace(' ', '') }}",
-    "project_namespace": "WebApi.{{ cookiecutter.__clean_name }}",
-    "tests_namespace": "WebApi.{{ cookiecutter.__clean_name }}.Tests"
+    "webapi_namespace": "{{ cookiecutter.__clean_name }}.WebApi",
+    "webapi_tests_namespace": "{{ cookiecutter.__clean_name }}.WebApi.Tests",
+    "contracts_namespace": "{{ cookiecutter.__clean_name }}.Contracts",
+    "infra_namespace": "{{ cookiecutter.__clean_name }}.Infrastructure",
+    "domain_namespace": "{{ cookiecutter.__clean_name }}.Domain",
+    "__entity_name": "{{cookiecutter.__clean_name[:-1]}}",
+     "_copy_without_render": [
+    "*.ico",
+    "*.png",
+    "*.jpg",
+    "*.dll",
+    "*.exe",
+    "*.pdb",
+    "**/.DS_Store"
+  ]
 }

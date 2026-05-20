@@ -1,8 +1,8 @@
 using Microsoft.AspNetCore.Mvc.Testing;
 
-using {{cookiecutter.project_namespace}};
+using {{cookiecutter.webapi_namespace}};
 
-namespace {{cookiecutter.tests_namespace}};
+namespace {{cookiecutter.webapi_tests_namespace}};
 
 public class {{cookiecutter.__clean_name}}WebApplicationFactory : WebApplicationFactory<Program>
 {

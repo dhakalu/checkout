@@ -1,0 +1,6 @@
+@{{cookiecutter.webapi_namespace}}_HostAddress = http://localhost:5171
+
+GET {{ '{{' }}{{cookiecutter.webapi_namespace}}_HostAddress{{ '}}' }}/health/
+Accept: application/json
+
+###

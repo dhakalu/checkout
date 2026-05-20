@@ -2,21 +2,23 @@ using System.Reflection;
 using Scalar.AspNetCore;
 using Shared.DependencyInjection;
 using Microsoft.AspNetCore.Identity;
+using {{cookiecutter.infra_namespace}}.Persistence;
 
-namespace {{cookiecutter.project_namespace}};
-
+namespace {{cookiecutter.webapi_namespace}};
 
 public class Program
 {
     public static async Task Main(string[] args)
     {
+        var assembly = Assembly.GetExecutingAssembly();
         var builder = WebApplication.CreateBuilder(args);
 
         // Add services to the container.
         // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
         builder.Services.AddOpenApi();
-        builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
-        builder.Services.AddProblemDetails();
+        builder.Services.AddSharedErrorHandler(assembly);
+        builder.Services.AddAllHandlers(assembly);
+        builder.Services.AddDb<{{cookiecutter.__entity_name}}DbContext>(builder.Configuration);
 
         var app = builder.Build();
 
@@ -36,6 +38,11 @@ public class Program
         })
         .WithName("GetHealth");
 
+        await StartAsync(app);
+    }
+
+    private static async Task StartAsync(WebApplication app)
+    {
         await app.StartAsync();
         var serverUrls = app.Urls; 
         Console.WriteLine("\n🚀 Application started! Click below to open documentation:");
@@ -44,7 +51,6 @@ public class Program
             Console.WriteLine($"🔗 {url}/scalar/v1"); 
         }
         Console.WriteLine("\nPress Ctrl+C to shut down.\n");
-
         await app.WaitForShutdownAsync();
     }
 }
