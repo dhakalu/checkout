@@ -1,17 +1,42 @@
 .PHONY: recreate-identity
 
+dt-add-all:
+	find . -name "*.csproj" -not -path "*/templates/*" -exec dotnet sln add {} +
+dt-build:
+	dotnet build
+restore:
+	dotnet restore
+ef-add:
+	clean_name={$(name)}
+	dotnet ef migrations add InitialCreate \
+  	--project $(name).Infrastructure \
+  	--startup-project $(name).WebApi \
+  	--output-dir Persistence/Migrations
 
+
+arch-diagrams:
+	cd docs/architecture/diagrams
+	uv sync 
+	find . -name "*.py" | xargs -I {} uv run python {}
 cert-rotate:
 	openssl genpkey -algorithm EC -out ec_private.pem -pkeyopt ec_paramgen_curve:P-256
 	openssl ec -pubout -in ec_private.pem -out ec_public.pem
-recreate-id:
+create-min-api:
 	@echo "Recreating Identity project..."
-	cd apps && rm -rf identity && cookiecutter ../templates/minimal-api/ --no-input project_name="identity"
+	cd apps && rm -rf orders && cookiecutter ../templates/minimal-api/ --no-input project_name="$(name)"
+sln-add:
+	
 dkr-id:
 	docker compose --profile id up -d
 run-id:
 	@echo "Running Identity project..."
 	cd apps/identity && dotnet run --project src/WebApi.Identity/WebApi.Identity.csproj dotnet run --configuration Debug
+run-ord:
+	@echo "Running Identity project..."
+	cd apps/orders  && dotnet run --project src/orders.WebApi/orders.WebApi.csproj dotnet run --configuration Debug
+test-id:
+
+
 test-id:
 	@echo "Running Identity tests..."
 	cd apps/identity && dotnet test --project tests/WebApi.Identity.Tests/WebApi.Identity.Tests.csproj

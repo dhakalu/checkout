@@ -1,0 +1,1 @@
+<Project>   <PropertyGroup>     <RepoRoot>$(MSBuildThisFileDirectory)</RepoRoot>   </PropertyGroup> </Project>

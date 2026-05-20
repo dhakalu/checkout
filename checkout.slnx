@@ -11,7 +11,18 @@
   <Folder Name="/apps/identity/tests/">
     <Project Path="apps/identity/tests/WebApi.Identity.Tests/WebApi.Identity.Tests.csproj" />
   </Folder>
+  <Folder Name="/apps/orders/" />
+  <Folder Name="/apps/orders/src/" />
+  <Folder Name="/apps/orders/tests/" />
   <Folder Name="/nuget-packages/" />
   <Folder Name="/nuget-packages/src/" />
+  <Folder Name="/nuget-packages/src/Shared.Annotations/">
+    <Project Path="nuget-packages/src/Shared.Annotations/Shared.Annotations.csproj" />
+  </Folder>
+
+  <Folder Name="/nuget-packages/src/Shared.DependencyInjection/">
+    <Project Path="nuget-packages/src/Shared.DependencyInjection/Shared.DependencyInjection.csproj" />
+  </Folder>
+  
  
 </Solution>
