@@ -1,5 +1,5 @@
 using Microsoft.EntityFrameworkCore;
-using Shared.DependencyInjection;
+using Shared.Annotations;
 
 namespace WebApi.Identity.Features.Scopes.Data;
 

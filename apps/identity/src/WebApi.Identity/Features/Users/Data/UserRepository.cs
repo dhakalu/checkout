@@ -1,7 +1,7 @@
 namespace WebApi.Identity.Features.Users.Data;
 
 using Microsoft.EntityFrameworkCore;
-using Shared.DependencyInjection;
+using Shared.Annotations;
 
 public class UserRepository(IdentityDbContext dbContext) : IRepository
 {

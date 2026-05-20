@@ -1,6 +1,6 @@
 using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
-using Shared.DependencyInjection;
+using Shared.Annotations;
 
 namespace WebApi.Identity.Features.Users.GetUser;
 

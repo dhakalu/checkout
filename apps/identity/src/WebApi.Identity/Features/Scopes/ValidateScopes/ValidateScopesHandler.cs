@@ -1,4 +1,4 @@
-using Shared.DependencyInjection;
+using Shared.Annotations;
 using WebApi.Identity.Features.Scopes.Data;
 
 namespace WebApi.Identity.Features.Scopes.ValidateScopes;

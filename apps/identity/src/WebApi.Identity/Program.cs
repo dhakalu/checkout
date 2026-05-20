@@ -6,7 +6,6 @@ using WebApi.Identity.Features.Auth.Token;
 
 namespace WebApi.Identity;
 
-
 public class Program
 {
     public static async Task Main(string[] args)
@@ -53,7 +52,7 @@ public class Program
             });
 
         builder.Services.AddSharedErrorHandler(Assembly.GetExecutingAssembly());
-        builder.Services.AddDb<IdentityDbContext>(builder.Configuration, assembly);
+        builder.Services.AddDb<IdentityDbContext>(builder.Configuration);
 
         builder.Services.AddLogging(config =>
         {

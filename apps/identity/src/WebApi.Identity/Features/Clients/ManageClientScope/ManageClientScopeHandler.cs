@@ -1,6 +1,6 @@
 using FluentValidation;
 using FluentValidation.Results;
-using Shared.DependencyInjection;
+using Shared.Annotations;
 using WebApi.Identity.Features.Clients.Data;
 using WebApi.Identity.Features.Scopes.ValidateScopes;
 

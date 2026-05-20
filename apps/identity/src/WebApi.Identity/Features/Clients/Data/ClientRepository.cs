@@ -1,5 +1,5 @@
 using Microsoft.EntityFrameworkCore;
-using Shared.DependencyInjection;
+using Shared.Annotations;
 using WebApi.Identity.Features.Clients.GetClient;
 
 namespace WebApi.Identity.Features.Clients.Data;
