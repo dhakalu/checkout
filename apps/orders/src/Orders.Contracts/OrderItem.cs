@@ -10,9 +10,9 @@ public record OrderItem
     /// </summary>
     public Guid ProductId { get; init; } = default!;
 
-    public string ProductName {get; init; } = default!;
+    public string ProductName { get; init; } = default!;
 
-    public string Sku {get; init;} = default!;
+    public string Sku { get; init; } = default!;
 
     /// <summary>
     /// The quantity of the product being ordered. This should be a positive integer and is essential for calculating the total cost of the order.
