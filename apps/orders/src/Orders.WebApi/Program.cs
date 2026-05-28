@@ -27,7 +27,7 @@ public class Program
         if (app.Environment.IsDevelopment())
         {
             app.MapOpenApi();
-            app.MapScalarApiReference(); 
+            app.MapScalarApiReference();
         }
 
         app.UseHttpsRedirection();
@@ -38,6 +38,7 @@ public class Program
             return Results.Ok(new { status = "Healthy" });
         })
         .WithName("GetHealth");
+        app.MapAllEndpoints(assembly);
 
         await StartAsync(app);
     }
@@ -45,11 +46,11 @@ public class Program
     private static async Task StartAsync(WebApplication app)
     {
         await app.StartAsync();
-        var serverUrls = app.Urls; 
+        var serverUrls = app.Urls;
         Console.WriteLine("\n🚀 Application started! Click below to open documentation:");
         foreach (var url in serverUrls)
         {
-            Console.WriteLine($"🔗 {url}/scalar/v1"); 
+            Console.WriteLine($"🔗 {url}/scalar/v1");
         }
         Console.WriteLine("\nPress Ctrl+C to shut down.\n");
         await app.WaitForShutdownAsync();
