@@ -16,6 +16,7 @@
 
   <ItemGroup>
     <ProjectReference Include="../../src/Orders.WebApi/Orders.WebApi.csproj" />
+    <ProjectReference Include="../../../../nuget-packages/src/Testing.Shared/Testing.Shared.csproj"/>
   </ItemGroup>
 
   <ItemGroup>

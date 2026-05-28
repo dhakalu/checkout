@@ -2,7 +2,7 @@ using Microsoft.AspNetCore.Mvc.Testing;
 
 namespace Orders.WebApi.Tests.Tests;
 
-public class ProgramTests(OrdersWebApplicationFactory app): IClassFixture<OrdersWebApplicationFactory>
+public class ProgramTests(OrdersWebApplicationFactory app) : IClassFixture<OrdersWebApplicationFactory>
 {
     private readonly HttpClient _client = app.CreateClient();
     [Fact]
