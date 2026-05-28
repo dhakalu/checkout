@@ -1,5 +1,4 @@
 using Microsoft.EntityFrameworkCore;
-using System.Dynamic;
 using Orders.Domain;
 
 namespace Orders.Infrastructure.Persistence;
@@ -8,7 +7,9 @@ public class OrderDbContext(DbContextOptions<OrderDbContext> options) : DbContex
 {
 
     public DbSet<Order> Orders { get; set; }
-    
+
+    public DbSet<OrderItem> OrderItems { get; set; }
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
