@@ -17,4 +17,8 @@
     <RepositoryUrl>https://github.com/dhakalu/checkout</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
   </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="../../../../nuget-packages/src/Shared.Annotations/Shared.Annotations.csproj" />
+  </ItemGroup>
 </Project>
