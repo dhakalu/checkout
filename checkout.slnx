@@ -1,28 +1,18 @@
-<Solution>
-  <Folder Name="/apps/" />
-  <Folder Name="/apps/app-gateway/" />
-  <Folder Name="/apps/app-gateway/src/">
-    <Project Path="apps/app-gateway/src/app-gateway.csproj" />
-  </Folder>
-  <Folder Name="/apps/identity/" />
-  <Folder Name="/apps/identity/src/">
-    <Project Path="apps/identity/src/WebApi.Identity/WebApi.Identity.csproj" />
-  </Folder>
-  <Folder Name="/apps/identity/tests/">
-    <Project Path="apps/identity/tests/WebApi.Identity.Tests/WebApi.Identity.Tests.csproj" />
-  </Folder>
-  <Folder Name="/apps/orders/" />
-  <Folder Name="/apps/orders/src/" />
-  <Folder Name="/apps/orders/tests/" />
-  <Folder Name="/nuget-packages/" />
-  <Folder Name="/nuget-packages/src/" />
-  <Folder Name="/nuget-packages/src/Shared.Annotations/">
-    <Project Path="nuget-packages/src/Shared.Annotations/Shared.Annotations.csproj" />
-  </Folder>
+<Solution xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 
-  <Folder Name="/nuget-packages/src/Shared.DependencyInjection/">
-    <Project Path="nuget-packages/src/Shared.DependencyInjection/Shared.DependencyInjection.csproj" />
-  </Folder>
-  
- 
+  <!-- App Gateway -->
+  <Project Path="apps/app-gateway/src/app-gateway.csproj" Folder="/apps/app-gateway/src/" />
+
+  <!-- Orders Service -->
+  <Project Path="apps/orders/src/Orders.Contracts/Orders.Contracts.csproj" Folder="/apps/orders/src/" />
+  <Project Path="apps/orders/src/Orders.Domain/Orders.Domain.csproj" Folder="/apps/orders/src/" />
+  <Project Path="apps/orders/src/Orders.Infrastructure/Orders.Infrastructure.csproj" Folder="/apps/orders/src/" />
+  <Project Path="apps/orders/src/Orders.WebApi/Orders.WebApi.csproj" Folder="/apps/orders/src/" />
+  <Project Path="apps/orders/tests/Orders.WebApi.Tests/Orders.WebApi.Tests.csproj" Folder="/apps/orders/tests/" />
+
+  <!-- Shared NuGet Packages -->
+  <Project Path="nuget-packages/src/Shared.Annotations/Shared.Annotations.csproj" Folder="/nuget-packages/src/Shared.Annotations/" />
+  <Project Path="nuget-packages/src/Shared.DependencyInjection/Shared.DependencyInjection.csproj" Folder="/nuget-packages/src/Shared.DependencyInjection/" />
+  <Project Path="nuget-packages/src/Testing.Shared/Testing.Shared.csproj" Folder="/nuget-packages/src/Testing.Shared/" />
+
 </Solution>

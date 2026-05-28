@@ -6,14 +6,21 @@ dt-build:
 	dotnet build
 restore:
 	dotnet restore
+dev:
+	$(eval LC_PROJECT := $(shell echo "$(project)" | tr '[:upper:]' '[:lower:]'))
+	dotnet watch run \
+  	--project apps/$(LC_PROJECT)/src/$(project).WebApi
 ef-add:
-	clean_name={$(name)}
-	dotnet ef migrations add InitialCreate \
-  	--project $(name).Infrastructure \
-  	--startup-project $(name).WebApi \
+	$(eval LC_PROJECT := $(shell echo "$(project)" | tr '[:upper:]' '[:lower:]'))
+	dotnet ef migrations add $(name) \
+  	--project apps/$(LC_PROJECT)/src/$(project).Infrastructure \
+  	--startup-project apps/$(LC_PROJECT)/src/$(project).WebApi \
   	--output-dir Persistence/Migrations
-
-
+ef-apply:
+	$(eval LC_PROJECT := $(shell echo "$(project)" | tr '[:upper:]' '[:lower:]'))
+	dotnet ef database update \
+	--project apps/$(LC_PROJECT)/src/$(project).Infrastructure \
+	--startup-project apps/$(LC_PROJECT)/src/$(project).WebApi
 arch-diagrams:
 	cd docs/architecture/diagrams
 	uv sync 
@@ -32,10 +39,11 @@ run-id:
 	@echo "Running Identity project..."
 	cd apps/identity && dotnet run --project src/WebApi.Identity/WebApi.Identity.csproj dotnet run --configuration Debug
 run-ord:
-	@echo "Running Identity project..."
-	cd apps/orders  && dotnet run --project src/orders.WebApi/orders.WebApi.csproj dotnet run --configuration Debug
-test-id:
-
+	@echo "Running Orders project..."
+	cd apps/orders  && dotnet run --project src/Orders.WebApi/Orders.WebApi.csproj dotnet run --configuration Debug
+test-ord:
+	@echo "Running Orders tests..."
+	cd apps/orders && dotnet test --project tests/Orders.WebApi.Tests/Orders.WebApi.Tests.csproj
 
 test-id:
 	@echo "Running Identity tests..."
