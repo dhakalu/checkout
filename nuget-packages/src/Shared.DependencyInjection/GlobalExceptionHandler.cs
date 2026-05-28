@@ -14,6 +14,37 @@ public class GlobalExceptionHandler(ILogger<GlobalExceptionHandler> logger) : IE
 {
     private readonly ILogger<GlobalExceptionHandler> _logger = logger;
 
+    private static string ConvertPathToCamelCase(string path)
+    {
+        if (string.IsNullOrEmpty(path)) return path;
+
+        // Splits paths like "Items[0].ProductId" into ["Items[0]", "ProductId"]
+        var segments = path.Split('.');
+
+        for (int i = 0; i < segments.Length; i++)
+        {
+            var segment = segments[i];
+
+            // Checks if the segment contains an array index like "Items[0]"
+            if (segment.Contains('[') && segment.EndsWith(']'))
+            {
+                var openBracketIndex = segment.IndexOf('[');
+                var propertyName = segment.Substring(0, openBracketIndex);
+                var indexPart = segment.Substring(openBracketIndex); // Keeps "[0]"
+
+                // Converts just the property name to camelCase and reattaches the index
+                segments[i] = JsonNamingPolicy.CamelCase.ConvertName(propertyName) + indexPart;
+            }
+            else
+            {
+                // Converts standard non-indexed properties to camelCase
+                segments[i] = JsonNamingPolicy.CamelCase.ConvertName(segment);
+            }
+        }
+
+        return string.Join(".", segments);
+    }
+
     public async ValueTask<bool> TryHandleAsync(HttpContext httpContext, Exception exception, CancellationToken cancellationToken)
     {
         _logger.LogError(exception, "An unhandled exception occurred while processing the request.");
@@ -27,9 +58,10 @@ public class GlobalExceptionHandler(ILogger<GlobalExceptionHandler> logger) : IE
             var errors = validationException.Errors
                 .GroupBy(e => e.PropertyName)
                 .ToDictionary(
-                    g => System.Text.Json.JsonNamingPolicy.CamelCase.ConvertName(g.Key),
+                    g => ConvertPathToCamelCase(g.Key),
                     g => g.Select(e => e.ErrorMessage).ToArray()
                 );
+
 
             var validationProblemDetails = new ValidationProblemDetails(errors)
             {
