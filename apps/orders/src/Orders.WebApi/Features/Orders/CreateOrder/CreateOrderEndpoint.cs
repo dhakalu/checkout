@@ -1,6 +1,8 @@
-using Shared.Annotations;
-using Orders.Contracts;
 using FluentValidation;
+
+using Orders.Contracts;
+
+using Shared.Annotations;
 
 namespace Orders.WebApi.Features.Orders.CreateOrder;
 

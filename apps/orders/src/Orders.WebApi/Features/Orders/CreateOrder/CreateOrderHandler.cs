@@ -1,6 +1,7 @@
 
 using Orders.Domain;
 using Orders.Infrastructure.Persistence;
+
 using Shared.Annotations;
 
 namespace Orders.WebApi.Features.Orders.CreateOrder;
@@ -8,7 +9,7 @@ namespace Orders.WebApi.Features.Orders.CreateOrder;
 public class CreateOrderHandler(OrderRepository orderRepository) : IHandler
 {
 
-    private OrderRepository _orderRepository = orderRepository;
+    private readonly OrderRepository _orderRepository = orderRepository;
 
     public async Task HandleAsync(CreateOrderCommand cmd, CancellationToken cancellationToken)
     {

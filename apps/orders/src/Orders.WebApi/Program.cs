@@ -1,8 +1,12 @@
 using System.Reflection;
-using Scalar.AspNetCore;
-using Shared.DependencyInjection;
+
 using Microsoft.AspNetCore.Identity;
+
 using Orders.Infrastructure.Persistence;
+
+using Scalar.AspNetCore;
+
+using Shared.DependencyInjection;
 
 namespace Orders.WebApi;
 

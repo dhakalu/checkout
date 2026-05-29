@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+
 using Orders.Domain;
 
 namespace Orders.Infrastructure.Persistence;

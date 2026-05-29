@@ -1,5 +1,7 @@
 using System.Reflection;
+
 using FluentValidation;
+
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 

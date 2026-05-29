@@ -1,9 +1,12 @@
 using System.Reflection;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Configuration;
+
 using Microsoft.EntityFrameworkCore;
-using Shared.Annotations;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+
 using Npgsql;
+
+using Shared.Annotations;
 
 namespace Shared.DependencyInjection;
 

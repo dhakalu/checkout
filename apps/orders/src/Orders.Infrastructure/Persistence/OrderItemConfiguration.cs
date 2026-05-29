@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+
 using Orders.Domain;
 
 namespace Orders.Infrastructure.Persistence;

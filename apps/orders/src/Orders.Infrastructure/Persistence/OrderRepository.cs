@@ -1,6 +1,8 @@
 using Microsoft.EntityFrameworkCore;
-using Shared.Annotations;
+
 using Orders.Domain;
+
+using Shared.Annotations;
 
 namespace Orders.Infrastructure.Persistence;
 

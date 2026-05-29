@@ -1,9 +1,10 @@
 using Microsoft.AspNetCore.Mvc.Testing;
-using Testcontainers.PostgreSql;
 using Microsoft.EntityFrameworkCore;
 
-using Orders.WebApi;
 using Orders.Infrastructure.Persistence;
+using Orders.WebApi;
+
+using Testcontainers.PostgreSql;
 
 namespace Orders.WebApi.Tests;
 
