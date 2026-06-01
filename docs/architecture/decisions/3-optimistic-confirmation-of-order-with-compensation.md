@@ -6,12 +6,10 @@
  
 | Field | Value |
 |---|---|
-| Document Type | Architectural Review Document (ARD) |
-| Version | 1.0 — Initial Draft |
-| Status | For Review |
-| Date | May 21, 2026 |
-| Domain | Distributed Systems / Saga Patterns |
- 
+| **Status** | Accepted |
+| **Date** | 2026-05-21 |
+| **Deciders** | Engineering |
+| **Domain** | Fulfillment Orchestrator |
 ---
  
 ## Table of Contents

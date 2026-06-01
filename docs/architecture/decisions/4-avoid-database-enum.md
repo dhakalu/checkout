@@ -1,7 +1,11 @@
 # ADR: Store Enumerated Values as VARCHAR in the Database
 
-**Status:** Accepted  
-**Date:** 2025-05-23
+| Field | Value |
+|---|---|
+| **Status** | Accepted |
+| **Date** | 2026-05-23 |
+| **Deciders** | Engineering |
+| **Domain** | All |
 ---
 ## Context
 

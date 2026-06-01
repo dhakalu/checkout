@@ -6,6 +6,8 @@
 This project demonstrates **Principal-level software engineering** by tackling the "hard" problems of distributed systems: real-time data at scale, eventual consistency, and self-healing infrastructure.
 
 ---
+### Architecture Diagram
+![diagram](./docs/architecture/diagrams/main-Container.drawio.svg)
 
 ### 🏗️ Architectural Bounded Contexts - Services Reference
 The system is partitioned into specialized microservices using **Domain-Driven Design (DDD)** and an **Event-Driven Architecture (EDA)**:
@@ -15,16 +17,16 @@ The system is partitioned into specialized microservices using **Domain-Driven D
 | **API Gateway (YARP)** | TLS termination, JWT validation at the edge, rate limiting, routing to downstream services | YARP | .NET | REST (public) | Routes to downstream | ✅ Yes | ✅ Defined |
 | **Identity(Keycloak)** | Authentication, JWT issuance, token revocation, RBAC, secret management, audit event emission | Keycloak | .NET | REST / OIDC | REST (JWKS, introspection) | ✅ Yes | ✅ Defined |
 | **Order & Transaction** | Hot-path checkout: accept orders, process payments, initiate the fulfillment saga, implement transactional outbox | MassTransit, Outbox Pattern, Polly | .NET | REST (via gateway) | Publishes events | ✅ Yes | ✅ Defined |
-| **Fulfillment Orchestrator** | Durable fulfillment workflow: consumes `order.created` to start a Temporal Workflow; Activities call downstream services via gRPC; MassTransit consumer bridges bus events to Temporal signals | Temporal Workflow, Temporal .NET SDK, MassTransit (consumer only) | .NET | None | Consumes `order.created` + `dispatch.scheduled` via MassTransit → signals Temporal; Activities call downstream via gRPC | ✅ Yes | ✅ Defined |
+| **Fulfillment Orchestrator** | Durable fulfillment workflow: consumes `order.created` to start a Temporal Workflow; Activities call downstream services via gRPC; MassTransit consumer bridges bus events to Temporal signals | Temporal Workflow, Temporal .NET SDK, MassTransit (consumer only) | .NET | None | Consumes `order.created` via MassTransit → starts Temporal Workflow; consumes `drone.assigned` via MassTransit → signals Temporal to resume; Activities call downstream via gRPC | ✅ Yes | ✅ Defined |
 | **Inventory Service** | Track stock levels per warehouse, handle reservation and release during fulfillment workflow, prevent oversell across concurrent orders | EF Core, optimistic concurrency | .NET | None | gRPC (called by Temporal Activities) | ✅ Yes | ❌ Missing |
 | **Payment / Billing** | Wrap 3rd-party payment gateway, own charge/hold/capture/refund lifecycle, expose a clean internal API to the fulfillment workflow | Polly (circuit breaker), idempotency keys | .NET | None | gRPC (called by Temporal Activities); publishes `payment.failed` on compensation | ✅ Yes | ❌ Missing |
 | **Customer / Profile** | Store delivery addresses, contact preferences, notification channels, and account history | EF Core, read/write split | .NET | REST (via gateway) | REST | ✅ Yes | ❌ Missing |
 | **Drone Telemetry Hub** | High-throughput ingestion of real-time GPS pings from thousands of active drones; buffer to Redis; fan out to subscribers | SignalR, Redis, WebSockets | Go | WebSocket (drones) | Publishes to Redis / MassTransit | ✅ Yes | ✅ Defined |
 | **Fleet Management** | Own the drone registry: hardware IDs, battery state, maintenance status, home dock, and availability for assignment | EF Core, scheduled jobs | .NET | None | gRPC / REST | ✅ Yes | ❌ Missing |
-| **Shipping & Tracking** | Source of truth for shipment state; bridge telemetry to order; compute real-time ETAs; evaluate geofence boundaries | Redis, time-series reads, geofencing | .NET | REST (via gateway) | Consumes telemetry events | ✅ Yes | ✅ Defined |
-| **Geospatial / Routing** | Compute optimal drone flight paths, enforce no-fly zones, integrate with maps API, reroute around dynamic obstacles | H3 / S2, Maps API, Polly | Go | None | gRPC (high call volume) | ✅ Yes | ❌ Missing |
-| **Regulatory / Airspace** | Enforce FAA and local authority rules: no-fly zones, weather holds, emergency recall; can halt a delivery mid-saga | External authority APIs, event triggers | Go | None | Consumes + publishes events | ✅ Yes | ❌ Missing |
-| **Scheduler / Optimizer** | Determine dispatch timing, batch nearby orders to the same drone, respect delivery windows and charge schedules | Constraint solver, MassTransit | .NET | None | Publishes dispatch commands | ✅ Yes | ❌ Missing |
+| **Shipping & Tracking** | Source of truth for shipment state; bridge telemetry to order; compute real-time ETAs; react to geofence boundary events | Redis, time-series reads | .NET | REST (via gateway) | Consumes `telemetry.ping`, `geofence.entered`, `geofence.exited`; publishes delivery and ETA events | ✅ Yes | ✅ Defined |
+| **Geospatial / Routing** | Compute optimal drone flight paths, integrate with maps API, reroute around dynamic obstacles; maintains a real-time drone position cache (Redis) derived from the telemetry stream; reroutes in-flight drones on airspace violations and holds | H3 / S2, Maps API, Polly | Go | None | Consumes `airspace.violation`, `airspace.hold.issued`; gRPC (flight path + routing queries); publishes rerouting instructions or triggers `drone.emergency.recall` if no safe route exists | ✅ Yes | ❌ Missing |
+| **Regulatory / Airspace** | Enforce FAA and local authority rules: own airspace boundary definitions, evaluate drone positions against boundaries, publish geofence crossing events, weather holds, emergency recall | External authority APIs, event triggers | Go | None | Consumes `telemetry.ping`; publishes `geofence.entered`, `geofence.exited`, `airspace.violation`, `drone.emergency.recall` | ✅ Yes | ❌ Missing |
+| **Scheduler / Optimizer** | Select and lock available drones via Fleet Management, determine dispatch timing, batch nearby orders to the same drone, respect delivery windows and charge schedules | Constraint solver, MassTransit | .NET | None | gRPC (receives dispatch requests from Temporal Activities; calls Fleet Management gRPC to lock drone before committing); publishes `dispatch.scheduled` | ✅ Yes | ❌ Missing |
 | **Notification Engine** | Decoupled multi-channel alerting (email, SMS, push) driven entirely by event subscriptions | MassTransit, SMTP/SMS/Push providers | .NET | None | Consumes events only | ✅ Yes | ✅ Defined |
 | **Audit Log Service** | Consume events from all services and write to an immutable, append-only store for regulatory and security review | MassTransit consumer, append-only DB | .NET | None | Consumes events only | ✅ Yes | ❌ Missing |
 | **OPA (policy engine)** | Evaluate fine-grained authorization policies (Rego) for services that need cross-dimensional access control decisions | Pre-built image, Rego policies in repo | 3rd-party | None | localhost HTTP (sidecar) | ⚠️ Sidecar | ✅ Defined |
@@ -33,7 +35,7 @@ The system is partitioned into specialized microservices using **Domain-Driven D
 
 ### 🔄 Fulfillment Orchestration — Temporal
 
-The Fulfillment Orchestrator uses **Temporal** for durable workflow execution (ADR-6). The state machine, retry logic, and compensating transactions live inside a Temporal Workflow; MassTransit is used only at the edges to receive bus events and bridge them into Temporal signals.
+The Fulfillment Orchestrator uses **Temporal** for durable workflow execution rather than a choreography-based saga on the message bus. The state machine, retry logic, and compensating transactions live inside a Temporal Workflow; MassTransit is used only at the edges to receive bus events and bridge them into Temporal signals.
 
 #### Workflow lifecycle
 
@@ -41,44 +43,61 @@ The Fulfillment Orchestrator uses **Temporal** for durable workflow execution (A
 2. The workflow executes a sequence of **Activities**, each of which calls a downstream service via gRPC:
    - `ReserveInventoryActivity` → Inventory Service gRPC
    - `ChargePaymentActivity` → Payment / Billing gRPC
-   - `AssignDroneActivity` → Fleet Management gRPC
-   - `AwaitDispatchSignal` → workflow pauses; resumes when a `dispatch.scheduled` signal arrives (see below)
+   - `RequestDispatchActivity` → Scheduler / Optimizer gRPC; hands off the order ID, destination, package details, and delivery window; the Scheduler queries Fleet Management via gRPC to select and lock an available drone, then publishes `dispatch.scheduled` to the bus; Fleet Management publishes `drone.assigned` once the lock is durable
+   - `AwaitDroneAssignedSignal` → workflow pauses; resumes when `drone.assigned` arrives (see below)
    - `TrackDeliveryActivity` → monitors delivery outcome via Shipping & Tracking events
 3. On any Activity failure, Temporal drives compensation in reverse order:
-   - `UnassignDroneActivity` → Fleet Management gRPC
+   - `CancelDispatchActivity` → Scheduler / Optimizer gRPC (if `RequestDispatchActivity` had already succeeded; Scheduler calls Fleet Management to release the drone lock)
    - `RefundPaymentActivity` → Payment / Billing gRPC; also **publishes `payment.failed`** to the bus so downstream subscribers (Notification, Audit Log, Order & Transaction) can react
    - `ReleaseInventoryActivity` → Inventory Service gRPC
 
-#### Bridging `dispatch.scheduled`
+#### Scheduler handoff, drone locking, and `drone.assigned` signal
 
-The Scheduler / Optimizer publishes `dispatch.scheduled` to RabbitMQ. A thin MassTransit consumer inside the Fulfillment Orchestrator receives it and calls `workflow.SignalAsync("DispatchReady", ...)` to resume the waiting workflow. This keeps Temporal internal to the Fulfillment Orchestrator, preserves the bus event for Fleet Management and Audit Log, and avoids coupling the Scheduler to Temporal's API.
+The workflow hands off to the Scheduler via `RequestDispatchActivity` (gRPC). The Scheduler selects an optimal drone across all pending orders, then calls Fleet Management via gRPC to lock the drone — marking it unavailable in the registry — before publishing `dispatch.scheduled`. Fleet Management publishes `drone.assigned` once the lock is durable. A thin MassTransit consumer inside the Fulfillment Orchestrator receives `drone.assigned` and calls `workflow.SignalAsync("DroneAssigned", ...)` to resume the waiting workflow. This ensures the workflow only proceeds once the drone assignment is confirmed and persisted — if the Fleet Management lock fails, `dispatch.scheduled` is never published, `drone.assigned` never arrives, and `RequestDispatchActivity` fails cleanly for Temporal to retry or compensate.
 
 ```
-Scheduler ──publishes──▶ dispatch.scheduled (RabbitMQ)
-                                │
-              ┌─────────────────┤ also consumed by Fleet Management, Audit Log
+FulfillmentWorkflow
+        │
+        ▼
+RequestDispatchActivity ──gRPC──▶ Scheduler / Optimizer
+                                          │
+                                  (selects drone, batching,
+                                   timing optimisation)
+                                          │
+                                   ──gRPC──▶ Fleet Management
+                                          │  (locks drone in registry)
+                                          │
+                                   publishes dispatch.scheduled (RabbitMQ)
+                                          │   (consumed by Audit Log)
+                                          │
+                                   Fleet Management
+                                   publishes drone.assigned (RabbitMQ)
+                                          │
+              ┌───────────────────────────┤ also consumed by Shipping & Tracking, Audit Log
               │
 Fulfillment Orchestrator (MassTransit consumer)
               │
-              └──SignalAsync("DispatchReady")──▶ FulfillmentWorkflow (Temporal)
+              └──SignalAsync("DroneAssigned")──▶ FulfillmentWorkflow resumes
 ```
 
 ---
 
 ### 📨 Event-Driven Architecture — Topic Catalog
 
-All asynchronous communication is handled via **MassTransit / Service Bus (RabbitMQ locally)**. Services communicate by publishing and subscribing to named topics — no direct service-to-service calls for non-critical paths. Every topic that carries financial or safety consequences requires a configured **Dead Letter Queue (DLQ)**.
+All asynchronous communication is handled via **MassTransit / RabbitMQ**. Services communicate by publishing and subscribing to named topics — no direct service-to-service calls for non-critical paths. Every topic that carries financial or safety consequences requires a configured **Dead Letter Queue (DLQ)**.
 
 #### Domain overview
 
 | Domain | Topics | Description |
 |---|---|---|
-| Order | 5 | Payment lifecycle and order state changes |
-| Fulfillment | 1 | Dispatch scheduling (saga coordination is now internal to Temporal) |
+| Order | 6 | Payment lifecycle and order state changes |
 | Drone / Telemetry | 6 | Real-time flight data, drone state transitions, fault reporting |
 | Shipping | 5 | Delivery outcomes, ETA updates, geofence events |
 | Fleet / Airspace | 4 | Regulatory holds, airspace violations, emergency recalls |
+| Scheduling | 1 | Dispatch readiness signals from the Scheduler / Optimizer |
 | Platform | 3 | Notifications, security audit trail, business audit trail |
+
+> **Note:** The Fulfillment domain has no bus topics — all saga coordination is internal to the Temporal workflow. The Scheduler / Optimizer is its own bounded context; `dispatch.scheduled` belongs to the Scheduling domain, not Fulfillment. The Fulfillment Orchestrator resumes its workflow on  rather than ; the latter is consumed only by Audit Log.
 
 ---
 
@@ -88,15 +107,16 @@ All asynchronous communication is handled via **MassTransit / Service Bus (Rabbi
 |---|---|---|---|
 | `order.created` | Order & Transaction | Fulfillment Orchestrator, Audit Log | ✅ |
 | `order.cancelled` | Order & Transaction | Fulfillment Orchestrator, Inventory, Notification, Audit Log | |
-| `order.refunded` | Payment / Billing | Order & Transaction, Notification, Audit Log | ✅ |
+| `order.refunded` | Order & Transaction | Notification, Audit Log | ✅ |
+| `payment.refunded` | Payment / Billing | Order & Transaction, Audit Log | ✅ |
 | `payment.captured` | Payment / Billing | Order & Transaction, Audit Log | ✅ |
 | `payment.failed` | Payment / Billing · Fulfillment Orchestrator (compensation Activity) | Order & Transaction, Notification, Audit Log | |
 
-#### Fulfillment topics
+#### Scheduling topics
 
 | Topic | Publisher | Subscribers | DLQ |
 |---|---|---|---|
-| `dispatch.scheduled` | Scheduler / Optimizer | Fulfillment Orchestrator (bridges to Temporal signal), Fleet Management, Audit Log | |
+| `dispatch.scheduled` | Scheduler / Optimizer | Audit Log | |
 
 > **Note:** The former saga coordination topics (`saga.step.completed`, `saga.step.failed`, `saga.compensate`) and inventory reservation topics (`inventory.reserved`, `inventory.reservation.failed`, `inventory.released`) have been removed. Temporal's durable execution and Activity retry model replaces all of them. Inventory reservation and release are now synchronous gRPC calls made by Temporal Activities.
 
@@ -104,11 +124,11 @@ All asynchronous communication is handled via **MassTransit / Service Bus (Rabbi
 
 | Topic | Publisher | Subscribers | DLQ | Notes |
 |---|---|---|---|---|
-| `drone.assigned` | Fulfillment Orchestrator | Fleet Management, Shipping & Tracking, Audit Log | | |
+| `drone.assigned` | Fleet Management | Fulfillment Orchestrator (bridges to Temporal signal), Shipping & Tracking, Audit Log | | |
 | `drone.departed` | Fleet Management | Shipping & Tracking, Notification, Audit Log | | |
 | `drone.returned` | Fleet Management | Scheduler / Optimizer, Audit Log | | |
 | `drone.fault` | Fleet Management / Telemetry Hub | Fulfillment Orchestrator, Regulatory, Audit Log | ✅ | |
-| `telemetry.ping` | Drone Telemetry Hub | Shipping & Tracking, Geospatial, Regulatory | | High frequency — short retention, consumers must tolerate gaps |
+| `telemetry.ping` | Drone Telemetry Hub | Shipping & Tracking, Regulatory / Airspace | | High frequency — short retention, consumers must tolerate gaps |
 | `telemetry.ping.batch` | Drone Telemetry Hub | Time-series store | | Buffered flush from Redis — not one message per ping |
 
 #### Shipping topics
@@ -118,16 +138,16 @@ All asynchronous communication is handled via **MassTransit / Service Bus (Rabbi
 | `delivery.completed` | Shipping & Tracking | Order & Transaction, Payment, Notification, Audit Log | ✅ |
 | `delivery.failed` | Shipping & Tracking | Fulfillment Orchestrator, Notification, Audit Log | ✅ |
 | `delivery.eta.updated` | Shipping & Tracking | Notification Engine | |
-| `geofence.entered` | Shipping & Tracking | Notification Engine, Regulatory | |
-| `geofence.exited` | Shipping & Tracking | Regulatory, Audit Log | |
+| `geofence.entered` | Regulatory / Airspace | Shipping & Tracking, Notification Engine | |
+| `geofence.exited` | Regulatory / Airspace | Shipping & Tracking, Audit Log | |
 
 #### Fleet / Airspace topics
 
 | Topic | Publisher | Subscribers | DLQ |
 |---|---|---|---|
-| `airspace.violation` | Regulatory / Airspace | Fulfillment Orchestrator, Fleet Management, Audit Log | ✅ |
-| `airspace.hold.issued` | Regulatory / Airspace | Fulfillment Orchestrator, Scheduler, Fleet Management | |
-| `airspace.hold.lifted` | Regulatory / Airspace | Scheduler / Optimizer, Fulfillment Orchestrator | |
+| `airspace.violation` | Regulatory / Airspace | Geospatial / Routing, Fleet Management, Audit Log | ✅ |
+| `airspace.hold.issued` | Regulatory / Airspace | Geospatial / Routing, Audit Log | |
+| `airspace.hold.lifted` | Regulatory / Airspace | Audit Log | |
 | `drone.emergency.recall` | Regulatory / Airspace | Fleet Management, Fulfillment Orchestrator, Audit Log | ✅ |
 
 #### Platform topics
@@ -142,11 +162,19 @@ All asynchronous communication is handled via **MassTransit / Service Bus (Rabbi
 
 #### Design notes
 
-**Temporal replaces saga choreography.** The Fulfillment Orchestrator is a Temporal Worker running a durable `FulfillmentWorkflow`. Step sequencing, retry, timeout, and compensation are all handled by Temporal's execution engine rather than the message bus. The bus is used only at the edges: to receive `order.created` (workflow start) and `dispatch.scheduled` (mid-workflow signal).
+**Temporal replaces saga choreography.** The Fulfillment Orchestrator is a Temporal Worker running a durable `FulfillmentWorkflow`. Step sequencing, retry, timeout, and compensation are all handled by Temporal's execution engine rather than the message bus. The bus is used only at the edges: to receive `order.created` (workflow start) and `drone.assigned` (mid-workflow signal to confirm the drone lock is durable before proceeding).
+
+**Scheduler owns drone selection and locking.** The workflow calls the Scheduler via `RequestDispatchActivity` (gRPC), handing off the order details. The Scheduler selects an optimal drone across all pending orders and calls Fleet Management via gRPC to lock the drone before publishing `dispatch.scheduled`. The workflow resumes only on `drone.assigned` — Fleet Management's durable confirmation — not on `dispatch.scheduled`. This means if the Fleet Management lock fails, `dispatch.scheduled` is never published, the workflow times out cleanly at `AwaitDroneAssignedSignal`, and Temporal retries or compensates without any orphaned state.
 
 **Compensation publishes selectively.** Most compensating Activities call downstream services directly via gRPC and produce no bus event — the call either succeeds (with Temporal retrying on failure) or the workflow escalates to a manual intervention state. The exception is `RefundPaymentActivity`, which additionally publishes `payment.failed` so that Notification, Audit Log, and Order & Transaction can react without polling or tight coupling to Temporal.
 
 **Dead Letter Queues** are mandatory on any topic where an unprocessable message has financial or safety consequences — a failed `drone.emergency.recall` is a regulatory incident. All DLQ'd messages trigger an alert to the on-call queue and are replayed manually after root-cause investigation.
+
+**Airspace holds are enforced at two layers.** For new dispatches, enforcement is implicit — when the Scheduler requests a flight path from Geospatial / Routing, Geospatial consults Regulatory's current airspace constraints and returns no valid route if a hold is active; no proactive subscription needed. For in-flight drones, Geospatial / Routing subscribes to `airspace.hold.issued` and reacts in real-time: it checks its own drone position cache (maintained from the `telemetry.ping` stream), identifies drones with routes passing through the affected airspace, and computes reroutes. If no safe alternative route exists, it triggers `drone.emergency.recall`. `airspace.hold.lifted` requires no active subscriber — in-flight drones return to optimal paths naturally on their next telemetry ping evaluation.
+
+**Regulatory / Airspace owns airspace boundary evaluation.** Regulatory owns the authoritative airspace boundary definitions — no-fly zones, controlled airspace, FAA rules, temporary flight restrictions. It consumes `telemetry.ping` directly and evaluates every drone position against those boundaries, publishing `geofence.entered` / `geofence.exited` when a crossing is detected and `airspace.violation` when a rule is breached. Shipping & Tracking consumes geofence events to update delivery state; it has no knowledge of airspace geometry.
+
+**Geospatial / Routing owns flight path computation and rerouting.** Active drone routes and the real-time drone position cache (Redis, sub-second resolution) live here — Geospatial is the authoritative source for current drone position. Fleet Management owns the drone registry (identity, hardware, availability) but not position. When an `airspace.violation` or `airspace.hold.issued` event arrives, Geospatial checks its position cache, identifies affected drones, and computes reroutes. If no safe route exists it triggers `drone.emergency.recall`.
 
 **`telemetry.ping`** is the only high-frequency topic in the system. It carries GPS coordinates from every active drone on a sub-second interval. Retention is set in hours rather than days. All consumers on this topic are designed to handle or skip missing messages gracefully — a gap in telemetry does not constitute a workflow failure.
 

@@ -1,8 +1,12 @@
 # ADR 1: Repository Strategy - Monorepo vs. Polyrepo
 
-## Status
-Accepted
+| Field | Value |
+|---|---|
+| **Status** | Accepted |
+| **Date** | 2026-05-01 |
+| **Deciders** | Engineering |
 
+---
 ## Context
 As the project expands to 12 microservices, we need to decide on a repository structure. A common debate exists between the Monorepo (one repository for all code) and Polyrepo (one repository per service) approaches.
 

@@ -1,8 +1,11 @@
 <Solution xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-
   <!-- App Gateway -->
   <Project Path="apps/app-gateway/src/app-gateway.csproj" Folder="/apps/app-gateway/src/" />
-
+  
+  <!-- Fulfillment -->
+  <Project Path="apps/fulfillment/src/Fulfillment.TemporalWorker/Fulfillment.TemporalWorker.csproj" />
+  <Project Path="apps/fulfillment/src/Fulfillment.Workflows/Fulfillment.Workflows.csproj" />
+  <Project Path="apps/fulfillment/src/Fulfillment.Orchrestrator/Fulfillment.Orchrestrator.csproj" />
   <!-- Orders Service -->
   <Project Path="apps/orders/src/Orders.Contracts/Orders.Contracts.csproj" Folder="/apps/orders/src/" />
   <Project Path="apps/orders/src/Orders.Domain/Orders.Domain.csproj" Folder="/apps/orders/src/" />
