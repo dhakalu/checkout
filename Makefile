@@ -25,8 +25,10 @@ arch-diagrams:
 	cd docs/architecture/diagrams
 	uv sync 
 	find . -name "*.py" | xargs -I {} uv run python {}
+db-order:
+	psql -h localhost -p 5433 -U orders -d orders
 cert-rotate:
-	openssl genpkey -algorithm EC -out ec_private.pem -pkeyopt ec_paramgen_curve:P-256
+	openssl genpkey -algor1ithm EC -out ec_private.pem -pkeyopt ec_paramgen_curve:P-256
 	openssl ec -pubout -in ec_private.pem -out ec_public.pem
 create-min-api:
 	@echo "Recreating Identity project..."

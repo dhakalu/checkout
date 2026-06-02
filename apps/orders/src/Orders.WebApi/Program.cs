@@ -1,6 +1,11 @@
 using System.Reflection;
 
+using MassTransit;
+using MassTransit.Configuration;
+using MassTransit.RabbitMqTransport.Configuration;
+
 using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.Options;
 
 using Orders.Infrastructure.Persistence;
 
@@ -24,6 +29,29 @@ public class Program
         builder.Services.AddSharedErrorHandler(assembly);
         builder.Services.AddAllHandlers(assembly);
         builder.Services.AddDb<OrderDbContext>(builder.Configuration);
+        builder.Services.Configure<RabbitMqConfiguration>(builder.Configuration.GetSection("RabbitMq"));
+        builder.Services.AddMassTransit(x =>
+        {
+            if (builder.Environment.IsDevelopment())
+            {
+                x.UsingRabbitMq((context, cfg) =>
+                {
+                    var rabbitConfig = context.GetRequiredService<IOptions<RabbitMqConfiguration>>().Value;
+                    cfg.Host(rabbitConfig.Host, "/", h =>
+                    {
+                        h.Username(rabbitConfig.Username);
+                        h.Password(rabbitConfig.Password);
+                    });
+                    cfg.ConfigureEndpoints(context);
+                });
+            }
+            x.AddEntityFrameworkOutbox<OrderDbContext>(o =>
+            {
+                o.UsePostgres();
+                o.UseBusOutbox();
+            });
+
+        });
 
         var app = builder.Build();
 
@@ -36,6 +64,7 @@ public class Program
 
         app.UseHttpsRedirection();
         app.UseExceptionHandler();
+
 
         app.MapGet("/health", () =>
         {
@@ -59,4 +88,11 @@ public class Program
         Console.WriteLine("\nPress Ctrl+C to shut down.\n");
         await app.WaitForShutdownAsync();
     }
+}
+
+internal class RabbitMqConfiguration
+{
+    internal string Host { get; set; } = default!;
+    internal string Username { get; set; } = default!;
+    internal string Password { get; set; } = default!;
 }

@@ -1,3 +1,5 @@
+using MassTransit;
+
 using Microsoft.EntityFrameworkCore;
 
 using Orders.Domain;
@@ -17,5 +19,9 @@ public class OrderDbContext(DbContextOptions<OrderDbContext> options) : DbContex
 
         // Scans the current assembly for any IEntityTypeConfiguration classes
         modelBuilder.ApplyConfigurationsFromAssembly(typeof(OrderDbContext).Assembly);
+
+        modelBuilder.AddInboxStateEntity((c) => c.ToTable("inbox_state"));
+        modelBuilder.AddOutboxMessageEntity((c) => c.ToTable("outbox_message"));
+        modelBuilder.AddOutboxStateEntity((c) => c.ToTable("outbox_state"));
     }
 }
