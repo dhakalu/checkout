@@ -11,6 +11,7 @@ using Orders.Infrastructure.Persistence;
 
 using Scalar.AspNetCore;
 
+using Shared.Configurations;
 using Shared.DependencyInjection;
 
 namespace Orders.WebApi;
@@ -23,6 +24,8 @@ public class Program
         var assembly = Assembly.GetExecutingAssembly();
         var builder = WebApplication.CreateBuilder(args);
 
+        builder.Logging.AddConsole();
+
         // Add services to the container.
         // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
         builder.Services.AddOpenApi();
@@ -34,22 +37,26 @@ public class Program
         {
             if (builder.Environment.IsDevelopment())
             {
+                x.AddEntityFrameworkOutbox<OrderDbContext>(o =>
+                {
+                    o.QueryDelay = TimeSpan.FromMinutes(2);
+                    o.UsePostgres();
+                    o.UseBusOutbox();
+                });
                 x.UsingRabbitMq((context, cfg) =>
                 {
                     var rabbitConfig = context.GetRequiredService<IOptions<RabbitMqConfiguration>>().Value;
-                    cfg.Host(rabbitConfig.Host, "/", h =>
+                    if (rabbitConfig != null)
                     {
-                        h.Username(rabbitConfig.Username);
-                        h.Password(rabbitConfig.Password);
-                    });
-                    cfg.ConfigureEndpoints(context);
+                        Console.WriteLine($"Configuring RabbitMQ with Host: {rabbitConfig.Host}, Username: {rabbitConfig.Username}");
+                        cfg.Host(rabbitConfig.Host, "/", h =>
+                        {
+                            h.Username(rabbitConfig.Username);
+                            h.Password(rabbitConfig.Password);
+                        });
+                    }
                 });
             }
-            x.AddEntityFrameworkOutbox<OrderDbContext>(o =>
-            {
-                o.UsePostgres();
-                o.UseBusOutbox();
-            });
 
         });
 
@@ -88,11 +95,4 @@ public class Program
         Console.WriteLine("\nPress Ctrl+C to shut down.\n");
         await app.WaitForShutdownAsync();
     }
-}
-
-internal class RabbitMqConfiguration
-{
-    internal string Host { get; set; } = default!;
-    internal string Username { get; set; } = default!;
-    internal string Password { get; set; } = default!;
 }
