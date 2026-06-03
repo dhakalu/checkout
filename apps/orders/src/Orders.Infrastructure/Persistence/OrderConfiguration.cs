@@ -16,6 +16,11 @@ public class OrderConfiguration : IEntityTypeConfiguration<Order>
             .HasColumnType("uuid")
             .IsRequired();
 
+        builder.Property(x => x.CustomerId)
+            .HasColumnName("customer_id")
+            .HasColumnType("uuid")
+            .IsRequired();
+
         builder.Property(x => x.Status)
             .HasColumnName("status")
             .HasColumnType("varchar(50)")

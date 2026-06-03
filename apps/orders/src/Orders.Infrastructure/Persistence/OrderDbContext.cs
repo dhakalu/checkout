@@ -4,9 +4,11 @@ using Microsoft.EntityFrameworkCore;
 
 using Orders.Domain;
 
+using Shared.Annotations;
+
 namespace Orders.Infrastructure.Persistence;
 
-public class OrderDbContext(DbContextOptions<OrderDbContext> options) : DbContext(options)
+public class OrderDbContext(DbContextOptions<OrderDbContext> options) : DbContext(options), IUnitOfWork
 {
 
     public DbSet<Order> Orders { get; set; }
