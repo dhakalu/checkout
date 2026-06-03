@@ -15,6 +15,7 @@
 
   <!-- Shared NuGet Packages -->
   <Project Path="nuget-packages/src/Shared.Annotations/Shared.Annotations.csproj" Folder="/nuget-packages/src/Shared.Annotations/" />
+  <Project Path="nuget-packages/src/Shared.Configurations/Shared.Configurations.csproj" Folder="/nuget-packages/src/Shared.Configurations/" />
   <Project Path="nuget-packages/src/Shared.DependencyInjection/Shared.DependencyInjection.csproj" Folder="/nuget-packages/src/Shared.DependencyInjection/" />
   <Project Path="nuget-packages/src/Testing.Shared/Testing.Shared.csproj" Folder="/nuget-packages/src/Testing.Shared/" />
 

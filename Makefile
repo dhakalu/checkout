@@ -43,6 +43,12 @@ run-id:
 run-ord:
 	@echo "Running Orders project..."
 	cd apps/orders  && dotnet run --project src/Orders.WebApi/Orders.WebApi.csproj dotnet run --configuration Debug
+run-ful:
+	@echo "Running Fulfillment Orchestrator project..."
+	cd apps/fulfillment/src/Fulfillment.Orchrestrator && dotnet run --project Fulfillment.Orchrestrator.csproj dotnet run --configuration Debug
+run-fulw:
+	@echo "Running Fulfillment Temporal Worker project..."
+	cd apps/fulfillment/src/Fulfillment.TemporalWorker && dotnet run --project Fulfillment.TemporalWorker.csproj dotnet run --configuration Debug
 test-ord:
 	@echo "Running Orders tests..."
 	cd apps/orders && dotnet test --project tests/Orders.WebApi.Tests/Orders.WebApi.Tests.csproj
