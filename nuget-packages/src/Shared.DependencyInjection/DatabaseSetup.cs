@@ -4,7 +4,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
-using Npgsql;
 
 using Shared.Annotations;
 
@@ -24,6 +23,7 @@ public static class DatabaseSetup
             });
         });
         services.AddAllRepositories(typeof(T).Assembly);
+        services.AddScoped(s => (IUnitOfWork)s.GetRequiredService<T>());
         return services;
     }
 
