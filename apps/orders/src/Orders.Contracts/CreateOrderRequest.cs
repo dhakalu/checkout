@@ -8,5 +8,4 @@ public record CreateOrderRequest
 
     public List<OrderItem> Items { get; init; } = default!;
 
-
 };

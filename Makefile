@@ -25,8 +25,10 @@ arch-diagrams:
 	cd docs/architecture/diagrams
 	uv sync 
 	find . -name "*.py" | xargs -I {} uv run python {}
+db-order:
+	psql -h localhost -p 5433 -U orders -d orders
 cert-rotate:
-	openssl genpkey -algorithm EC -out ec_private.pem -pkeyopt ec_paramgen_curve:P-256
+	openssl genpkey -algor1ithm EC -out ec_private.pem -pkeyopt ec_paramgen_curve:P-256
 	openssl ec -pubout -in ec_private.pem -out ec_public.pem
 create-min-api:
 	@echo "Recreating Identity project..."
@@ -41,6 +43,12 @@ run-id:
 run-ord:
 	@echo "Running Orders project..."
 	cd apps/orders  && dotnet run --project src/Orders.WebApi/Orders.WebApi.csproj dotnet run --configuration Debug
+run-ful:
+	@echo "Running Fulfillment Orchestrator project..."
+	cd apps/fulfillment/src/Fulfillment.Orchrestrator && dotnet run --project Fulfillment.Orchrestrator.csproj dotnet run --configuration Debug
+run-fulw:
+	@echo "Running Fulfillment Temporal Worker project..."
+	cd apps/fulfillment/src/Fulfillment.TemporalWorker && dotnet run --project Fulfillment.TemporalWorker.csproj dotnet run --configuration Debug
 test-ord:
 	@echo "Running Orders tests..."
 	cd apps/orders && dotnet test --project tests/Orders.WebApi.Tests/Orders.WebApi.Tests.csproj

@@ -10,4 +10,8 @@
     <PackageReference Include="Temporalio" Version="1.14.1" />
   </ItemGroup>
 
+  <ItemGroup>
+      <ProjectReference Include="../../../orders/src/Orders.Contracts/Orders.Contracts.csproj" />
+  </ItemGroup>
+
 </Project>

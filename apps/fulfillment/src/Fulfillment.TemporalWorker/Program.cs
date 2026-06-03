@@ -17,15 +17,16 @@ var cancellationToken = cancellationTokenSource.Token;
 
 var client = await TemporalClient.ConnectAsync(new("localhost:7233"));
 
-var worker = new TemporalWorker(client,
-    new TemporalWorkerOptions("checkout-order-fulfillment")
-    .AddWorkflow<FulfillmentWorkflow>()
-    .AddActivity(StartFulfillmentActivity.StartAsync)
-);
 
 var app = builder.Build();
 var logger = app.Services.GetRequiredService<ILogger<Program>>();
 
+
+var worker = new TemporalWorker(client,
+    new TemporalWorkerOptions("checkout-order-fulfillment")
+    .AddWorkflow<FulfillmentWorkflow>()
+    .AddAllActivities(new StartFulfillmentActivity(app.Services.GetRequiredService<ILogger<StartFulfillmentActivity>>()))
+);
 try
 {
     await worker.ExecuteAsync(cancellationToken);

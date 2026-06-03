@@ -1,10 +1,14 @@
+using MassTransit;
+
 using Microsoft.EntityFrameworkCore;
 
 using Orders.Domain;
 
+using Shared.Annotations;
+
 namespace Orders.Infrastructure.Persistence;
 
-public class OrderDbContext(DbContextOptions<OrderDbContext> options) : DbContext(options)
+public class OrderDbContext(DbContextOptions<OrderDbContext> options) : DbContext(options), IUnitOfWork
 {
 
     public DbSet<Order> Orders { get; set; }
@@ -17,5 +21,9 @@ public class OrderDbContext(DbContextOptions<OrderDbContext> options) : DbContex
 
         // Scans the current assembly for any IEntityTypeConfiguration classes
         modelBuilder.ApplyConfigurationsFromAssembly(typeof(OrderDbContext).Assembly);
+
+        modelBuilder.AddInboxStateEntity((c) => c.ToTable("inbox_state"));
+        modelBuilder.AddOutboxMessageEntity((c) => c.ToTable("outbox_message"));
+        modelBuilder.AddOutboxStateEntity((c) => c.ToTable("outbox_state"));
     }
 }

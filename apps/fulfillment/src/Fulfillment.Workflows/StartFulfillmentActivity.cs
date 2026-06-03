@@ -1,12 +1,15 @@
+using Microsoft.Extensions.Logging;
+
 using Temporalio.Activities;
 
 namespace Fulfillment.Workflows;
 
-public class StartFulfillmentActivity
+public class StartFulfillmentActivity(ILogger<StartFulfillmentActivity> logger)
 {
     [Activity]
-    public static async Task<string> StartAsync(FulfillmentWorkflowRequest request)
+    public async Task<string> StartAsync(FulfillmentWorkflowRequest request)
     {
-        return "done!";
+        logger.LogInformation("Starting fulfillment process.");
+        return $"Fulfillment process started for OrderId: {request.OrderId}, CustomerId: {request.CustomerId}";
     }
 }

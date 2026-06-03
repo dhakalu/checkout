@@ -1,4 +1,7 @@
+using System.Data;
+
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Storage;
 
 using Orders.Domain;
 
@@ -15,6 +18,15 @@ public class OrderRepository(OrderDbContext dbContext) : IRepository
     public async Task AddAsync(Order identity)
     {
         _dbContext.Orders.Add(identity);
-        await _dbContext.SaveChangesAsync();
+    }
+
+    public async Task<IDbContextTransaction> BeginTransactionAsync(CancellationToken cancellationToken)
+    {
+        return await _dbContext.Database.BeginTransactionAsync(cancellationToken);
+    }
+
+    public async Task<int> SaveChangesAsync(CancellationToken cancellationToken)
+    {
+        return await _dbContext.SaveChangesAsync(cancellationToken);
     }
 }

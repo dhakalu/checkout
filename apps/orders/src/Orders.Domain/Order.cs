@@ -4,6 +4,8 @@ public class Order
 {
     public Guid Id { get; } = Guid.NewGuid();
 
+    public Guid CustomerId { get; init; } = default!;
+
     public OrderStatus Status { get; set; } = default!;
 
     public ShippingAddress ShippingAddress { get; init; } = default!;
