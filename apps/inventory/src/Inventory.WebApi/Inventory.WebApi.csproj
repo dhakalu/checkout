@@ -1,0 +1,23 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+
+  <ItemGroup>
+    
+    <ProjectReference Include="$(RepoRoot)nuget-packages/src/Shared.DependencyInjection/Shared.DependencyInjection.csproj" />
+    <ProjectReference Include="$(RepoRoot)apps/inventory/src/Inventory.Contracts/Inventory.Contracts.csproj" />
+    <ProjectReference Include="$(RepoRoot)apps/inventory/src/Inventory.Infrastructure/Inventory.Infrastructure.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="10.0.7" />
+    <PackageReference Include="FluentValidation" Version="12.1.1" />
+    <PackageReference Include="FluentValidation.DependencyInjectionExtensions" Version="12.1.1" />
+    <PackageReference Include="Scalar.AspNetCore" Version="2.14.10" />
+  </ItemGroup>
+
+</Project>

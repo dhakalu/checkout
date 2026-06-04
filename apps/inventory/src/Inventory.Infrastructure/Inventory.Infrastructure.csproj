@@ -1,0 +1,30 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+
+    <!-- NuGet Package Settings -->
+    <PackageId>Inventory.Infrastructure</PackageId>
+    <Version>1.0.0</Version>
+    <Authors>Upen Dhakal</Authors>
+    <Company>Checkout</Company>
+    <Description>Domain logic for inventory</Description>
+    <PackageTags>checkout;inventory</PackageTags>
+
+    <!-- Optional: Repository metadata -->
+    <RepositoryUrl>https://github.com/dhakalu/checkout</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="$(RepoRoot)apps/inventory/src/Inventory.Domain/Inventory.Domain.csproj" />
+    <ProjectReference Include="$(RepoRoot)nuget-packages/src/Shared.Annotations/Shared.Annotations.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="10.0.8" />
+    <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL"  Version="10.0.1" />
+  </ItemGroup>
+</Project>
