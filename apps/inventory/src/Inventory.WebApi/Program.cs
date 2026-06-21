@@ -1,8 +1,12 @@
 using System.Reflection;
-using Scalar.AspNetCore;
-using Shared.DependencyInjection;
-using Microsoft.AspNetCore.Identity;
+
 using Inventory.Infrastructure.Persistence;
+
+using Microsoft.AspNetCore.Identity;
+
+using Scalar.AspNetCore;
+
+using Shared.DependencyInjection;
 
 namespace Inventory.WebApi;
 
@@ -18,7 +22,7 @@ public class Program
         builder.Services.AddOpenApi();
         builder.Services.AddSharedErrorHandler(assembly);
         builder.Services.AddAllHandlers(assembly);
-        builder.Services.AddDb<InventorDbContext>(builder.Configuration);
+        builder.Services.AddDb<InventoryDbContext>(builder.Configuration);
 
         var app = builder.Build();
 
@@ -26,7 +30,7 @@ public class Program
         if (app.Environment.IsDevelopment())
         {
             app.MapOpenApi();
-            app.MapScalarApiReference(); 
+            app.MapScalarApiReference();
         }
 
         app.UseHttpsRedirection();
@@ -44,11 +48,11 @@ public class Program
     private static async Task StartAsync(WebApplication app)
     {
         await app.StartAsync();
-        var serverUrls = app.Urls; 
+        var serverUrls = app.Urls;
         Console.WriteLine("\n🚀 Application started! Click below to open documentation:");
         foreach (var url in serverUrls)
         {
-            Console.WriteLine($"🔗 {url}/scalar/v1"); 
+            Console.WriteLine($"🔗 {url}/scalar/v1");
         }
         Console.WriteLine("\nPress Ctrl+C to shut down.\n");
         await app.WaitForShutdownAsync();

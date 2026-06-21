@@ -2,7 +2,7 @@ using Microsoft.AspNetCore.Mvc.Testing;
 
 namespace Inventory.WebApi.Tests.Tests;
 
-public class ProgramTests(InventoryWebApplicationFactory app): IClassFixture<InventoryWebApplicationFactory>
+public class ProgramTests(InventoryWebApplicationFactory app) : IClassFixture<InventoryWebApplicationFactory>
 {
     private readonly HttpClient _client = app.CreateClient();
     [Fact]

@@ -1,9 +1,10 @@
+using Inventory.Infrastructure.Persistence;
+using Inventory.WebApi;
+
 using Microsoft.AspNetCore.Mvc.Testing;
-using Testcontainers.PostgreSql;
 using Microsoft.EntityFrameworkCore;
 
-using Inventory.WebApi;
-using Inventory.Infrastructure.Persistence;
+using Testcontainers.PostgreSql;
 
 namespace Inventory.WebApi.Tests;
 
@@ -25,7 +26,7 @@ public class InventoryWebApplicationFactory : WebApplicationFactory<Program>
         using (var scope = host.Services.CreateScope())
         {
             var services = scope.ServiceProvider;
-            var context = services.GetRequiredService<InventorDbContext>();
+            var context = services.GetRequiredService<InventoryDbContext>();
 
             context.Database.MigrateAsync().GetAwaiter().GetResult();
         }
@@ -39,15 +40,13 @@ public class InventoryWebApplicationFactory : WebApplicationFactory<Program>
         {
             // Locate and remove the original DbContext registration
             var descriptor = services.SingleOrDefault(d =>
-                d.ServiceType == typeof(DbContextOptions<InventorDbContext>));
+                d.ServiceType == typeof(DbContextOptions<InventoryDbContext>));
 
             if (descriptor != null) services.Remove(descriptor);
 
             // Inject the dynamic connection string provided by the running Testcontainer
-            services.AddDbContext<InventorDbContext>(options =>
+            services.AddDbContext<InventoryDbContext>(options =>
                 options.UseNpgsql(_dbContainer.GetConnectionString()));
-
-
         });
     }
 
