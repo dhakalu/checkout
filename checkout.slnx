@@ -13,6 +13,13 @@
   <Project Path="apps/orders/src/Orders.WebApi/Orders.WebApi.csproj" Folder="/apps/orders/src/" />
   <Project Path="apps/orders/tests/Orders.WebApi.Tests/Orders.WebApi.Tests.csproj" Folder="/apps/orders/tests/" />
 
+   <!-- Inventory Service -->
+  <Project Path="apps/inventory/src/Inventory.Contracts/Inventory.Contracts.csproj" Folder="/apps/inventory/src/" />
+  <Project Path="apps/inventory/src/Inventory.Domain/Inventory.Domain.csproj" Folder="/apps/inventory/src/" />
+  <Project Path="apps/inventory/src/Inventory.Infrastructure/Inventory.Infrastructure.csproj" Folder="/apps/inventory/src/" />
+  <Project Path="apps/inventory/src/Inventory.WebApi/Inventory.WebApi.csproj" Folder="/apps/inventory/src/" />
+  <Project Path="apps/inventory/tests/Inventory.WebApi.Tests/Inventory.WebApi.Tests.csproj" Folder="/apps/inventory/tests/" />
+
   <!-- Shared NuGet Packages -->
   <Project Path="nuget-packages/src/Shared.Annotations/Shared.Annotations.csproj" Folder="/nuget-packages/src/Shared.Annotations/" />
   <Project Path="nuget-packages/src/Shared.Configurations/Shared.Configurations.csproj" Folder="/nuget-packages/src/Shared.Configurations/" />
