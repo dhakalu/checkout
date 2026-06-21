@@ -1,14 +1,17 @@
+using Inventory.Domain;
+
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using Inventory.Domain;
 
 namespace Inventory.Infrastructure.Persistence;
 
-public class InventorConfiguration : IEntityTypeConfiguration<Inventor>
+public class BrandConfiguration : IEntityTypeConfiguration<Brand>
 {
-    public void Configure(EntityTypeBuilder<Inventor> builder)
+    public void Configure(EntityTypeBuilder<Brand> builder)
     {
-        builder.ToTable("example");
+        builder.ToTable("brands");
+
+        builder.HasKey(x => x.Id);
 
         builder.Property(x => x.Id)
             .HasColumnName("id")

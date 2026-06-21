@@ -1,0 +1,1 @@
+namespace Inventory.Infrastructure.Persistence;
