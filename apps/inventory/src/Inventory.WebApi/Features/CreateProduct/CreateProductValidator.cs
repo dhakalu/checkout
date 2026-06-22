@@ -2,6 +2,7 @@ using FluentValidation;
 
 using Inventory.Contracts;
 
+namespace Inventory.WebApi.Features.CreateProduct;
 
 public class CreateProductValidator : AbstractValidator<CreateProductRequest>
 {
