@@ -43,6 +43,11 @@ public class ProductsInventoryConfiguration : IEntityTypeConfiguration<ProductsI
             .HasColumnType("int")
             .IsRequired();
 
+        builder.Property(x => x.LastUpdated)
+            .HasColumnName("updated_at")
+            .HasColumnType("timestamp with time zone")
+            .IsRequired();
+
         builder.HasOne(x => x.ProductVariant)
             .WithOne()
             .HasForeignKey<ProductsInventory>(x => x.ProductVariantId)

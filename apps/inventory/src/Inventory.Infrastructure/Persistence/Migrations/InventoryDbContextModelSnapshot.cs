@@ -31,7 +31,7 @@ namespace Inventory.Infrastructure.Persistence.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("text")
+                        .HasColumnType("varchar(500)")
                         .HasColumnName("name");
 
                     b.Property<string>("Type")
@@ -92,7 +92,8 @@ namespace Inventory.Infrastructure.Persistence.Migrations
                         .HasColumnName("category_id");
 
                     b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("created_at");
 
                     b.Property<string>("Description")
                         .HasColumnType("text")
@@ -109,7 +110,8 @@ namespace Inventory.Infrastructure.Persistence.Migrations
                         .HasColumnName("slug");
 
                     b.Property<DateTime>("UpdatedAt")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("updated_at");
 
                     b.HasKey("Id");
 
@@ -124,26 +126,33 @@ namespace Inventory.Infrastructure.Persistence.Migrations
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
+                        .HasColumnType("uuid")
+                        .HasColumnName("id");
 
                     b.Property<string>("Description")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasColumnType("varchar(2000)")
+                        .HasColumnName("description");
 
                     b.Property<bool>("IsActive")
-                        .HasColumnType("boolean");
+                        .HasColumnType("boolean")
+                        .HasColumnName("is_active");
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasColumnType("varchar(255)")
+                        .HasColumnName("name");
 
                     b.Property<string>("Slug")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasColumnType("varchar(255)")
+                        .HasColumnName("slug");
 
                     b.HasKey("Id");
 
-                    b.ToTable("ProductCategory");
+                    b.HasIndex("Name");
+
+                    b.ToTable("product_categories", (string)null);
                 });
 
             modelBuilder.Entity("Inventory.Domain.ProductVariant", b =>
@@ -227,7 +236,8 @@ namespace Inventory.Infrastructure.Persistence.Migrations
                         .HasColumnName("id");
 
                     b.Property<DateTime>("LastUpdated")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("updated_at");
 
                     b.Property<Guid>("ProductVariantId")
                         .HasColumnType("uuid")

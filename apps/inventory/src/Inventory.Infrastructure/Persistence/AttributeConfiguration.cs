@@ -20,7 +20,7 @@ public class AttributeConfiguration : IEntityTypeConfiguration<Domain.Attribute>
 
         builder.Property(x => x.Name)
             .HasColumnName("name")
-            .HasColumnType("text")
+            .HasColumnType("varchar(500)")
             .IsRequired();
 
         builder.Property(x => x.Type)

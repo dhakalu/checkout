@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Inventory.Infrastructure.Persistence.Migrations
 {
     /// <inheritdoc />
-    public partial class AddInitialTables : Migration
+    public partial class InitialTables : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -17,7 +17,7 @@ namespace Inventory.Infrastructure.Persistence.Migrations
                 columns: table => new
                 {
                     id = table.Column<Guid>(type: "uuid", nullable: false),
-                    name = table.Column<string>(type: "text", nullable: false),
+                    name = table.Column<string>(type: "varchar(500)", nullable: false),
                     type = table.Column<string>(type: "varchar(50)", nullable: false)
                 },
                 constraints: table =>
@@ -42,6 +42,21 @@ namespace Inventory.Infrastructure.Persistence.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "product_categories",
+                columns: table => new
+                {
+                    id = table.Column<Guid>(type: "uuid", nullable: false),
+                    name = table.Column<string>(type: "varchar(255)", nullable: false),
+                    slug = table.Column<string>(type: "varchar(255)", nullable: false),
+                    description = table.Column<string>(type: "varchar(2000)", nullable: false),
+                    is_active = table.Column<bool>(type: "boolean", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_product_categories", x => x.id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "product_variant_attributes",
                 columns: table => new
                 {
@@ -56,21 +71,6 @@ namespace Inventory.Infrastructure.Persistence.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "ProductCategory",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(type: "uuid", nullable: false),
-                    Name = table.Column<string>(type: "text", nullable: false),
-                    Slug = table.Column<string>(type: "text", nullable: false),
-                    Description = table.Column<string>(type: "text", nullable: false),
-                    IsActive = table.Column<bool>(type: "boolean", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_ProductCategory", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "products",
                 columns: table => new
                 {
@@ -80,22 +80,22 @@ namespace Inventory.Infrastructure.Persistence.Migrations
                     name = table.Column<string>(type: "varchar(100)", nullable: false),
                     slug = table.Column<string>(type: "varchar(255)", nullable: false),
                     description = table.Column<string>(type: "text", nullable: true),
-                    CreatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    UpdatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
+                    created_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    updated_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_products", x => x.id);
                     table.ForeignKey(
-                        name: "FK_products_ProductCategory_category_id",
-                        column: x => x.category_id,
-                        principalTable: "ProductCategory",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
                         name: "FK_products_brands_brand_id",
                         column: x => x.brand_id,
                         principalTable: "brands",
+                        principalColumn: "id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_products_product_categories_category_id",
+                        column: x => x.category_id,
+                        principalTable: "product_categories",
                         principalColumn: "id",
                         onDelete: ReferentialAction.Restrict);
                 });
@@ -135,7 +135,7 @@ namespace Inventory.Infrastructure.Persistence.Migrations
                     quantity_reserved = table.Column<int>(type: "int", nullable: false),
                     reorder_point = table.Column<int>(type: "int", nullable: false),
                     reorder_quantity = table.Column<int>(type: "int", nullable: false),
-                    LastUpdated = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
+                    updated_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -147,6 +147,11 @@ namespace Inventory.Infrastructure.Persistence.Migrations
                         principalColumn: "id",
                         onDelete: ReferentialAction.Cascade);
                 });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_product_categories_name",
+                table: "product_categories",
+                column: "name");
 
             migrationBuilder.CreateIndex(
                 name: "IX_product_variants_product_id",
@@ -189,10 +194,10 @@ namespace Inventory.Infrastructure.Persistence.Migrations
                 name: "products");
 
             migrationBuilder.DropTable(
-                name: "ProductCategory");
+                name: "brands");
 
             migrationBuilder.DropTable(
-                name: "brands");
+                name: "product_categories");
         }
     }
 }

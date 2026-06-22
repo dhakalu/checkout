@@ -13,8 +13,9 @@ public class InventoryDbContext(DbContextOptions<InventoryDbContext> options) : 
 
     public DbSet<ProductsInventory> Inventories { get; set; }
 
-    public DbSet<Brand> Brands { get; set; }
 
+    public DbSet<Brand> Brands { get; set; }
+    public DbSet<ProductCategory> Categories { get; set; }
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
