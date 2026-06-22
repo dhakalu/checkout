@@ -19,10 +19,16 @@ public class CreateProductValidator : AbstractValidator<CreateProductRequest>
 
         RuleFor(x => x.Name)
             .NotEmpty()
-            .WithMessage("Product name is required");
+            .WithMessage("Product name is required")
+            .MaximumLength(100)
+            .WithMessage("Product name must be shorter than 100 characters.");
 
         RuleFor(x => x.Description)
             .NotEmpty()
             .WithMessage("Description is required");
+
+        RuleFor(x => x.Slug)
+            .NotEmpty()
+            .MaximumLength(200);
     }
 }
