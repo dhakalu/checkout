@@ -1,0 +1,16 @@
+using Inventory.Domain;
+
+using Microsoft.EntityFrameworkCore.ChangeTracking;
+
+using Shared.Annotations;
+
+namespace Inventory.Infrastructure.Persistence;
+
+public class ProductsRepository(InventoryDbContext dbContext) : IRepository
+{
+
+    public async Task<EntityEntry<Product>> AddAsync(Product product, CancellationToken cancellationToken)
+    {
+        return await dbContext.AddAsync(product, cancellationToken);
+    }
+}

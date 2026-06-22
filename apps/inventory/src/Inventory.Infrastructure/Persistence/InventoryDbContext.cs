@@ -4,9 +4,11 @@ using Inventory.Domain;
 
 using Microsoft.EntityFrameworkCore;
 
+using Shared.Annotations;
+
 namespace Inventory.Infrastructure.Persistence;
 
-public class InventoryDbContext(DbContextOptions<InventoryDbContext> options) : DbContext(options)
+public class InventoryDbContext(DbContextOptions<InventoryDbContext> options) : DbContext(options), IUnitOfWork
 {
 
     public DbSet<ProductsInventory> Inventories { get; set; }

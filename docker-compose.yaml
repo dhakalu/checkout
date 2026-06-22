@@ -25,6 +25,19 @@ services:
       - orders-db-data:/var/lib/postgresql
     profiles: 
       - order
+  inventory-db:
+    image: postgres
+    container_name: inventory-db
+    environment:
+      - POSTGRES_USER=inventory
+      - POSTGRES_DB=inventory
+      - POSTGRES_HOST_AUTH_METHOD=trust
+    ports:
+      - "5434:5432"
+    volumes:
+      - inventory-db-data:/var/lib/postgresql
+    profiles: 
+      - inventory
   rabbit-mq:
     image: rabbitmq:4.3-management-alpine
     container_name: mq-main
@@ -38,6 +51,7 @@ services:
     profiles:
       - id
       - order
+      - inventory
   azure-keyvault-emulator:
     image: jamesgoulddev/azure-keyvault-emulator:latest
     container_name: azure-keyvault-emulator
@@ -218,5 +232,6 @@ networks:
 volumes:
   id-db-data:
   orders-db-data:
+  inventory-db-data:
   keyvault-data:
   keycloak-data:
