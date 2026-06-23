@@ -1,4 +1,5 @@
 using System.Collections.Immutable;
+using System.Security.Cryptography.X509Certificates;
 
 using Inventory.Domain;
 
@@ -28,5 +29,10 @@ public class BrandRepository(InventoryDbContext dbContext) : IRepository
         .Skip(offset)
         .Take(limit)
         .ToListAsync(cancellationToken);
+    }
+
+    public async Task<Brand?> GetByNameOrSlugAsync(string name, string slug, CancellationToken cancellationToken)
+    {
+        return await dbContext.Brands.FirstOrDefaultAsync(x => x.Name == name || x.Slug == slug, cancellationToken);
     }
 }

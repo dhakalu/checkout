@@ -42,5 +42,8 @@ public class BrandConfiguration : IEntityTypeConfiguration<Brand>
             .HasColumnName("is_active")
             .HasColumnType("boolean")
             .IsRequired();
+
+        builder.HasIndex(x => x.Name).IsUnique();
+        builder.HasIndex(x => x.Slug).IsUnique();
     }
 }
