@@ -12,7 +12,7 @@ public class CreateBrandHandler(BrandRepository repository, IUnitOfWork unitOfWo
     {
         var b = await repository.GetByNameOrSlugAsync(cmd.Name, cmd.Slug, cancellationToken);
 
-        if (b != null) 
+        if (b != null)
             throw new InvalidOperationException("Brand with name or slug already exists");
         b = new()
         {
