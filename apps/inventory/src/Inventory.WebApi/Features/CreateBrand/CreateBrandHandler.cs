@@ -2,6 +2,7 @@ using Inventory.Domain;
 using Inventory.Infrastructure.Persistence;
 
 using Shared.Annotations;
+using Shared.Exceptions;
 
 namespace Inventory.WebApi.Features.CreateBrand;
 
@@ -13,7 +14,7 @@ public class CreateBrandHandler(BrandRepository repository, IUnitOfWork unitOfWo
         var b = await repository.GetByNameOrSlugAsync(cmd.Name, cmd.Slug, cancellationToken);
 
         if (b != null)
-            throw new InvalidOperationException("Brand with name or slug already exists");
+            throw new DuplicateRecordException("Brand with name or slug already exists");
         b = new()
         {
             Name = cmd.Name,

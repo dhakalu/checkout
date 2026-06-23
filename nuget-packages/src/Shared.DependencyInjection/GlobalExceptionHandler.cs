@@ -10,6 +10,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 
+using Shared.Exceptions;
+
 namespace Shared.DependencyInjection;
 
 public class GlobalExceptionHandler(ILogger<GlobalExceptionHandler> logger) : IExceptionHandler
@@ -100,7 +102,7 @@ public class GlobalExceptionHandler(ILogger<GlobalExceptionHandler> logger) : IE
                     (StatusCodes.Status400BadRequest, "Bad request", argEx.Message),
                 KeyNotFoundException kEx => (
                     StatusCodes.Status404NotFound, "Not found", kEx.Message),
-                InvalidOperationException ioEx => (
+                DuplicateRecordException ioEx => (
                     StatusCodes.Status409Conflict, "Conflict", ioEx.Message),
                 UnauthorizedAccessException uEx => (
                     StatusCodes.Status401Unauthorized, "Unauthorized", uEx.Message

@@ -15,10 +15,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="../../../../nuget-packages/src/Shared.Exceptions/Shared.Exceptions.csproj" />
     <ProjectReference Include="../Fulfillment.Workflows/Fulfillment.Workflows.csproj" />
     <ProjectReference Include="../../../orders/src/Orders.Contracts/Orders.Contracts.csproj" />
-    <ProjectReference
-      Include="../../../../nuget-packages/src/Shared.Configurations/Shared.Configurations.csproj" />
+    <ProjectReference Include="../../../../nuget-packages/src/Shared.Configurations/Shared.Configurations.csproj" />
   </ItemGroup>
 
 </Project>

@@ -9,6 +9,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
 using Shared.Configurations;
+using Shared.Exceptions;
 
 using Temporalio.Client;
 
@@ -29,7 +30,7 @@ builder.Services.AddMassTransit(x =>
         if (rabbitConfig == null || string.IsNullOrEmpty(rabbitConfig.Host) || string.IsNullOrEmpty(rabbitConfig.Username) || string.IsNullOrEmpty(rabbitConfig.Password))
         {
             logger.LogError("RabbitMQ configuration is missing or incomplete. Using default localhost settings.");
-            throw new InvalidOperationException("RabbitMQ configuration is missing or incomplete. Please check the configuration settings.");
+            throw new MissingConfigurationException("RabbitMq");
         }
         else
         {

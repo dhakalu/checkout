@@ -24,6 +24,7 @@
 
  <ItemGroup>
   <ProjectReference Include="../Shared.Annotations/Shared.Annotations.csproj" />
+  <ProjectReference Include="../Shared.Exceptions/Shared.Exceptions.csproj" />
  </ItemGroup>
 
   <ItemGroup>

@@ -11,6 +11,7 @@
     <ProjectReference Include="$(RepoRoot)nuget-packages/src/Shared.DependencyInjection/Shared.DependencyInjection.csproj" />
     <ProjectReference Include="$(RepoRoot)apps/inventory/src/Inventory.Contracts/Inventory.Contracts.csproj" />
     <ProjectReference Include="$(RepoRoot)apps/inventory/src/Inventory.Infrastructure/Inventory.Infrastructure.csproj" />
+    <ProjectReference Include="../../../../nuget-packages/src/Shared.Exceptions/Shared.Exceptions.csproj" />
   </ItemGroup>
 
   <ItemGroup>
