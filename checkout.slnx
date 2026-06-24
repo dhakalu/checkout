@@ -19,6 +19,8 @@
   <Project Path="apps/inventory/src/Inventory.Infrastructure/Inventory.Infrastructure.csproj" Folder="/apps/inventory/src/" />
   <Project Path="apps/inventory/src/Inventory.WebApi/Inventory.WebApi.csproj" Folder="/apps/inventory/src/" />
   <Project Path="apps/inventory/tests/Inventory.WebApi.Tests/Inventory.WebApi.Tests.csproj" Folder="/apps/inventory/tests/" />
+  <!-- Catalog Search Services -->
+  <Project Path="apps/search/src/Search.WebApi/Search.WebApi.csproj" Folder="/apps/search/src/" />
 
   <!-- Shared NuGet Packages -->
   <Project Path="nuget-packages/src/Shared.Annotations/Shared.Annotations.csproj" Folder="/nuget-packages/src/Shared.Annotations/" />

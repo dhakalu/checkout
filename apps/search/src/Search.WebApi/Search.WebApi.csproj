@@ -1,0 +1,21 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="../../../../nuget-packages/src/Shared.Configurations/Shared.Configurations.csproj" />
+    <ProjectReference Include="../../../../nuget-packages/src/Shared.DependencyInjection/Shared.DependencyInjection.csproj" />
+    <ProjectReference Include="../../../inventory/src/Inventory.Contracts/Inventory.Contracts.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="MassTransit.EntityFrameworkCore" Version="8.5.9" />
+    <PackageReference Include="MassTransit.RabbitMQ" Version="8.5.9" />
+
+  </ItemGroup>
+
+</Project>

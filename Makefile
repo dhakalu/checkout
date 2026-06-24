@@ -52,7 +52,11 @@ run-fulw:
 run-inv:
 	@echo "Running Inventory web api project..."
 	cd apps/inventory/src/Inventory.WebApi && dotnet run --project Inventory.WebApi.csproj dotnet run --configuration Debug
-ttest-ord:
+run-s:
+	@echo "Running Search web api project..."
+	cd apps/search/src/Search.WebApi && dotnet run --project Search.WebApi.csproj dotnet run --configuration Debug
+
+test-ord:
 	@echo "Running Orders tests..."
 	cd apps/orders && dotnet test --project tests/Orders.WebApi.Tests/Orders.WebApi.Tests.csproj
 
