@@ -3,9 +3,7 @@ using System.Reflection;
 using Inventory.Infrastructure.Persistence;
 
 using MassTransit;
-using MassTransit.RabbitMqTransport.Configuration;
 
-using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Options;
 
 using Shared.Configurations;
