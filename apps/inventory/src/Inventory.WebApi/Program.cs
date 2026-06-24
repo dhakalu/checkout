@@ -2,10 +2,15 @@ using System.Reflection;
 
 using Inventory.Infrastructure.Persistence;
 
+using MassTransit;
+using MassTransit.RabbitMqTransport.Configuration;
+
 using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.Options;
 
-
+using Shared.Configurations;
 using Shared.DependencyInjection;
+using Shared.Exceptions;
 
 namespace Inventory.WebApi;
 
@@ -21,6 +26,33 @@ public class Program
         builder.Services.AddSharedErrorHandler(assembly);
         builder.Services.AddAllHandlers(assembly);
         builder.Services.AddDb<InventoryDbContext>(builder.Configuration);
+        builder.Services.Configure<RabbitMqConfiguration>(builder.Configuration.GetSection("RabbitMq"));
+
+        builder.Services.AddMassTransit(cfg =>
+        {
+            cfg.UsingRabbitMq((context, rabbitCfg) =>
+            {
+                RabbitMqConfiguration? mqConfiguration = context.GetRequiredService<IOptions<RabbitMqConfiguration>>().Value;
+                if (rabbitCfg == null
+                    || string.IsNullOrEmpty(mqConfiguration.Username)
+                    || string.IsNullOrEmpty(mqConfiguration.Host)
+                    || string.IsNullOrEmpty(mqConfiguration.Password)
+                )
+                {
+                    throw new MissingConfigurationException("RabbitMq");
+                }
+                rabbitCfg.Host(mqConfiguration.Host, "/", (hostConfigurator) =>
+                {
+                    hostConfigurator.Username(mqConfiguration.Username);
+                    hostConfigurator.Password(mqConfiguration.Password);
+                });
+            });
+            cfg.AddEntityFrameworkOutbox<InventoryDbContext>(outboxCfg =>
+            {
+                outboxCfg.UseBusOutbox();
+                outboxCfg.UsePostgres();
+            });
+        });
 
         var app = builder.Build();
         app.MapAllEndpoints(assembly);

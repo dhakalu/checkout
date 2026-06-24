@@ -1,13 +1,16 @@
 
+using Inventory.Contracts.Events;
 using Inventory.Domain;
 using Inventory.Infrastructure.Persistence;
+
+using MassTransit;
 
 using Shared.Annotations;
 using Shared.Exceptions;
 
 namespace Inventory.WebApi.Features.CreateProduct;
 
-public class CreateProductHandler(ProductsRepository repository, IUnitOfWork unitOfWork) : IHandler
+public class CreateProductHandler(ProductsRepository repository, IUnitOfWork unitOfWork, IPublishEndpoint publishEndpoint) : IHandler
 {
 
     public async Task<bool> HandleAsync(CreateProductCommand cmd, CancellationToken token)
@@ -31,6 +34,7 @@ public class CreateProductHandler(ProductsRepository repository, IUnitOfWork uni
             UpdatedAt = DateTime.UtcNow
         };
         await repository.AddAsync(product, token);
+        await publishEndpoint.Publish<ProductCreated>(new(product.Id, product.Name, product.Description, product.Slug, product.BrandId, product.CategoryId), token);
         await unitOfWork.SaveChangesAsync(token);
         return true;
     }

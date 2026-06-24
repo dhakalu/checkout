@@ -2,6 +2,8 @@ using System.Dynamic;
 
 using Inventory.Domain;
 
+using MassTransit;
+
 using Microsoft.EntityFrameworkCore;
 
 using Shared.Annotations;
@@ -24,5 +26,8 @@ public class InventoryDbContext(DbContextOptions<InventoryDbContext> options) : 
 
         // Scans the current assembly for any IEntityTypeConfiguration classes
         modelBuilder.ApplyConfigurationsFromAssembly(typeof(InventoryDbContext).Assembly);
+
+        // add outbox patterns
+        modelBuilder.AddTransactionalOutboxEntities();
     }
 }
