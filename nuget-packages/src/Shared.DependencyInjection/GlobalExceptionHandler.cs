@@ -100,8 +100,8 @@ public class GlobalExceptionHandler(ILogger<GlobalExceptionHandler> logger) : IE
                     (StatusCodes.Status400BadRequest, "Bad request", jsonException.Message),
                 ArgumentException argEx =>
                     (StatusCodes.Status400BadRequest, "Bad request", argEx.Message),
-                KeyNotFoundException kEx => (
-                    StatusCodes.Status404NotFound, "Not found", kEx.Message),
+                KeyNotFoundException or RecordNotFoundException => (
+                    StatusCodes.Status404NotFound, "Not found", exception.Message),
                 DuplicateRecordException ioEx => (
                     StatusCodes.Status409Conflict, "Conflict", ioEx.Message),
                 UnauthorizedAccessException uEx => (
