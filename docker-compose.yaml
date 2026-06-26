@@ -1,4 +1,56 @@
 services:
+
+  es01:
+    image: docker.elastic.co/elasticsearch/elasticsearch:9.4.2
+    volumes:
+      - esdata:/usr/share/elasticsearch/data
+    ports:
+      - 9200:9200
+    environment:
+      - node.name=es01
+      - cluster.name=docker-cluster
+      - discovery.type=single-node
+      - ELASTIC_PASSWORD=admin_password123
+      - bootstrap.memory_lock=true
+      - xpack.security.enabled=false
+      - xpack.security.http.ssl.enabled=false
+      - xpack.security.transport.ssl.enabled=false
+      # FIX 1: Set Heap to 50% of your container memory limit
+      - ES_JAVA_OPTS=-Xms1g -Xmx1g
+    # FIX 2: Raise container memory limit slightly if possible to accommodate JVM overhead
+    mem_limit: 3221225472 # 3GB (Recommended) or keep 2147483648 (2GB)
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    # FIX 3: Fix healthcheck authentication and match real API responses
+    healthcheck:
+      test: [ "CMD-SHELL", "curl -u elastic:admin_password123 -s http://localhost:9200 | grep -q 'cluster_name'" ]
+      interval: 10s
+      timeout: 10s
+      retries: 120
+
+  kibana:
+    depends_on:
+      es01:
+        condition: service_healthy
+    image: docker.elastic.co/kibana/kibana:8.17.0
+    volumes:
+      - kibanadata:/usr/share/kibana/data
+    ports:
+      - 5601:5601
+    environment:
+      - SERVERNAME=kibana
+      - ELASTICSEARCH_HOSTS=http://es01:9200
+      - ELASTICSEARCH_USERNAME=elastic
+      - ELASTICSEARCH_PASSWORD=admin_password123
+    mem_limit: 2147483648
+    healthcheck:
+      test: ["CMD-SHELL", "curl -s -I http://localhost:5601 | grep -q 'HTTP/1.1 302 Found'"]
+      interval: 10s
+      timeout: 10s
+      retries: 120
+
   id-db:
     image: postgres
     container_name: id-db
@@ -23,8 +75,6 @@ services:
       - "5433:5432"
     volumes:
       - orders-db-data:/var/lib/postgresql
-    profiles: 
-      - order
   inventory-db:
     image: postgres
     container_name: inventory-db
@@ -36,8 +86,6 @@ services:
       - "5434:5432"
     volumes:
       - inventory-db-data:/var/lib/postgresql
-    profiles: 
-      - inventory
   rabbit-mq:
     image: rabbitmq:4.3-management-alpine
     container_name: mq-main
@@ -48,10 +96,6 @@ services:
     ports:
       - "5672:5672"
       - "15672:15672"
-    profiles:
-      - id
-      - order
-      - inventory
   keycloak:
     image: quay.io/keycloak/keycloak:26.6.1
     container_name: keycloak
@@ -70,12 +114,13 @@ services:
     volumes:
       - keycloak-data:/opt/keycloak/data
       - ./certs:/opt/keycloak/certs:ro
-    profiles:
-      - id
-      - order
 
 volumes:
   id-db-data:
   orders-db-data:
   inventory-db-data:
   keycloak-data:
+  esdata:
+    driver: local
+  kibanadata:
+    driver: local
