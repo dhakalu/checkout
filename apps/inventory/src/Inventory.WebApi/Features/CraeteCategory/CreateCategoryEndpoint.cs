@@ -16,8 +16,8 @@ public class CreateCategoryEndpoint : IEndpoint
     private async Task<IResult> HandleAsync(CreateCategoryRequest request, CreateCategoryValidator validator, CreateCategoryHandler handler, CancellationToken cancellation)
     {
         await validator.ValidateAndThrowAsync(request, cancellation);
-        await handler.HandleAsync(new(request.Name, request.Description, request.Slug, request.IsActive), cancellation);
-        return Results.Created();
+        var category = await handler.HandleAsync(new(request.Name, request.Description, request.Slug, request.IsActive), cancellation);
+        return Results.Created($"/categories/{category.Id}", category);
     }
 
 }

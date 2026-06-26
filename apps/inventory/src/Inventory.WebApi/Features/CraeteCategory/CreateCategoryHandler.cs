@@ -1,4 +1,5 @@
 
+using Inventory.Contracts;
 using Inventory.Domain;
 using Inventory.Infrastructure.Persistence;
 
@@ -10,7 +11,7 @@ public class CreateCategoryHandler(ProductCategoryRepository repository, IUnitOf
 {
 
 
-    public async Task<bool> HandleAsync(CreateCategoryCommand cmd, CancellationToken cancellationToken)
+    public async Task<CagetoryDetail> HandleAsync(CreateCategoryCommand cmd, CancellationToken cancellationToken)
     {
         ProductCategory category = new()
         {
@@ -21,6 +22,6 @@ public class CreateCategoryHandler(ProductCategoryRepository repository, IUnitOf
         };
         await repository.AddAsync(category, cancellationToken);
         await unitOfWork.SaveChangesAsync(cancellationToken);
-        return true;
+        return new CagetoryDetail(category.Id, category.Name, category.Description, category.Slug, category.IsActive);
     }
 }
