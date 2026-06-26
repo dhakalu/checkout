@@ -26,4 +26,14 @@ public class ProductCategoryRepository(InventoryDbContext dbContext) : IReposito
             .Take(limit)
             .ToListAsync(ct);
     }
+
+    public async Task<ProductCategory?> GetByIdAsync(Guid id, CancellationToken token)
+    {
+        return await dbContext.Categories.AsNoTracking().FirstOrDefaultAsync(x => x.Id == id, token);
+    }
+
+    public async Task<ProductCategory?> GetByNameOrSlug(string name, string slug, CancellationToken cancellationToken)
+    {
+        return await dbContext.Categories.AsNoTracking().FirstOrDefaultAsync(x => x.Name == name || x.Slug == slug, cancellationToken);
+    }
 }

@@ -6,5 +6,7 @@ public record ProductCreated(
    string Description,
    string Slug,
    Guid BrandId,
-   Guid CategoryId
+   string BrandName,
+   Guid CategoryId,
+   string CategoryName
 );

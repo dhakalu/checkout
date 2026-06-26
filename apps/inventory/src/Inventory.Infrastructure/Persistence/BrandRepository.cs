@@ -31,6 +31,11 @@ public class BrandRepository(InventoryDbContext dbContext) : IRepository
         .ToListAsync(cancellationToken);
     }
 
+    public async Task<Brand?> GetByIdAsync(Guid id, CancellationToken token)
+    {
+        return await dbContext.Brands.AsNoTracking().FirstOrDefaultAsync(x => x.Id == id, token);
+    }
+
     public async Task<Brand?> GetByNameOrSlugAsync(string name, string slug, CancellationToken cancellationToken)
     {
         return await dbContext.Brands.FirstOrDefaultAsync(x => x.Name == name || x.Slug == slug, cancellationToken);
