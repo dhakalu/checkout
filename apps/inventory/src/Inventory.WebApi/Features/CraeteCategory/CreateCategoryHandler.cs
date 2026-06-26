@@ -4,6 +4,7 @@ using Inventory.Domain;
 using Inventory.Infrastructure.Persistence;
 
 using Shared.Annotations;
+using Shared.Exceptions;
 
 namespace Inventory.WebApi.Features.CraeteCategory;
 
@@ -13,7 +14,14 @@ public class CreateCategoryHandler(ProductCategoryRepository repository, IUnitOf
 
     public async Task<CagetoryDetail> HandleAsync(CreateCategoryCommand cmd, CancellationToken cancellationToken)
     {
-        ProductCategory category = new()
+        ProductCategory? category = await repository.GetByNameOrSlug(cmd.Name, cmd.Slug, cancellationToken);
+
+        if (category != null)
+        {
+            throw new DuplicateRecordException($"Product category with name '{cmd.Name}' or slug '${cmd.Slug}' already exists.");
+        }
+
+        category = new()
         {
             Name = cmd.Name,
             Description = cmd.Description,
