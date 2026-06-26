@@ -1,10 +1,13 @@
 ﻿using System.Reflection;
 
+using Elastic.Clients.Elasticsearch;
 
 using MassTransit;
 
 using Microsoft.Extensions.Options;
 
+using Search.Domain;
+using Search.WebApi.Configuration;
 using Search.WebApi.Consumers;
 
 using Shared.Configurations;
@@ -25,6 +28,19 @@ public class Program
         builder.Services.AddSharedErrorHandler(assembly);
         builder.Services.AddAllHandlers(assembly);
         builder.Services.Configure<RabbitMqConfiguration>(builder.Configuration.GetSection("RabbitMq"));
+        builder.Services.Configure<ElasticSearchConfiguration>(builder.Configuration.GetSection("ElasticSearch"));
+
+
+        builder.Services.AddSingleton<ElasticsearchClient>((ctx) =>
+        {
+            ElasticSearchConfiguration esConfig = ctx.GetRequiredService<IOptions<ElasticSearchConfiguration>>().Value;
+            if (esConfig == null || string.IsNullOrEmpty(esConfig.Host))
+                throw new MissingConfigurationException("ElasticSearch");
+            var esSettings = new ElasticsearchClientSettings(new Uri(esConfig.Host))
+                .DefaultMappingFor<ProductDocument>(m => m.IndexName("products"));
+
+            return new ElasticsearchClient(esSettings);
+        });
 
         builder.Services.AddMassTransit(cfg =>
         {

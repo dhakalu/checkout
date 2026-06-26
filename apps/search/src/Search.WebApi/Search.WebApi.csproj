@@ -10,9 +10,11 @@
     <ProjectReference Include="../../../../nuget-packages/src/Shared.Configurations/Shared.Configurations.csproj" />
     <ProjectReference Include="../../../../nuget-packages/src/Shared.DependencyInjection/Shared.DependencyInjection.csproj" />
     <ProjectReference Include="../../../inventory/src/Inventory.Contracts/Inventory.Contracts.csproj" />
+    <ProjectReference Include="../Search.Domain/Search.Domain.csproj" />
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="Elastic.Clients.Elasticsearch" Version="9.4.2" />
     <PackageReference Include="MassTransit.EntityFrameworkCore" Version="8.5.9" />
     <PackageReference Include="MassTransit.RabbitMQ" Version="8.5.9" />
 

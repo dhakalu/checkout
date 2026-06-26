@@ -1,0 +1,78 @@
+{
+  "settings": {
+    "analysis": {
+      "analyzer": {
+        "autocomplete_analyzer": {
+          "tokenizer": "edge_ngram_tokenizer",
+          "filter": ["lowercase"]
+        }
+      },
+      "tokenizer": {
+        "edge_ngram_tokenizer": {
+          "type": "edge_ngram",
+          "min_gram": 2,
+          "max_gram": 15,
+          "token_chars": ["letter", "digit"]
+        }
+      }
+    }
+  },
+  "mappings": {
+    "properties": {
+      "id": { "type": "keyword" },
+      "title": {
+        "type": "text",
+        "fields": {
+          "suggest": {
+            "type": "text",
+            "analyzer": "autocomplete_analyzer",
+            "search_analyzer": "standard"
+          }
+        }
+      },
+      "description": { "type": "text" },
+      "brandId": { "type": "keyword" },
+      "brandName": {
+        "type": "keyword",
+        "fields": {
+          "searchable": { "type": "text" }
+        }
+      },
+      
+      "categoryId": { "type": "keyword" },
+      "categoryName": {
+        "type": "keyword",
+        "fields": {
+          "searchable": { "type": "text" }
+        }
+      },
+      
+      "themes": { "type": "keyword" },
+      "createdAt": { "type": "date" },
+      
+      "variants": {
+        "type": "nested",
+        "properties": {
+          "id": { "type": "keyword" },
+          "name": {
+            "type": "text",
+            "fields": {
+                "suggest": {
+                  "type": "text",
+                   "analyzer": "autocomplete_analyzer",
+                   "search_analyzer": "standard"
+                }
+            }
+          },
+          "sku": { "type": "keyword" },
+          "color": { "type": "keyword" },
+          "theme": { "type": "keyword" },
+          "size": { "type": "keyword" },
+          "price": { "type": "scaled_float", "scaling_factor": 100 },
+          "comparePrice": { "type": "scaled_float", "scaling_factor": 100},
+          "isInStock": { "type": "boolean" }
+        }
+      }
+    }
+  }
+}
