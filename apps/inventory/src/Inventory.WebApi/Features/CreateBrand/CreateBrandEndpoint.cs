@@ -29,7 +29,7 @@ public class CreateBrandEndpoint : IEndpoint
             request.Description,
             request.IsActive
         );
-        var isCreated = await handler.HandleAsync(cmd, cancellationToken);
-        return isCreated ? Results.Created() : Results.InternalServerError();
+        var createdBrand = await handler.HandleAsync(cmd, cancellationToken);
+        return createdBrand != null ? Results.Created($"brands/{createdBrand.Id}", createdBrand) : Results.InternalServerError();
     }
 }

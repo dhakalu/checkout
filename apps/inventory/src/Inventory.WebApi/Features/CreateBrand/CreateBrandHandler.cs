@@ -1,3 +1,4 @@
+using Inventory.Contracts;
 using Inventory.Domain;
 using Inventory.Infrastructure.Persistence;
 
@@ -9,7 +10,7 @@ namespace Inventory.WebApi.Features.CreateBrand;
 public class CreateBrandHandler(BrandRepository repository, IUnitOfWork unitOfWork, ILogger<CreateBrandHandler> logger) : IHandler
 {
 
-    public async Task<bool> HandleAsync(CreateBrandCommand cmd, CancellationToken cancellationToken)
+    public async Task<BrandDetail?> HandleAsync(CreateBrandCommand cmd, CancellationToken cancellationToken)
     {
         var b = await repository.GetByNameOrSlugAsync(cmd.Name, cmd.Slug, cancellationToken);
 
@@ -25,6 +26,6 @@ public class CreateBrandHandler(BrandRepository repository, IUnitOfWork unitOfWo
         };
         await repository.AddAsync(b, cancellationToken);
         await unitOfWork.SaveChangesAsync(cancellationToken);
-        return true;
+        return new BrandDetail(b.Id, b.Name, b.Description, b.Slug, b.WebsiteUrl, b.IsActive);
     }
 }
