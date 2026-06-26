@@ -56,6 +56,9 @@ run-s:
 	@echo "Running Search web api project..."
 	cd apps/search/src/Search.WebApi && dotnet run --project Search.WebApi.csproj dotnet run --configuration Debug
 
+es-apply:
+	@echo "Running Orders tests..."
+	cd apps/search/elasticsearch && source apply.sh
 test-ord:
 	@echo "Running Orders tests..."
 	cd apps/orders && dotnet test --project tests/Orders.WebApi.Tests/Orders.WebApi.Tests.csproj
